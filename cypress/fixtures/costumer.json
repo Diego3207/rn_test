@@ -1,0 +1,21 @@
+{
+    "nombreValido":"MATTEL2",
+    "nombreComercialValido":"MATTEL",
+    "rfcValido":"DFDF3838",
+    "direccionValido":"C. Mar de Bering 2014, Lomas del Country, 44620 Guadalajara, Jal., México",
+    "sitioWebValido":"www.mattel.com",
+    "grupoValido":"Empresa",
+    "nombreContactoValido":"Marco",
+    "telefonoContactoValido":"3383838333",
+    "emailConctactoValido":"marco@gmail.com",
+    "departamentoConctactoValido":"Soporte",
+    "cuentaBancariaValido":"test",
+    "nombreInvalido":"MATTELMATTELMATTELMATTELMATTELMATTELMATTELMATTELMATTELMATTELMATTELMATTELMATTELMATTELMATTELMATTELMATTELMATTELMATTELMATTELMATTEL",
+    "nombreComercialInvalido":"MATTELMATTELMATTELMATTELMATTELMATTELMATTELMATTELMATTELMATTELMATTELMATTELMATTELMATTELMATTELMATTELMATTELMATTELMATTELMATTELMATTEL",
+    "rfcInvalido":"DFDF3838DFDF3838DFDF3838DFDF3838DFDF3838DFDF3838DFDF3838DFDF3838DFDF3838DFDF3838DFDF3838DFDF3838DFDF3838DFDF3838DFDF3838DFDF3838DFDF3838DFDF3838DFDF3838DFDF3838DFDF3838",
+    "direccionInvalido":"C. Mar de Bering 2014, Lomas del Country, 44620 Guadalajara, Jal., MéxicoC. Mar de Bering 2014, Lomas del Country, 44620 Guadalajara, Jal., MéxicoC. Mar de Bering 2014, Lomas del Country, 44620 Guadalajara, Jal., MéxicoMéxicoMéxicoMéxicoMéxicoC. Mar de Berin",
+    "sitioWebInvalido":"www.mattel.comwww.mattel.comwww.mattel.comwww.mattel.comwww.mattel.comwww.mattel.comwww.mattel.comwww.mattel.comwww.mattel.comwww.mattel.com",
+    "nombreContactoInvalido":"MarcaoMarcaoMarcaoMarcaoMarcaoMarcaoMarcaoMarcaoMarcaoMarcaoMarcaoMarcaoMarcaoMarcaoMarcaoMarcaoMarcao",
+    "emailContactoInvalido":"m@.com",
+    "departamentoContactoInvalido":"SoporteSoporteSoporteSoporteSoporteSoporteSoporteSoporteSoporteSoporteSoporteSoporteSoporteSoporteSoporteSoporte"
+}

@@ -1,0 +1,99 @@
+<p-confirmDialog  #confirm [style]="{width: '50vw'}" rejectButtonStyleClass="p-button-outlined"></p-confirmDialog>
+<p-toast key="msg"></p-toast>
+
+<div class="grid">
+    <div class="col-12">
+        <div class="card px-6 py-6">
+            <!--<p-toast></p-toast> -->
+            <p-toolbar styleClass="mb-4">
+                <ng-template pTemplate="left">
+                    <div class="my-2">
+                        <!--<button pButton pRipple label="Agregar" icon="pi pi-plus" class="p-button-success mr-2" [routerLink]="['/trackerInstallations/add/']"></button>-->
+                        <button pButton pRipple label="Eliminar" icon="pi pi-trash" class="p-button-danger" (click)="delete(1,null)" [disabled]="!selectedTrackerInstallationReviews || !selectedTrackerInstallationReviews.length"></button>
+                    </div>
+                </ng-template>
+            </p-toolbar>
+
+            <p-table #dt 
+            [value]="trackerInstallationReviews"  
+            [lazy]="true"
+            [resetPageOnSort]="false"
+            [multiSortMeta]="[{field: 'id', order: 1}]"
+            sortMode="multiple" 
+            (onLazyLoad)="load($event)" 
+            [lazyLoadOnInit]="true"
+            [paginator]="true" 
+            [totalRecords]="totalRows"
+            [rowsPerPageOptions]="[10,25,50]" 
+            [loading]="loading"    
+            [showCurrentPageReport]="true"
+            currentPageReportTemplate="{{ getPageRange(page, limit, totalRows) }}"
+            [(selection)]="selectedTrackerInstallationReviews" selectionMode="multiple"
+            [rows]="10" [rowHover]="true"  dataKey="id" responsiveLayout="scroll" [breakpoint]="'760px'" [tableStyle]="{'minx-width': '50rem'}">
+                
+                <ng-template pTemplate="header">
+                    <tr>
+                        <th style="width: 3rem">
+                            <p-tableHeaderCheckbox></p-tableHeaderCheckbox>
+                        </th>
+                        <th pSortableColumn="id">
+                            ID <p-sortIcon field="id"></p-sortIcon>
+                        </th>
+                        <th  pSortableColumn="trackerInstallationReviewTrackerInstallationId" >
+                           ID INSTALACION <p-sortIcon field="trackerInstallationReviewTrackerInstallationId"></p-sortIcon>
+                        </th>
+                        <th >
+                           TECNICO ENCARGADO
+                        </th>
+                        <th pSortableColumn="trackerInstallationReviewDate">
+                            FECHA DE DESINSTALACION <p-sortIcon field="trackerInstallationReviewDate"></p-sortIcon>
+                        </th>
+                        <th>
+                            <!-- Espacio para que se vea bien las columnas -->
+                        </th>
+                    </tr>
+                   <tr>
+                        <th>
+                            <!-- Espacio para que se vea bien las columnas  -->
+                        </th>
+                        <th>
+                            <p-columnFilter type="numeric"  [showButtons]="false" field="id"  [matchModeOptions]="matchModeOptionsNumber" > </p-columnFilter>
+                        </th>
+                        <th>
+                            <p-columnFilter type="numeric"  [showButtons]="false" field="trackerUninstallTrackerInstallationId"  [matchModeOptions]="matchModeOptionsNumber" > </p-columnFilter>
+                        </th>
+                        <th>
+                            <p-columnFilter type="text" field="trackerInstallationReviewTechnicalUserId['installerName']" [matchModeOptions]="matchModeOptionsText" ></p-columnFilter>
+                        </th>
+                        <th>
+                            <p-columnFilter type="text" field="trackerInstallationReviewDate" [matchModeOptions]="matchModeOptionsText" ></p-columnFilter>
+                        </th>
+                        <th>
+                            <!-- Espacio para que se vea bien las columnas -->
+                        </th>
+                    </tr> 
+                </ng-template>
+
+                <ng-template pTemplate="body" let-trackerInstallationReview let-expanded="expanded"> 
+                    <tr>
+                        <td>
+                            <p-tableCheckbox [value]="trackerInstallationReview"></p-tableCheckbox>
+                        </td>
+                        <td>{{trackerInstallationReview.id}}</td>
+                        <td>{{trackerInstallationReview.trackerInstallationReviewTrackerInstallationId}}</td>
+                        <td>{{trackerInstallationReview.trackerInstallationReviewTechnicalUserId['installerName']}}</td>
+                        <td>{{trackerInstallationReview.trackerInstallationReviewDate  | date: 'dd-MM-yyyy' }}</td>
+
+                        <td>
+                            <div class="flex">
+                                <button pTooltip="Editar revisión" pButton pRipple icon="pi pi-pencil" class="p-button-rounded p-button-info p-button-text" [routerLink]="['/trackerInstallationReviews/edit/', trackerInstallationReview.id]"></button>
+                                <button pTooltip="Eliminar revisión" pButton pRipple icon="pi pi-trash" class="p-button-rounded p-button-danger p-button-text" (click)="delete(2,trackerInstallationReview)"></button>
+                            </div>
+                        </td>
+                    </tr>
+                </ng-template>
+            </p-table>
+        </div>
+    </div>
+</div>
+

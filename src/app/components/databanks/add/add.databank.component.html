@@ -1,0 +1,67 @@
+<style>
+	.error-box {
+		border: 1px solid red;
+	}
+</style>    
+    <p-toast key="msg"></p-toast>
+    <div class="grid justify-content-center">
+        <div class="col-12 md:col-6 justify-content-between">
+            <div class="card p-fluid">
+                <form [formGroup]="form" (ngSubmit)="onSubmit()">
+                    <div class="field">
+                        <label for="dataBankBeneficiaryName" class="font-semibold">Nombre del beneficiario</label>
+                        <input pInputText id="dataBankBeneficiaryName" maxlength="101" formControlName="dataBankBeneficiaryName" autofocus/>
+                        <div *ngIf="form.controls.dataBankBeneficiaryName.invalid">
+                        <small class="text-red-600 flex justify-content-end" *ngIf="form.controls.dataBankBeneficiaryName.errors?.['required']" >*Campo requerido</small>
+                        <small class="text-red-600 flex justify-content-end" *ngIf="form.controls.dataBankBeneficiaryName.errors?.['maxlength']" >*Longitud máxima 100</small>
+                        </div>
+                    </div>
+                    <div class="field">
+                        <label for="dataBankInstitutionName" class="font-semibold">Nombre de la institución Bancaria</label>
+                        <p-dropdown 
+                            formControlName="dataBankInstitutionName" 
+                            [options]="banks" 
+                            placeholder="Seleciona una opción" 
+                            optionLabel="name" 
+                            optionValue="code" 
+                            [filter]="true" 
+                            filterBy="name" 
+                            [showClear]="true">
+                        </p-dropdown>
+                        <div *ngIf="form.controls.dataBankInstitutionName.invalid">
+                        <small class="text-red-600 flex justify-content-end" *ngIf="form.controls.dataBankInstitutionName.errors?.['required']" >*Campo requerido</small>
+                        <small class="text-red-600 flex justify-content-end" *ngIf="form.controls.dataBankInstitutionName.errors?.['maxlength']" >*Longitud máxima 100</small>
+                        </div>
+                    </div>
+                    <div class="field">
+                        <label for="dataBankType" class="font-semibold">Medio de Pago</label>
+                        <p-dropdown formControlName="dataBankType" [options]="types" placeholder="Seleciona una opción" optionLabel="name" optionValue="code"></p-dropdown>
+                        <div *ngIf="form.controls.dataBankType.invalid">
+                        <small class="text-red-600 flex justify-content-end" *ngIf="form.controls.dataBankType.errors?.['required']" >*Campo requerido</small>
+                        <small class="text-red-600 flex justify-content-end" *ngIf="form.controls.dataBankType.errors?.['maxlength']" >*Longitud máxima 100</small>
+                        </div>
+                    </div>
+                    <div class="field">
+                        <label for="dataBankNumber" class="font-semibold">Número</label>
+                        <input pInputText id="dataBankNumber" maxlength="251" formControlName="dataBankNumber" autofocus/>
+                        <div *ngIf="form.controls.dataBankNumber.invalid">
+                        <small class="text-red-600 flex justify-content-end" *ngIf="form.controls.dataBankNumber.errors?.['required']" >*Campo requerido</small>
+
+                        </div>
+                    </div>
+                    <div class="field">
+                        <label for="dataBankPlayer" class="font-semibold">Propietario <i class="pi pi-info-circle" style="font-size: 1rem" pTooltip="Propietario de la cuenta bancaria, en caso de ser de la empresa elegir la opción PROPIA"></i></label>
+                        <p-dropdown formControlName="dataBankPlayer" [options]="players" placeholder="Seleciona una opción" optionLabel="name" optionValue="code"></p-dropdown>
+                        <div *ngIf="form.controls.dataBankPlayer.invalid">
+                        <small class="text-red-600 flex justify-content-end" *ngIf="form.controls.dataBankPlayer.errors?.['required']" >*Campo requerido</small>
+                        <small class="text-red-600 flex justify-content-end" *ngIf="form.controls.dataBankPlayer.errors?.['maxlength']" >*Longitud máxima 100</small>
+                        </div>
+                    </div>
+                    <div class="col-12 flex justify-content-end mt-4">
+                        <button pButton pRipple class="p-button-outlined w-8rem mr-3"  label="Cancelar" (click)="cancel($event)" ></button>
+                        <button pButton pRipple class="p-button-primary w-8rem"  label="Guardar" ></button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>

@@ -1,0 +1,86 @@
+<p-dialog header="Alerta" [(visible)]="confirmDisplaySelected" [modal]="true" showEffect="fade" [style]="{width: '30vw'}" [breakpoints]="{'960px': '75vw'}" [closable]="false" [draggable]="false">
+    <p class="line-height-3 m-0">
+        {{content}}
+        
+    </p>
+</p-dialog>
+<p-dialog header="Alerta" [(visible)]="confirmDisplay" [modal]="true" showEffect="fade" [style]="{width: '30vw'}" [breakpoints]="{'960px': '75vw'}" [closable]="false" [draggable]="false">
+    <p class="line-height-3 m-0">
+        {{content}}
+    </p>
+</p-dialog>
+<p-toast key="msg"></p-toast>
+<div class="grid">
+    <div class="col-12">
+        <div class="card px-6 py-6">
+            <!--<p-toast></p-toast> -->
+            
+            <p-table #dt 
+            [columns]="stocktakings"
+            [value]="stocktakings"  
+            [lazy]="true"
+            [resetPageOnSort]="false"
+            [multiSortMeta]="[{field: 'id', order: 1}]"
+            sortMode="multiple" 
+            (onLazyLoad)="load($event)" 
+            [lazyLoadOnInit]="true"
+            [paginator]="true" 
+            [totalRecords]="totalRows"
+            [rowsPerPageOptions]="[10,25,50]" 
+            [loading]="loading"    
+            [showCurrentPageReport]="true"
+            [globalFilterFields]="['stocktakingProductId', 'stocktakingSupplyId', 'stocktakingLocationId', 'stocktakingProductQuantity']"
+            currentPageReportTemplate=" {{ getPageRange(page, limit, totalRows) }} " 
+            [(selection)]="selectedStocktakings" selectionMode="multiple"
+            [rows]="10" [rowHover]="true"  dataKey="id" responsiveLayout="stack" [breakpoint]="'760px'"  >
+                
+            <ng-template pTemplate="caption">
+                <div class="flex">
+                    <button type="button" pButton pRipple icon="pi pi-file" (click)="dt.exportCSV()" class="mr-2" pTooltip="CSV" tooltipPosition="bottom"></button>
+                    <button type="button" pButton pRipple icon="pi pi-file-pdf"  (click)="exportPdf()" class="p-button-warning mr-2" pTooltip="PDF" tooltipPosition="bottom"></button>
+                    <button type="button" pButton pRipple icon="pi pi-file-excel"  class="p-button-success mr-2" pTooltip="XLS" tooltipPosition="bottom"></button>
+                    
+                    <span class="p-input-icon-left ml-auto"> 
+                        <input pInputText #textInput type="text" (input)="dt.filterGlobal(textInput.value, 'contains')" placeholder="Búsqueda" />
+                    </span> 
+                </div>
+            </ng-template>
+            
+                <ng-template pTemplate="header">
+                    <tr>
+                        <th pSortableColumn="id">
+                            ID <p-sortIcon field="id"></p-sortIcon>
+                        </th>
+                        <th pSortableColumn="stocktakingProductId">
+                            ID PRODUCTO <p-sortIcon field="stocktakingProductId"></p-sortIcon>
+                        </th>
+                        <th pSortableColumn="stocktakingSupplyId">
+                            ID COMPRA <p-sortIcon field="stocktakingSupplyId"></p-sortIcon>
+                        </th>
+                        <th pSortableColumn="stocktakingLocationId">
+                            UBICACION <p-sortIcon field="stocktakingLocationId"></p-sortIcon>
+                        </th>
+                        <th pSortableColumn="stocktakingProductQuantity">
+                            CANTIDAD<p-sortIcon field="stocktakingProductQuantity"></p-sortIcon>
+                        </th>
+                        <th pSortableColumn="stocktakingType">
+                            TIPO<p-sortIcon field="stocktakingType"></p-sortIcon>
+                        </th>
+                        <th></th>
+                    </tr>
+                </ng-template>
+                <ng-template pTemplate="body" let-stocktaking>
+                    <tr>
+                        <td>{{stocktaking.id}}</td>
+                        <td>{{stocktaking.stocktakingProductId}}</td>
+                        <td>{{stocktaking.stocktakingSupplyId}}</td>
+                        <td>{{stocktaking.stocktakingLocationId}}</td>
+                        <td>{{stocktaking.stocktakingProductQuantity}}</td>
+                        <td>{{stocktaking.stocktakingType}}</td>
+                    </tr>
+                </ng-template>
+            </p-table>
+        </div>
+    </div>
+</div>
+

@@ -1,0 +1,125 @@
+<style>
+	.error-box {
+		border: 1px solid red;
+	}
+</style>
+<p-toast key="msg" [breakpoints]="{'0px': {width: '100%', right: '0', left: '0'}}"></p-toast>
+<div class="grid justify-content-center">
+	<div class="col-12 md:col-8 justify-content-between">
+		<div class="card p-fluid">
+		   
+		   
+			<form [formGroup]="form" (ngSubmit)="onSubmit()">
+				<div class="field">
+					<label for="name" class="font-semibold">Nombre</label>
+					<input pInputText id="name" maxlength="255" formControlName="userFullName" autofocus [ngClass]="{'ng-invalid ng-dirty':form.controls.userFullName.errors }" />
+					<div *ngIf="form.controls.userFullName.invalid">
+						<small class="text-red-600 flex justify-content-end" *ngIf="form.controls.userFullName.errors?.['required']" >*Campo requerido</small>
+						<small class="text-red-600 flex justify-content-end" *ngIf="form.controls.userFullName.errors?.['maxlength']" >*Longitud máxima 255</small>
+					</div>
+				</div>
+				<div class="field">
+					<label for="email" class="font-semibold">Correo</label>
+					<input id="email" pInputText  maxlength="255"   formControlName="userEmail"  /><!-- [ngClass]="{'ng-invalid ng-dirty' : submitted && !form.value.userEmail}"-->
+					<div *ngIf="form.controls.userEmail.invalid">
+						<small class="text-red-600 flex justify-content-end" *ngIf="form.controls.userEmail.errors?.['required']" >*Campo requerido</small>
+						<small class="text-red-600 flex justify-content-end" *ngIf="form.controls.userEmail.errors?.['maxlength']" >*Longitud máxima 255</small>
+						<small class="text-red-600 flex justify-content-end" *ngIf="form.controls.userEmail.errors?.['email']" >*Correo invalido</small>
+						<small class="text-red-600 flex justify-content-end" *ngIf="form.controls.userEmail.errors?.['emailduplicated']" >*Correo duplicado</small>
+					</div>
+				</div>
+
+				<form [formGroup]="formPass" (ngSubmit)="onSubmit()">
+					<div class="field">
+						<label for="newPass" class="font-semibold">*Cambiar contraseña</label>
+						<p-password id="newPass" maxlength="255" [toggleMask]="true" [feedback]="false"  formControlName="userPassword"  />
+						<div *ngIf="formPass.controls.userPassword.invalid">
+							<small class="text-red-600 flex justify-content-end" *ngIf="formPass.controls.userPassword.errors?.['maxlength']" >*Longitud máxima 255</small>
+							<small class="text-red-600 flex justify-content-end" *ngIf="formPass.controls.userPassword.errors?.['minlength']" >*Longitud mínima 6</small>
+						</div>
+					</div>
+				</form>
+				
+				<div class="field">
+					<label for="imag" class="font-semibold">Imagen de perfil (10MB)</label>
+
+					<p-fileUpload #fileUpload name="demo[]" (onUpload)="onUpload($event)" [customUpload]="true" [multiple]="false" (onSelect)="onUpload($event)" accept="image/*" [showUploadButton]="false" [showCancelButton]="false"  styleClass="border-1 surface-border surface-card p-0 border-round mb-4" [maxFileSize]=1000000>
+						<ng-template pTemplate="content">
+							<div class="h-20rem m-1 border-round">
+								<div *ngIf="!image" class="flex flex-column w-full h-full justify-content-center align-items-center cursor-pointer" 
+								(click)="fileUpload.advancedFileInput.nativeElement.click()">
+									<i class="pi pi-fw pi-file text-4xl text-primary"></i>
+									<span class="block font-semibold text-900 text-lg mt-3">Arrastra o selecciona una imagen</span>
+								</div>
+								<div *ngIf="image" class="w-full h-full relative border-round p-0">
+									<img [src]="image.objectURL" class="w-full h-full border-round" style="object-fit: scale-down;" alt="Imagen de perfil">
+									<button pButton pRipple type="button" icon="pi pi-times" class="p-button-rounded p-button-primary text-sm absolute justify-content-center align-items-center" style=" width: 20px; height: 20px; top: -10px; right: -10px;" (click)="$event.stopPropagation(); removeImage()"></button>
+								</div>
+							</div>
+						</ng-template>
+					</p-fileUpload>
+
+				</div>
+				<div class="field">
+					<label for="verified" class="font-semibold">Verificado</label>
+					<div>
+						<p-inputSwitch  inputId="switch1" trueValue="confirmed" falseValue="unconfirmed" formControlName="userEmailStatus" ></p-inputSwitch>
+					</div>
+				</div>
+				
+				<div [ngClass]="{'error-box':form.controls.userBranches.errors }" >
+					<div class="flex flex-wrap gap-2">
+						<p-button label="Agregar sucursal"  (click)="addRow('branches')" icon="pi pi-plus"  badge="{{form.controls.userBranches.length}}" ></p-button>
+					</div>
+					<div class="card mt-3" formArrayName="userBranches" >
+						
+						<div *ngIf="form.controls.userBranches.invalid">
+							<small class="text-red-600 flex justify-content-end" *ngIf="form.controls.userBranches.errors?.['required']" >*Campo requerido</small>
+							<small class="text-red-600 flex justify-content-end" *ngIf="form.controls.userBranches.errors?.['duplicated']" >*Sucursal duplicada</small>
+							<small class="text-red-600 flex justify-content-end" *ngIf="form.controls.userBranches.errors?.['minlength']" >*Longitud mínima 1</small>
+						</div>
+						
+						<p-table responsiveLayout="stack" [breakpoint]="'760px'" [scrollable]="false"  [value]="infoBranchesArray().controls" dataKey="index" editMode="row" [tableStyle]="{'minx-width': '50rem'}">
+							<ng-template pTemplate="header">
+								<tr>
+									<th style="width:50%">Sucursal</th>
+									<th style="width:50%">Perfil</th>
+									<th ></th>
+								</tr>
+							</ng-template>
+							<ng-template pTemplate="body" let-userBranches  let-i="rowIndex">
+								<tr  [pEditableRow]="userBranches" [formGroupName]="i">
+									<td style="vertical-align: top;">
+											<p-dropdown [options]="branchList" autoWidth="false" appendTo="body"
+											 formControlName="userBranchBranch"  optionValue="id" placeholder="Selecciona una sucursal" optionLabel="branchName" [showClear]="true" ></p-dropdown> <!-- [ngClass]="{'ng-invalid ng-dirty' : submitted && this.form.get('userBranches').controls[i].controls.userBranchBranch.invalid }"-->
+											<div *ngIf="form.controls.userBranches.controls[i].controls.userBranchBranch.invalid">
+												<small class="text-red-600 flex justify-content-end" *ngIf="form.controls.userBranches.controls[i].controls.userBranchBranch.errors?.['required']" >*Campo requerido</small>
+											</div>	
+										
+									</td>
+									<td style="vertical-align: top;">
+											<p-dropdown [options]="roleList" appendTo="body"
+											 formControlName="userBranchRole"  optionValue="id" placeholder="Selecciona un perfil" optionLabel="roleName" [showClear]="true"></p-dropdown><!--[ngClass]="{'ng-invalid ng-dirty' : submitted && this.form.get('userBranches').controls[i].controls.userBranchRole.invalid}"-->
+											<div *ngIf="form.controls.userBranches.controls[i].controls.userBranchRole.invalid">
+												<small class="text-red-600 flex justify-content-end" *ngIf="form.controls.userBranches.controls[i].controls.userBranchRole.errors?.['required']" >*Campo requerido</small>
+										</div>
+									</td>
+									<td>
+										<div class="flex align-items-center justify-content-center gap-2">
+											<button pButton pRipple type="button"  (click)="removeRow('branches',userBranches,i)" pCancelEditableRow icon="pi pi-trash" class="p-button-rounded p-button-text p-button-danger"></button>                                                
+										</div>
+									</td>
+								</tr>
+							</ng-template>
+						</p-table>
+					</div>
+					
+				</div>
+				<div class="col-12 flex justify-content-end mt-4">
+					<button pButton pRipple class="p-button-outlined w-8rem mr-3"  label="Cancelar"  (click)="cancel($event)"></button>
+					<button pButton pRipple class="p-button-primary w-8rem"  label="Guardar" ></button>
+				</div>
+			</form>
+		</div>
+	</div>
+</div>

@@ -1,0 +1,59 @@
+<div class="flex h-screen">
+    <div class="w-full lg:w-4 h-full text-center px-6 py-6 flex flex-column justify-content-between">
+
+		<p-toast key="msg"></p-toast>
+		<p-dialog header="Dialog" [(visible)]="confirmDisplay" [modal]="true" showEffect="fade" [style]="{width: '30vw'}" [breakpoints]="{'960px': '75vw'}" [closable]="false" [draggable]="false">
+                <p class="line-height-3 m-0">
+                    {{content}}
+                </p>
+                <ng-template pTemplate="footer">
+                        <button pButton icon="pi pi-check" (click)="confirmation()" label="Ok" class="p-button-outlined"></button>
+                </ng-template>
+            </p-dialog>
+
+		<img [src]="'assets/layout/images/logo-fll.svg'" class="h-4rem mt-4" alt="diamond-layout" />
+
+        <div class="flex flex-column align-items-center gap-4">
+            <div class="mb-3">
+                <h2>Registro</h2>
+                <p>Crea una nueva cuenta</p>
+            </div>
+
+            <div class="flex flex-column gap-4">
+                <span class="p-input-icon-left w-full">
+                    <i class="pi pi-user"></i>
+                    <input id="username" type="text" [(ngModel)]="fullName" pInputText class="w-full md:w-25rem" placeholder="Nombre">
+                </span>
+                <span class="p-input-icon-left w-full">
+                    <i class="pi pi-envelope"></i>
+                    <input id="email" type="text" [(ngModel)]="email" pInputText class="w-full md:w-25rem" placeholder="Correo">
+                </span>
+                <span class="p-input-icon-left w-full">
+                    <i class="pi pi-lock"></i>
+                    <input id="password" type="password" [(ngModel)]="password" pInputText class="w-full md:w-25rem" placeholder="Contraseña">
+
+                </span>
+                <div class="flex flex-wrap">
+                    <p-checkbox name="checkbox" value="val" [(ngModel)]="confirmed" styleClass="mr-2" [binary]="true"></p-checkbox>
+                    <label for="checkbox" class="text-color font-semibold mr-2">He leído los</label>
+                    <a class="text-color-secondary font-semibold cursor-pointer hover:text-primary cursor-pointer">Términos y Condiciones</a>
+                </div>
+                <button pButton pRipple label="REGISTRAR" class="w-full mb-4" (click)="register()" ></button>
+                <span class="font-semibold text-color-secondary">¿Ya tienes una cuenta? <a [routerLink]="['/auth/login']" class="font-semibold cursor-pointer primary-color">Ingresa aquí</a></span>
+            </div>
+        </div>
+
+        <p class="text-color-secondary font-semibold">¿Necesitas ayuda?
+			<a class="text-primary hover:underline cursor-pointer font-medium">Haz click aquí</a>.
+		</p>
+    </div>
+    <div class="w-8 hidden lg:flex flex-column justify-content-between align-items-center px-6 py-6 bg-cover bg-norepeat" style="background-image: url('assets/demo/images/auth/bg-login.jpg')">
+        <div class="mt-auto mb-auto">
+            <span class="block text-white text-7xl font-semibold">Crea una cuenta en la <br/>aplicación <br/>de administración</span>
+            <span class="block text-white text-3xl mt-4">Al registrar tu cuenta te mandaremos un correo con un enlace para verificar tu cuenta, ese enlace tiene una vigencia de 24 horas. </span>
+        </div>
+    </div>
+</div>
+
+
+<app-config [minimal]="true"></app-config>

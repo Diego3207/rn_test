@@ -1,0 +1,150 @@
+<p-confirmDialog    key="dialogDelete"   [style]="{width: '50vw'}" rejectButtonStyleClass="p-button-outlined" ></p-confirmDialog>
+
+<p-dialog header="Motivo de rechazo" [(visible)]="visible" [modal]="true" [style]="{ width: '50vw' }" [draggable]="false" [resizable]="false">
+    <div class="col-12 md:col-12 justify-content-between">
+        <div class=" p-fluid">          
+            <form [formGroup]="form" >
+                <div class="field">
+                   <!--<span class="p-float-label">-->
+                        <!--<label  for="reason" class="col font-semibold">Motivo de rechazo</label>-->
+                        <textarea id="reason" rows="5" cols="30"   formControlName="quotationSaleReasonStatus" pInputTextarea></textarea>
+                   <!--</span> -->
+                    <div *ngIf="form.controls.quotationSaleReasonStatus.invalid">
+                            <small class="text-red-600 flex justify-content-end" *ngIf="form.controls.quotationSaleReasonStatus.errors?.['required']" >*Campo requerido</small>
+                            <small class="text-red-600 flex justify-content-end" *ngIf="form.controls.quotationSaleReasonStatus.errors?.['maxlength']" >*Longitud máxima 255</small>
+                    </div>
+                </div>
+            </form>
+            
+        </div>
+    </div>
+    <ng-template pTemplate="footer">
+        <p-button icon="pi pi-times" (click)="closeDialogReject()" label="cancelar" styleClass="p-button-outlined"></p-button>
+        <p-button icon="pi pi-check" (click)="rejectQuotation()" label="Guardar" styleClass="p-button-primary"></p-button>
+    </ng-template>
+</p-dialog>
+
+<p-confirmDialog    key="dialogAccept"   [style]="{width: '50vw'}" rejectButtonStyleClass="p-button-outlined" ></p-confirmDialog>
+
+<p-toast key="msg"></p-toast>
+<div class="grid">
+    <div class="col-12">
+        <div class="card px-6 py-6">
+            <p-toolbar styleClass="mb-4 gap-2">
+                <ng-template pTemplate="left">
+                    <div class="my-2">  
+                        <button pButton pRipple label="Agregar" icon="pi pi-plus" class="p-button-success  m-2" [routerLink]="['/quotationSales/add/']"></button>
+                        <button pButton pRipple label="Eliminar" icon="pi pi-trash" class="p-button-danger m-2" (click)="delete(1,null)" [disabled]="!selectedElements || !selectedElements.length"></button>
+                    </div> 
+                </ng-template>
+            </p-toolbar>
+
+            <p-table #dt 
+            [value]="quotations"  
+            [lazy]="true"
+            [resetPageOnSort]="false"
+            [multiSortMeta]="[{field: 'id', order: 1}]"
+            sortMode="multiple" 
+            (onLazyLoad)="load($event)" 
+            [lazyLoadOnInit]="true"
+            [paginator]="true" 
+            [totalRecords]="totalRows"
+            [rowsPerPageOptions]="[10,25,50]" 
+            [showCurrentPageReport]="true"
+            currentPageReportTemplate=" {{ getPageRange(page, limit, totalRows) }}" 
+            [(selection)]="selectedElements" selectionMode="multiple"
+            [responsive]="true" 
+            
+            [rows]="10" [rowHover]="true"  dataKey="id"  [breakpoint]="'760px'"  >
+             <!-- [breakpoint]="'760px'" [tableStyle]="{ 'min-width': '75rem' }"-->
+                <ng-template pTemplate="header" >
+                    <tr>
+                        <th style="width: 3rem">
+                            <p-tableHeaderCheckbox></p-tableHeaderCheckbox>
+                        </th>
+                        <th pSortableColumn="quotationSaleFolio"   >
+                            FOLIO<p-sortIcon field="quotationSaleFolio"  ></p-sortIcon>
+                        </th>
+                        <th pSortableColumn="quotationSaleDescription"   >
+                            DESCRIPCIÓN<p-sortIcon field="quotationSaleDescription"  ></p-sortIcon>
+                        </th>
+                        <th >
+                            CLIENTE 
+                        </th>
+                        <th >
+                            ASESOR 
+                        </th>
+                        <th pSortableColumn="createdAt"  >
+                            FECHA <p-sortIcon field="createdAt"></p-sortIcon>
+                        </th>
+                        <th pSortableColumn="quotationSaleStatus"  >
+                            ESTADO <p-sortIcon field="quotationSaleStatus"></p-sortIcon>
+                        </th>
+                        
+                        <!--<th pSortableColumn="createdAt"  >
+                            FECHA STATUS <p-sortIcon field="quotationSaleDateStatus"></p-sortIcon>
+                        </th>-->
+                        <th></th>
+                    </tr>
+                    <tr>
+                        <th >
+                        </th>
+                        <th [style]="{'min-width':'200px'}">
+                            <p-columnFilter type="text" field="quotationSaleFolio" [matchModeOptions]="matchModeOptionsText" ></p-columnFilter>
+                        </th>
+                        <th [style]="{'min-width':'200px'}">
+                            <p-columnFilter type="text" field="quotationSaleDescription" [matchModeOptions]="matchModeOptionsText" ></p-columnFilter>
+                        </th>
+                        <th [style]="{'min-width':'200px'}">
+                             <p-columnFilter type="text" field="quotationSaleCustomerId['costumerName']" [matchModeOptions]="matchModeOptionsText" ></p-columnFilter>
+                        </th>
+                        <th [style]="{'min-width':'200px'}">
+                            <p-columnFilter type="text" field="quotationSaleSalesmanId['userFullName']" [matchModeOptions]="matchModeOptionsText" ></p-columnFilter>
+                        </th>
+                        <th [style]="{'min-width':'200px'}">
+                            <p-columnFilter type="date" field="createdAt"  appendTo="body" [matchModeOptions]="matchModeOptionsDate" ></p-columnFilter>
+                        </th>
+                        <th [style]="{'min-width':'200px'}">
+                            <p-columnFilter type="text" field="quotationSaleStatus" [matchModeOptions]="matchModeOptionsText" ></p-columnFilter>
+                        </th>
+                       
+                    <!--<th>
+                            <p-columnFilter type="date" field="quotationSaleDateStatus"   [matchModeOptions]="matchModeOptionsDate" ></p-columnFilter>
+                        </th> -->
+                        <th></th>
+                    </tr> 
+                </ng-template>
+                <ng-template pTemplate="body" let-quotationSale>
+                    <tr>
+                        <td>
+                            <p-tableCheckbox [value]="quotationSale"></p-tableCheckbox>
+                        </td>
+                        <td>{{quotationSale.quotationSaleFolio}}</td> 
+                        <td>{{quotationSale.quotationSaleDescription}}</td> 
+                        <td>{{quotationSale.quotationSaleCustomerId['costumerName']}}</td>
+                        <td>{{quotationSale.quotationSaleSalesmanId['userFullName']}}</td>
+                        <td>{{quotationSale.createdAt| date: 'dd-MM-yyyy h:mm a '}}</td>
+                        <td>{{quotationSale.quotationSaleStatus}}</td>
+                        
+
+                       <!--<td>{{quotationSale.quotationSaleDateStatus| date}}</td> -->
+                    
+                        <td>
+                            <div class="flex">
+                                <button pButton pRipple pTooltip="Modificar cotización" icon="pi pi-pencil"  *ngIf="quotationSale.quotationSaleStatus == 'nueva' " class="p-button-rounded p-button-info  p-button-text p-mr-3" [routerLink]="['/quotationSales/edit/', quotationSale.id]"></button>
+                                <!--<button pTooltip="Procesar cotización" *ngIf="quotationSale.quotationSaleStatus != 'rechazada' " *ngIf="quotationSale.quotationSaleStatus != 'abastesida' " [routerLink]="['/quotationSale/process/', quotationSale.id]"  pButton pRipple icon="pi pi-shopping-bag" class="p-button-rounded p-button-success  p-button-text  p-mr-4" ></button>-->
+                                <button pButton pRipple pTooltip="Aceptar cotización"  *ngIf="quotationSale.quotationSaleStatus == 'nueva' " icon="pi pi-check-circle" class="p-button-rounded p-button-success  p-button-text p-mr-3" (click)="accept(quotationSale.id)" ></button>
+                                <button pButton pRipple pTooltip="Rechazar cotización"  *ngIf="quotationSale.quotationSaleStatus == 'nueva' " icon="pi pi-times-circle" class="p-button-rounded p-button-warning  p-button-text p-mr-3" (click)="openDialogReject(quotationSale.id)" ></button>
+                                <button pTooltip="Generar PDF" pButton pRipple icon="pi pi-file-pdf" class="p-button-rounded p-button-secondary  p-button-text  p-mr-4" (click)="importPDF(quotationSale)" ></button>
+                                <button pButton pRipple pTooltip="Eliminar cotización" icon="pi pi-trash" class="p-button-rounded p-button-danger  p-button-text" (click)="delete(2,quotationSale)" ></button>
+                                
+
+                            </div>
+                        </td>
+                    </tr>
+                </ng-template>
+            </p-table>
+        </div>
+    </div>
+</div>
+

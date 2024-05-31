@@ -1,0 +1,168 @@
+<div class="layout-dashboard">
+    <div class="grid">
+        <div class="col-12 flex align-items-center justify-content-between flex-wrap gap-5">
+            <div class="mx-auto sm:mx-0">
+                <span class="block text-xl font-semibold mb-2">Total Balance</span>
+                <div class="flex align-items-center">
+                    <span class="font-semibold text-2xl">$57,401<span class="text-color-secondary text-base">.26</span></span>
+                    <span class="text-green-700 border-round font-semibold ml-4 p-2 white-space-nowrap" [style.backgroundColor]="'rgba(77, 182, 172, 0.1)'">+$401 Today</span>
+                </div>
+            </div>
+            <div class="mx-auto sm:mx-0">
+                <button pButton pRipple type="button" icon="pi pi-calendar" class="p-button-rounded p-button-outlined p-button-secondary mr-1 sm:mr-3"></button>
+                <button pButton pRipple type="button" label="Add Quick Action" icon="pi pi-plus" class="p-button-rounded p-button-secondary" iconPos="right"></button>
+            </div>
+        </div>
+        <div class="col-12 md:col-4" *ngFor="let metric of metrics">
+            <div class="card flex w-full relative h-14rem overflow-hidden" (mouseenter)="show(btn)" (mouseleave)="hide(btn)">
+                <div class="flex w-full justify-content-between p-1">
+                    <div>
+                        <span class="block white-space-nowrap font-semibold">{{metric.title}}</span>
+                        <span class="block font-semibold text-xl mt-2 white-space-nowrap">$12,345<span class="text-color-secondary text-sm">.67</span></span>
+                    </div>
+                    <div class="text-right">
+                        <span class="block white-space-nowrap">{{metric.profit}} <i class="pi pi-arrow-up text-green-500"></i></span>
+                        <span class="block text-color-secondary mt-2 white-space-nowrap">vs last week</span>
+                    </div>
+                </div>
+                <img [src]="'assets/demo/images/dashboard/' + metric.image +'.svg'" class="absolute w-full bottom-0 left-0">
+                <button #btn pButton pRipple type="button" label="View Details" icon="pi pi-eye font-semibold" iconPos="right" class="p-button-rounded p-button-secondary font-semibold absolute hidden" style="border-radius: 50px; left: 36%; bottom: 10%;"></button>
+            </div>
+        </div>
+
+        <div class="h-full col-12 xl:col-8">
+            <div class="card">
+                <div class="flex flex-column md:flex-row md:justify-content-between align-items-center mb-2">
+                    <h4 class="white-space-nowrap">Recent Transactions</h4>
+                    <button pButton pRipple type="button" label="See All Transactions" class="p-button-text"></button>
+                </div>
+
+				<p-table [value]="transactions" [rows]="5" responsiveLayout="scroll">
+					<ng-template pTemplate="body" let-transaction>
+						<tr>
+							<td>
+                                <span class="white-space-nowrap flex w-3rem h-3rem align-items-center justify-content-center border-round-xl" [style.backgroundColor]="'rgba(77, 182, 172, 0.1)'">
+                                    <i class="text-2xl text-color" [ngClass]="transaction.icon"></i>
+                                </span>
+                            </td>
+							<td>
+                                <span class="white-space-nowrap block font-semibold">{{transaction.title}}</span>
+                                <span class="block text-color-secondary font-sm font-bold">{{transaction.date}}</span>
+                            </td>
+							<td>
+                                <span class="white-space-nowrap p-2 surface-ground font-semibold">{{transaction.badge}}</span>
+                            </td>
+							<td>
+								<span class="white-space-nowrap block font-semibold text-lg text-right" [ngClass]="{'text-green-700': transaction.received}">{{transaction.amount}}</span>
+							</td>
+							<td style="text-align: center">
+								<button pButton type="button" class="p-button-text p-button-secondary" icon="pi pi-ellipsis-v" (click)="menu.toggle($event)"></button>
+                                <p-menu #menu [popup]="true" [model]="items" appendTo="body"></p-menu>
+							</td>
+						</tr>
+					</ng-template>
+				</p-table>
+            </div>
+        </div>
+
+        <div class="h-full col-12 xl:col-4">
+            <div class="card h-full">
+                <h4 class="white-space-nowrap mb-2">Expenses</h4>
+                <div class="flex gap-3 w-full mt-4 align-items-center" *ngFor="let expense of expenses">
+                    <img [src]="'assets/demo/images/dashboard/'+ expense.image + '.svg'" [alt]="expense.title" class="w-3rem h-3rem">
+                    <div class="w-full">
+                        <div class="flex flex-wrap w-full justify-content-between align-items-center">
+                            <span class="font-semibold">{{expense.title}}</span>
+                            <div class="flex">
+                                <span class="font-semibold text-color-secondary pr-2 border-right-2 surface-border text-sm">{{expense.value}}%</span>
+
+                                <span class="font-semibold ml-2 text-sm">{{expense.amount}}</span>
+                            </div>
+                        </div>
+                        <div class="border-round w-full overflow-hidden mt-2" style="height:7px; background-color: var(--surface-border)">
+                            <div class="border-left-round h-full" [style.background]="expense.background" [style.width]="expense.value + '%'"></div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-12 xl:col-6">
+            <div class="card h-full">
+                <div class="flex align-items-center">
+                    <h4 class="white-space-nowrap mr-3 mb-0">Cards</h4>
+                    <span class="w-2rem h-2rem flex justify-content-center align-items-center border-circle text-green-700 font-semibold" [style.backgroundColor]="'rgba(77, 182, 172, 0.1)'">2</span>
+                </div>
+
+                <div class="grid flex-column sm:flex-row grid-nogutter border-round-xl mt-4">
+                    <div class="col-12 sm:col-6 p-4 border-round-top-xl sm:border-noround-right sm:border-round-left-xl justify-content-between" [style.backgroundColor]="'rgba(77, 182, 172, 0.1)'">
+                        <span class="block text-xl font-semibold">Total Credit</span>
+                        <span class="block text-3xl font-semibold mt-3">$12,345<span class="text-xl font-semibold" [style.color]="'rgba(77, 182, 172, 0.7)'">.67</span></span>
+                    </div>
+                    <div class="col-12 sm:col-6 p-4 border-round-bottom-xl sm:border-noround-left sm:border-round-right-xl flex align-items-center justify-content-center sm:justify-content-end" [style.backgroundColor]="'#4DB6AC'">
+                        <button pButton pRipple type="button" label="View Details" icon="pi pi-eye font-semibold" iconPos="right" class="p-button-rounded p-button-text p-button-success surface-section font-semibold" [style.color]="'#4DB6AC'"></button>
+                    </div>
+                </div>
+
+                <div class="grid grid-nogutter flex-column md:flex-row mt-4 gap-4">
+                    <div class="col">
+                        <div class="card flex flex-column justify-content-between h-17rem bg-no-repeat bg-cover border-round-2xl shadow-none relative p-4 overflow-hidden" style="background-image: url('assets/demo/images/dashboard/card-1.svg')">
+                            <div class="flex w-full align-items-center">
+                                <img src="assets/demo/images/dashboard/mastercard.svg" alt="mastercard" class="w-4rem mr-2">
+                                <span class="text-2xl font-semibold white-space-nowrap">Personal Card</span>
+                                <img src="assets/demo/images/dashboard/chip.svg" alt="mastercard" class="w-3rem ml-auto">
+                            </div>
+                            <div class="flex justify-content-between">
+                                <span class="font-semibold white-space-nowrap">1234 1234 1234 1234</span><span class="font-semibold"><span class="font-normal">Exp </span>12/23</span>
+                            </div>
+                            <div class="flex justify-content-between align-items-center mb-6">
+                                <span class="font-semibold">Limit</span>
+                                <div>
+                                    <span class="font-bold px-2 border-right-2" style="color: #4DB6AC; border-color: #4DB6AC;">100%</span>
+                                    <span class="font-bold ml-2"> $300.00 / $123.00</span>
+                                </div>
+                            </div>
+                            <span class="h-3rem w-8 absolute bottom-0 left-0" style="border-bottom-left-radius: 1rem; background-color:rgba(77, 182, 172, 1);"></span>
+                            <span class="h-3rem w-4 absolute bottom-0 right-0" style="border-bottom-right-radius: 1rem; background-color:rgba(77, 182, 172, 0.3)"></span>
+                        </div>
+                    </div>
+
+                    <div class="col">
+                        <div class="card flex flex-column justify-content-between h-17rem bg-no-repeat bg-cover border-round-2xl shadow-none relative p-4 overflow-hidden" style="background-image: url('assets/demo/images/dashboard/card-2.svg')">
+                            <div class="flex w-full align-items-center">
+                                <img src="assets/demo/images/dashboard/mastercard.svg" alt="mastercard" class="w-4rem mr-2">
+                                <span class="text-2xl font-semibold white-space-nowrap">Business Card</span>
+                                <img src="assets/demo/images/dashboard/chip.svg" alt="mastercard" class="w-3rem ml-auto">
+                            </div>
+
+                            <div class="flex justify-content-between">
+                                <span class="font-semibold white-space-nowrap">1234 1234 1234 1234</span><span class="font-semibold"><span class="font-normal">Exp </span>12/23</span>
+                            </div>
+                            <div class="flex justify-content-between align-items-center mb-6">
+                                <span class="font-semibold">Limit</span>
+                                <div>
+                                    <span class="font-bold px-2 border-right-2" style="color: #4DB6AC; border-color: #4DB6AC;">100%</span>
+                                    <span class="font-bold ml-2"> $300.00 / $123.00</span>
+                                </div>
+                            </div>
+                            <span class="h-3rem w-4 absolute bottom-0 left-0" style="border-bottom-left-radius: 1rem; background-color:#FAB710"></span>
+                            <span class="h-3rem w-8 absolute bottom-0 right-0" style="border-bottom-right-radius: 1rem; background-color:rgba(250, 183, 16, 0.3);"></span>
+                        </div>
+                    </div>
+                </div>
+
+                <a role="button" pRipple class="w-full border-1 border-dashed surface-border h-4rem border-round-xl mt-4 flex justify-content-center align-items-center cursor-pointer select-none">
+                    <i class="pi pi-plus-circle text-xl mr-2 text-color-secondary"></i>
+                    <span class="text-xl text-color-secondary">Add New Card</span>
+                </a>
+            </div>
+        </div>
+
+        <div class="col-12 xl:col-6">
+            <div class="card">
+                <h4>Savings</h4>
+                <p-chart type="bar" [data]="barData" [options]="barOptions" height="470px"></p-chart>
+            </div>
+        </div>
+    </div>
+</div>

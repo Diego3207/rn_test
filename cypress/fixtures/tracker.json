@@ -1,0 +1,18 @@
+{
+    "voltajeValida":"3.7",
+    "iccidValida":"8952020018590654697",
+    "planServicioValida":"ADDON",
+    "descripcionGPSValida":"1 gps",
+    "cotizacionGPSValida":"1 gps",
+    "proveedorGPSValida":"Concox",
+    "productoGPSValida":"qbit",
+    "serialGPSValida":"355087093979655",
+    "descripcionChipValida":"1 chip",
+    "cotizacionChipValida":"1 chip",
+    "proveedorChipValida":"Telcel",
+    "productoChipValida":"sim card",
+    "cantidadValida":"1",
+    "precioValida":"300",
+    "numeroValida":"5579131179",
+    "serialGPSInvalida":"355087093979655355087093"
+}

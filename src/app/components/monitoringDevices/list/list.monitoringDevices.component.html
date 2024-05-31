@@ -1,0 +1,107 @@
+<p-confirmDialog  #confirm [style]="{width: '50vw'}" rejectButtonStyleClass="p-button-outlined"></p-confirmDialog>
+<p-toast key="msg"></p-toast>
+
+<div class="grid">
+    <div class="col-12">
+        <div class="card px-6 py-6">
+            <!--<p-toast></p-toast> -->
+            <p-toolbar styleClass="mb-4">
+                <ng-template pTemplate="left">
+                    <div class="my-2">
+                        <button pButton pRipple label="Agregar" icon="pi pi-plus" class="p-button-success mr-2" [routerLink]="['/monitoringDevices/add/']"></button>
+                        <button pButton pRipple label="Eliminar" icon="pi pi-trash" class="p-button-danger" (click)="delete(1,null)" [disabled]="!selectedMonitoringDevices || !selectedMonitoringDevices.length"></button>
+                    </div>
+                </ng-template>
+            </p-toolbar>
+
+            <p-table #dt 
+            [value]="monitoringDevices"  
+            [lazy]="true"
+            [resetPageOnSort]="false"
+            [multiSortMeta]="[{field: 'id', order: 1}]"
+            sortMode="multiple" 
+            (onLazyLoad)="load($event)" 
+            [lazyLoadOnInit]="true"
+            [paginator]="true" 
+            [totalRecords]="totalRows"
+            [rowsPerPageOptions]="[10,25,50]" 
+            [loading]="loading"    
+            [showCurrentPageReport]="true"
+            currentPageReportTemplate="{{ getPageRange(page, limit, totalRows) }}"
+            [(selection)]="selectedMonitoringDevices" selectionMode="multiple"
+            [rows]="10" [rowHover]="true"  dataKey="id" responsiveLayout="scroll" [breakpoint]="'760px'" [tableStyle]="{'minx-width': '50rem'}">
+                
+                <ng-template pTemplate="header">
+                    <tr>
+                        <th style="width: 3rem">
+                            <p-tableHeaderCheckbox></p-tableHeaderCheckbox>
+                        </th>
+                        <th pSortableColumn="id">
+                            Id <p-sortIcon field="id"></p-sortIcon>
+                        </th>
+                        <th pSortableColumn="monitoringDeviceName">
+                           Nombre <p-sortIcon field="monitoringDeviceName"></p-sortIcon>
+                        </th>
+                        <th pSortableColumn="monitoringDeviceType">
+                            Tipo <p-sortIcon field="monitoringDeviceType"></p-sortIcon>
+                        </th>
+                        <th pSortableColumn="monitoringDeviceCostumerId">
+                            Cliente <p-sortIcon field="monitoringDeviceCostumerId"></p-sortIcon>
+                        </th>
+                        <th pSortableColumn="monitoringDeviceProvider">
+                            Provedor Interno <p-sortIcon field="monitoringDeviceProvider"></p-sortIcon>
+                        </th>
+                        <th>
+                            <!-- Espacio para que se vea bien las columnas -->
+                        </th>
+                    </tr>
+                   <tr>
+                        <th>
+                            <!-- Espacio para que se vea bien las columnas -->
+                        </th>
+                        <th>
+                            <p-columnFilter type="numeric"  [showButtons]="false" field="id"  [matchModeOptions]="matchModeOptionsNumber" > </p-columnFilter>
+                        </th>
+                        <th>
+                            <p-columnFilter type="text" field="monitoringDeviceCostumerId['costumerName']" [matchModeOptions]="matchModeOptionsText" ></p-columnFilter>
+                        </th>
+                        <th>
+                            <p-columnFilter type="text" field="monitoringDeviceType" [matchModeOptions]="matchModeOptionsText" ></p-columnFilter>
+                        </th>
+                        <th>
+                            <p-columnFilter type="text" field="monitoringDeviceCostumerId" [matchModeOptions]="matchModeOptionsText" ></p-columnFilter>
+                        </th>
+                        <th>
+                            <p-columnFilter type="text" field="monitoringDeviceProvider" [matchModeOptions]="matchModeOptionsText" ></p-columnFilter>
+                        </th>
+                        <th>
+                            <!-- Espacio para que se vea bien las columnas -->
+                        </th>
+                    </tr> 
+                </ng-template>
+
+                <ng-template pTemplate="body" let-monitoringDevice let-expanded="expanded"> 
+                    <tr>
+                        <td>
+                            <p-tableCheckbox [value]="monitoringDevice"></p-tableCheckbox>
+                        </td>
+                        <td>{{monitoringDevice.id}}</td>
+                        <td>{{monitoringDevice.monitoringDeviceName}}</td>
+                        <td>{{monitoringDevice.monitoringDeviceType}}</td>
+                        <td>{{monitoringDevice.monitoringDeviceCostumerId['costumerName']}}</td>
+                        <td>
+                            <i class="pi" [ngClass]="{ 'text-green-500 pi-check-circle': monitoringDevice.monitoringDeviceProvider == true, 'text-red-500 pi-times-circle': monitoringDevice.monitoringDeviceProvider == false}"></i>
+                        </td>
+                        <td>
+                            <div class="flex">
+                                <button pTooltip="Editar Dispositivo" pButton pRipple icon="pi pi-pencil" class="p-button-rounded p-button-info p-button-text" [routerLink]="['/monitoringDevices/edit/', monitoringDevice.id]"></button>
+                                <button pTooltip="Eliminar Dispositivo" pButton pRipple icon="pi pi-trash" class="p-button-rounded p-button-danger p-button-text" (click)="delete(2,monitoringDevice)"></button>
+                            </div>
+                        </td>
+                    </tr>
+                </ng-template>
+            </p-table>
+        </div>
+    </div>
+</div>
+

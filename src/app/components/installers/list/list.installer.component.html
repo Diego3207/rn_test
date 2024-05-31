@@ -1,0 +1,98 @@
+<p-confirmDialog  #confirm [style]="{width: '50vw'}" rejectButtonStyleClass="p-button-outlined"></p-confirmDialog>
+<p-toast key="msg"></p-toast>
+
+<div class="grid">
+    <div class="col-12">
+        <div class="card px-6 py-6">
+            <!--<p-toast></p-toast> -->
+            <p-toolbar styleClass="mb-4">
+                <ng-template pTemplate="left">
+                    <div class="my-2">
+                        <button pButton pRipple label="Agregar" icon="pi pi-plus" class="p-button-success mr-2" [routerLink]="['/installers/add/']"></button>
+                        <button pButton pRipple label="Eliminar" icon="pi pi-trash" class="p-button-danger" (click)="delete(1,null)" [disabled]="!selectedInstallers || !selectedInstallers.length"></button>
+                    </div>
+                </ng-template>
+            </p-toolbar>
+
+            <p-table #dt 
+            [value]="installers"  
+            [lazy]="true"
+            [resetPageOnSort]="false"
+            [multiSortMeta]="[{field: 'id', order: 1}]"
+            sortMode="multiple" 
+            (onLazyLoad)="load($event)" 
+            [lazyLoadOnInit]="true"
+            [paginator]="true" 
+            [totalRecords]="totalRows"
+            [rowsPerPageOptions]="[10,25,50]" 
+            [loading]="loading"    
+            [showCurrentPageReport]="true"
+            currentPageReportTemplate="{{ getPageRange(page, limit, totalRows) }}"
+            [(selection)]="selectedInstallers" selectionMode="multiple"
+            [rows]="10" [rowHover]="true"  dataKey="id" responsiveLayout="scroll" [breakpoint]="'760px'" [tableStyle]="{'minx-width': '50rem'}">
+                
+                <ng-template pTemplate="header">
+                    <tr>
+                        <th style="width: 3rem">
+                            <p-tableHeaderCheckbox></p-tableHeaderCheckbox>
+                        </th>
+                        <th pSortableColumn="id">
+                            ID <p-sortIcon field="id"></p-sortIcon>
+                        </th>
+                        <th pSortableColumn="installerName">
+                            NOMBRE <p-sortIcon field="installerName"></p-sortIcon>
+                        </th>
+                        <th pSortableColumn="installerAddress">
+                            CIUDAD <p-sortIcon field="installerAddress"></p-sortIcon>
+                        </th>
+                        <th pSortableColumn="installerPhone">
+                            TELÉFONO <p-sortIcon field="installerPhone"></p-sortIcon>
+                        </th>
+                        <th>
+                            <!-- Espacio para que se vea bien las columnas -->
+                        </th>
+                    </tr>
+                   <tr>
+                        <th>
+                            <!-- Espacio para que se vea bien las columnas -->
+                        </th>
+                        <th>
+                            <p-columnFilter type="numeric"  [showButtons]="false" field="id"  [matchModeOptions]="matchModeOptionsNumber" > </p-columnFilter>
+                        </th>
+                        <th>
+                            <p-columnFilter type="text" field="installerName" [matchModeOptions]="matchModeOptionsText" ></p-columnFilter>
+                        </th>
+                        <th>
+                            <p-columnFilter type="text" field="installerAddress" [matchModeOptions]="matchModeOptionsText" ></p-columnFilter>
+                        </th>
+                        <th>
+                            <p-columnFilter type="text" field="installerPhone" [matchModeOptions]="matchModeOptionsText" ></p-columnFilter>
+                        </th>
+                        <th>
+                            <!-- Espacio para que se vea bien las columnas -->
+                        </th>
+                    </tr> 
+                </ng-template>
+
+                <ng-template pTemplate="body" let-installer let-expanded="expanded"> 
+                    <tr>
+                        <td>
+                            <p-tableCheckbox [value]="installer"></p-tableCheckbox>
+                        </td>
+                        <td>{{installer.id}}</td>
+                        <td>{{installer.installerName}}</td>
+                        <td>{{installer.installerAddress}}</td>
+                        <td>{{installer.installerPhone}}</td>
+                        <td>
+                            <div class="flex">
+                                <button pTooltip="Editar Instalador" pButton pRipple icon="pi pi-pencil" class="p-button-rounded p-button-info p-button-text" [routerLink]="['/installers/edit/', installer.id]"></button>
+                                <button pTooltip="Eliminar Instalador" pButton pRipple icon="pi pi-trash" class="p-button-rounded p-button-danger p-button-text" (click)="delete(2,installer)"></button>
+                            </div>
+                        </td>
+                    </tr>
+                </ng-template>
+            </p-table>
+        </div>
+    </div>
+</div>
+

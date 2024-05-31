@@ -1,0 +1,67 @@
+Tabla supplies
+AFTER INSERT
+CREATE DEFINER=`rn_admin`@`%` TRIGGER `supplies_AFTER_INSERT` AFTER INSERT ON `supplies` FOR EACH ROW BEGIN
+ declare quantityProducts  integer default 0;
+ declare quantitySupplies  integer default 0;
+ 
+ SELECT 
+  SUM(purchase_order_product_quantity)
+ INTO quantityProducts FROM
+  purchase_order_products
+ WHERE
+  purchase_order_product_purchase_order_id = new.supply_purchase_order_id;
+ 
+ SELECT COUNT(supply_purchase_order_id)
+  INTO quantitySupplies FROM
+            supplies
+ WHERE
+  supply_purchase_order_id = new.supply_purchase_order_id;
+    
+    IF (quantitySupplies = quantityProducts ) THEN
+  UPDATE purchase_orders SET purchase_order_status ='abastecida' WHERE purchase_order_id = new.supply_purchase_order_id;       
+ ELSEIF (quantitySupplies < quantityProducts ) THEN
+  UPDATE purchase_orders SET purchase_order_status ='pendiente' WHERE purchase_order_id = new.supply_purchase_order_id;       
+    END IF;
+END
+
+AFTER UPDATE
+CREATE DEFINER=`rn_admin`@`%` TRIGGER `supplies_AFTER_UPDATE` AFTER UPDATE ON `supplies` FOR EACH ROW BEGIN
+declare quantityProducts  integer default 0;
+declare quantitySupplies  integer default 0;
+declare quotationSaleId  integer default 0;
+
+SELECT 
+  sale_order_quotation_sale_id
+ INTO quotationSaleId FROM
+  sale_orders
+ WHERE
+  sale_order_id = new.supply_sale_order_id;
+  
+SELECT 
+SUM(quotation_sale_product_quantity)
+INTO quantityProducts FROM
+quotation_sale_products
+WHERE
+quotation_sale_product_quotation_sale_id = quotationSaleId;
+
+SELECT COUNT(supply_sale_order_id)
+INTO quantitySupplies FROM
+supplies
+WHERE
+supply_sale_order_id = new.supply_sale_order_id;
+
+IF (quantitySupplies = quantityProducts ) THEN
+UPDATE sale_orders SET sale_order_status ='terminada' WHERE sale_order_id = new.supply_sale_order_id;       
+ELSEIF (quantitySupplies < quantityProducts ) THEN
+UPDATE sale_orders SET sale_order_status ='pendiente' WHERE sale_order_id = new.supply_sale_order_id;       
+END IF;
+END
+
+BEFORE DELETE
+CREATE DEFINER=`rn_admin`@`%` TRIGGER `supplies_BEFORE_DELETE` BEFORE DELETE ON `supplies` FOR EACH ROW BEGIN
+	UPDATE purchase_orders SET purchase_order_quotation_purchase_id = 0 WHERE purchase_order_quotation_purchase_id = OLD.supply_purchase_order_id;
+	UPDATE quotation_purchases SET quotation_purchase_status = 'nueva' WHERE quotation_purchase_id = 
+    (select purchase_order_quotation_purchase_id from purchase_orders where purchase_order_quotation_purchase_id = OLD.supply_purchase_order_id);
+	INSERT INTO deleted_supplies(deleted_supply_date, deleted_supply_purchase_order_id , deleted_supply_supply_key , deleted_supply_active , deleted_supply_user_id)
+	VALUES(NOW(), OLD.supply_purchase_order_id, OLD.supply_key, 1, OLD.supply_userSuppliedId);
+END

@@ -1,0 +1,140 @@
+<style>
+	.error-box {
+		border: 1px solid red;
+	}
+</style>    
+    <p-toast key="msg"></p-toast>
+    <div class="grid justify-content-center">
+        <div class="col-12 md:col-6 justify-content-between">
+            <div class="card p-fluid">
+                <form [formGroup]="form" (ngSubmit)="onSubmit()">
+                    <div class="field">
+                        <label for="brand" class="font-semibold">Marca</label>
+                        <input pInputText id="brand" maxlength="101" formControlName="productBrand" autofocus/>
+                        <div *ngIf="form.controls.productBrand.invalid">
+                        <small class="text-red-600 flex justify-content-end" *ngIf="form.controls.productBrand.errors?.['required']" >*Campo requerido</small>
+                        <small class="text-red-600 flex justify-content-end" *ngIf="form.controls.productBrand.errors?.['maxlength']" >*Longitud máxima 16</small>
+                        </div>
+                    </div>
+                    <div class="field">
+                        <label for="model" class="font-semibold">Modelo</label>
+                        <input pInputText id="model" maxlength="101" formControlName="productModel" autofocus/>
+                        <div *ngIf="form.controls.productModel.invalid">
+                        <small class="text-red-600 flex justify-content-end" *ngIf="form.controls.productModel.errors?.['required']" >*Campo requerido</small>
+                        <small class="text-red-600 flex justify-content-end" *ngIf="form.controls.productModel.errors?.['maxlength']" >*Longitud máxima 16</small>
+                        </div>
+                    </div>
+                    <div class="field">
+                        <label for="description" class="font-semibold">Descripción</label>
+                        <input pInputText id="description" formControlName="productDescription" autofocus />
+                        <div *ngIf="form.controls.productDescription.invalid">
+                        <small class="text-red-600 flex justify-content-end" *ngIf="form.controls.productDescription.errors?.['required']" >*Campo requerido</small>
+                        </div>
+                    </div> 
+                    <div class="field">
+                        <label class="font-semibold">Categoría</label>
+                        <p-dropdown [options]="listCategory" appendTo="body" [filter]="true" formControlName="productCategoryId" filterBy="label" [showClear]="true" placeholder="Selecciona uno" optionValue="value" optionLabel="label"  ></p-dropdown>
+                        <div *ngIf="form.controls.productCategoryId.invalid">
+                            <small class="text-red-600 flex justify-content-end" *ngIf="form.controls.productCategoryId.errors?.['required']" >*Campo requerido</small>
+                        </div>
+                    </div>
+                    <div class="field">
+                        <label for="price" class="font-semibold">Precio</label>
+                        <p-inputNumber 
+                            mode="currency" 
+                            currency="USD" 
+                            locale="en-US" 
+                            [minFractionDigits]="2" 
+                            inputId="locale-us"  
+                            id="price" 
+                            formControlName="productPrice">
+                        </p-inputNumber>  
+                        <div *ngIf="form.controls.productPrice.invalid">
+                            <small class="text-red-600 flex justify-content-end" *ngIf="form.controls.productPrice.errors?.['required']">*Campo requerido</small>
+                            <small class="text-red-600 flex justify-content-end" *ngIf="form.controls.productPrice.errors?.['min']" >*Cantidad mínima es $0.00</small>
+                            <small class="text-red-600 flex justify-content-end" *ngIf="form.controls.productPrice.errors?.['max']" >*Cantidad máxima es $9,999,999,999.99</small>
+                        </div>	 
+                    </div>
+
+                    <div class="grid field"> 
+                        <div class="col-2">
+                            <p class="font-semibold">Garantía para el cliente:</p>  
+                        </div>
+                        <div class="col-2"> 
+                            <p-inputNumber 
+                            inputId="locale-us"  
+                            mode="decimal" 
+                            locale="en-US" 
+                            placeholder="0"
+                            formControlName="productGuaranteeUnit">
+                            </p-inputNumber> 
+                            <div *ngIf="form.controls.productGuaranteeUnit.invalid">
+                                <small class="text-red-600 flex justify-content-end" *ngIf="form.controls.productGuaranteeUnit.errors?.['max']" >*Cantidad máxima es 365</small>
+                                <small class="text-red-600 flex justify-content-end" *ngIf="form.controls.productGuaranteeUnit.errors?.['min']" >*Cantidad mínima es 1</small>
+                            </div>
+                        </div>
+                        <div class="col-4">
+                            <p-dropdown 
+                                formControlName="productGuaranteeUnitMeasure" 
+                                [options]="unitMeasures" 
+                                placeholder="Temporalidad"
+                                appendTo="body"
+                                [showClear]="true"  
+                                optionLabel="name" 
+                                optionValue="value">
+                            </p-dropdown>
+                            <div *ngIf="form.controls.productGuaranteeUnitMeasure.invalid">
+                                <small class="text-red-600 flex justify-content-end" *ngIf="form.controls.productGuaranteeUnitMeasure.errors?.['maxlength']" >*Longitud máxima 100 </small>
+                            </div>
+                        </div>
+                        <div class="col-4">
+                            <input pInputText type="text" formControlName="productGuaranteeSpecifications">
+                            <div *ngIf="form.controls.productGuaranteeSpecifications.invalid">
+                                <small class="text-red-600 flex justify-content-end" *ngIf="form.controls.productGuaranteeSpecifications.errors?.['maxlength']" >*Longitud máxima 250 </small>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="field">
+                        <label for="imag" class="font-semibold">Documentación</label>
+                        <p-fileUpload #fileUpload 
+                        name="demo[]" 
+                        (onUpload)="onUpload($event)"
+                        [multiple]="true" 
+                        accept=".xlsx,.pdf,.csv,.xls,image/*"
+                        (onSelect)="onUpload($event)"
+                        [showUploadButton]="false" 
+                        [showCancelButton]="false" 
+                        [maxFileSize]=100000000>
+                        </p-fileUpload>
+                    </div>
+
+                    <div class=" field flex flex-wrap gap-3 mt-3">
+                        <label class="font-semibold">Tipo de activo</label>
+                        
+                        <div class="flex align-items-center">
+                            <p-radioButton  value="fijo" [ngClass]="{'ng-invalid ng-dirty' : form.controls.productAsset.errors }" formControlName="productAsset" inputId="fijo"></p-radioButton>
+                            <label for="fijo" class="ml-2">Fijo</label>
+                        </div>
+                        <div *ngIf="form.controls.productAsset.invalid">
+                        <small class="text-red-600 flex justify-content-end" *ngIf="form.controls.productAsset.errors?.['required']" >*Campo requerido</small>
+                        </div>
+    
+                        <div class="flex align-items-center">
+                            <p-radioButton  value="circulante" [ngClass]="{'ng-invalid ng-dirty' : form.controls.productAsset.errors}"  formControlName="productAsset" inputId="circulante"></p-radioButton>
+                            <label for="circulante" class=" ml-2">Circulante</label>
+                        </div>
+                        <div *ngIf="form.controls.productAsset.invalid">
+                        <small class="text-red-600 flex justify-content-end" *ngIf="form.controls.productAsset.errors?.['required']" >*Campo requerido</small>
+                        </div>
+    
+                    </div>
+                    
+                    <div class="col-12 flex justify-content-end mt-4">
+                        <button pButton pRipple class="p-button-outlined w-8rem mr-3"  label="Cancelar" (click)="cancel($event)" ></button>
+                        <button pButton pRipple class="p-button-primary w-8rem"  label="Guardar" ></button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>

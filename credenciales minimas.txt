@@ -1,0 +1,184 @@
+/*NUEVO MÓDULOS
+1.- Añadir módulos
+
+*/
+
+
+/*user_branches   no se deshabilita al deshabilitat al usuario, se tiene que deshabilitar tambien
+se tiene que asignar un rol de usuario basico cuando cre un nuevo usuario
+se necesita una pantalla para modificar al usuario
+se necesita modificacion del modulo de 
+*/
+
+
+/* usuario super administrador cotraseña 123456 */
+INSERT INTO `users` VALUES 
+(1689615188906,1689615188906,1,'user_img/no-image.png','Administrador','admin@reportnow.com.mx','confirmed','2QrESOWeeQLyWei4HrNBtA',1689701588905,'$2a$10$8GzvretEtEh8r4ioJhuHheXYLidztxFi5l97e1ysWqQBuVh6qsSL2','',0,1);
+
+/*sucursal principal */
+INSERT INTO `branches` VALUES 
+(1689981856526,1689981856526,1,1,'ReportNow');
+
+/*modulos del sistema*/
+INSERT INTO `modules` VALUES 
+(1689981908457,1689981908457,1,'dashboards','Módulo de destino inicial',1),
+(1689981908457,1689981908457,2,'branches','Sucursales a nivel lógico del sistema',1),
+(1689981908457,1689981908457,3,'modules','Módulos del sistema',1),
+(1689981908457,1689981908457,4,'roles','Definición de perfiles y permisos en cada modulo',1),
+(1689981908457,1689981908457,5,'users','Control de usuarios',1),
+(1689981908457,1689981908457,6,'service','Catálogo de servicios',1),
+(1689981908457,1689981908457,7,'product','Catálogo de productos',1),
+(1689981908457,1689981908457,8,'package','Paquetes de productos y servicios ',1),
+(1689981908457,1689981908457,9,'databank','Catálogo de cuentas bancarias',1),
+(1689981908457,1689981908457,10,'location','Catálogo de ubicaciones físicas',1),
+(1689981908457,1689981908457,11,'provider','Catálogo de proveedores',1),
+(1689981908457,1689981908457,12,'costumer','Catálogo de clientes/prospectos',1),
+(1689981908457,1689981908457,13,'quotationPurchases','Cotizaciones para compra',1),
+(1689981908457,1689981908457,14,'quotationSales','Cotizaciones para venta',1),
+(1689981908457,1689981908457,15,'purchaseOrders','Órdenes de compra',1),
+(1689981908457,1689981908457,16,'stocktaking','Inventario',1),
+(1689981908457,1689981908457,17,'trackerInstallations','Catálogo de instaladores',1),
+(1689981908457,1689981908457,18,'vehicles','Catálogo de instaladores',1),
+(1689981908457,1689981908457,19,'trackers','Catálogo de vehiculos',1),
+(1689981908457,1689981908457,20,'installers','Catálogo de instaladores',1),
+(1689981908457,1689981908457,21,'simCards','Catálogo de lineas',1),
+(1689981908457,1689981908457,22,'saleOrders','Ordenes de venta',1),
+(1689981908457,1689981908457,23,'supply','Modulo de inventario',1),
+(1689981908457,1689981908457,24,'trackerInstallations','Instalaciones',1),
+(1689981908457,1689981908457,25,'saleOrders','Orden de venta',1),
+(1711561822856,1711561822856,26,'monitoringDevices',"Dispositivos de monitoreo",1),
+(1711561834699,1711561834699,27,'tickets',"Tickets de monitoreo",1),
+(1711561857476,1711561857476,28,'incidences','Incidencias',1),
+(1711561868446,1711561868446,29,'directory','Directorio',1);
+
+
+/*roles del sistema*/
+INSERT INTO `roles` VALUES 
+(1689982038119,1689982038119,1,'Super Administrador',1),
+(1690031752271,1690031752271,2,'Usuario RN',1);
+
+/*permisos de cada rol*/
+INSERT INTO `role_rights` VALUES 
+(1689981908457,1689981908457,1,1,1,1,1,1,1,1,1),
+(1689981908457,1689981908457,2,1,1,1,1,1,1,1,2),
+(1689981908457,1689981908457,3,1,1,1,1,1,1,1,3),
+(1689981908457,1689981908457,4,1,1,1,1,1,1,1,4),
+(1689981908457,1689981908457,5,1,1,1,1,1,1,1,5),
+(1689981908457,1689981908457,6,1,1,1,1,1,1,1,6),
+(1689981908457,1689981908457,7,1,1,1,1,1,1,1,7),
+(1689981908457,1689981908457,8,1,1,1,1,1,1,1,8),
+(1689981908457,1689981908457,9,1,1,1,1,1,1,1,9),
+(1689981908457,1689981908457,10,1,1,1,1,1,1,1,10),
+(1689981908457,1689981908457,11,1,1,1,1,1,1,1,11),
+(1689981908457,1689981908457,12,1,1,1,1,1,1,1,12),
+(1689981908457,1689981908457,13,1,1,1,1,1,1,1,13),
+(1689981908457,1689981908457,14,1,1,1,1,1,1,1,14),
+(1689981908457,1689981908457,15,1,1,1,1,1,1,1,15),
+(1689981908457,1689981908457,16,1,1,1,1,1,1,1,16),
+(1689981908457,1689981908457,17,1,1,0,1,1,1,2,1),
+(1689981908457,1689981908457,18,1,1,0,1,1,1,2,6),
+(1689981908457,1689981908457,19,1,1,0,1,1,1,2,7),
+(1689981908457,1689981908457,20,1,1,0,1,1,1,2,8),
+(1689981908457,1689981908457,21,1,1,0,1,1,1,2,9),
+(1689981908457,1689981908457,22,1,1,0,1,1,1,2,10),
+(1689981908457,1689981908457,23,1,1,0,1,1,1,2,11),
+(1689981908457,1689981908457,24,1,1,0,1,1,1,2,12),
+(1689981908457,1689981908457,25,1,1,0,1,1,1,2,13),
+(1689981908457,1689981908457,26,1,1,0,1,1,1,2,14),
+(1689981908457,1689981908457,27,1,1,0,1,1,1,2,15),
+(1689981908457,1689981908457,28,1,1,0,1,1,1,2,16),
+(1711562106473,1711562106473,29,1,1,1,1,1,1,1,22),
+(1711562106478,1711562106478,30,1,1,1,1,1,1,1,24),
+(1711562106482,1711562106482,31,1,1,1,1,1,1,1,18),
+(1711562106486,1711562106486,32,1,1,1,1,1,1,1,19),
+(1711562106492,1711562106492,33,1,1,1,1,1,1,1,20),
+(1711562106498,1711562106498,34,1,1,1,1,1,1,1,21),
+(1711562106535,1711562106535,35,1,1,1,1,1,1,1,23),
+(1711562106541,1711562106541,36,1,1,1,1,1,1,1,26),
+(1711562106544,1711562106544,37,1,1,1,1,1,1,1,27),
+(1711562106549,1711562106549,38,1,1,1,1,1,1,1,28),
+(1711562106552,1711562106552,39,1,1,1,1,1,1,1,29);
+
+
+/* asocia rol / sucursal al usuario */
+INSERT INTO `user_branches` VALUES 
+(1689982061358,1689982061358,1,1,1,1,1);
+
+
+
+/*tablas por insertar extras*/
+
+/*product_category*/
+INSERT INTO `product_categories` VALUES 
+(1689981908457,1689981908457,1,'Gps',1),
+(1689981908457,1689981908457,2,'SIM Card',1);
+
+/*cfdi*/
+INSERT INTO `cfdi` VALUES 
+(1689981908457,1689981908457,1,"G01",'Adquisision de bienes',1);
+
+/*pay_ways*/
+INSERT INTO `pay_ways` VALUES 
+(1689981908457,1689981908457,1,"01",'Efectivo',1);
+
+/*pay_methods*/
+INSERT INTO `pay_methods` VALUES 
+(1689981908457,1689981908457,1,"PPU",'Pago en una sola exhibicion',1);
+
+insert into costumers values 
+(1713394772682,1713394772682,1,'MATTEL','MATTEL','DFDF3838','C. Mar de Bering 2014, Lomas del Country, 44620 Guadalajara, Jal., México','www.mattel.com','Empresa',1,1);
+
+insert into dependency_categories values
+(NULL,NULL,1,'Dependencias Estatales y Federales',1),
+(NULL,NULL,2,'Protección Civil y Bomberos Municipales',1),
+(NULL,NULL,3,'Servicios medicos Municipales (Cruz Verde)',1),
+(NULL,NULL,4,'Seguridad Publica Municipales',1),
+(NULL,NULL,5,'Personal Report Now',1),
+(NULL,NULL,6,'Clientes',1);
+
+
+insert into quotation_sale_commercial_terms values
+(1700779209,1700779209,1,'EQUIPO GPS FIJO – PLAN ANUAL','Condiciones comerciales:
+<ul>
+	<li>Agregar 16% de IVA a todos los precios.</li>
+	<li>Posteriormente a la contratación y pago inicial, únicamente se pagaría el servicio integral de monitoreo de manera anual. </li>
+	<li>Plazo mínimo de contratación 12 meses.</li>
+	<li>Para la contratación es necesario cubrir costo de instalación, el costo del equipo y el pago por servicio anual. </li>
+	<li>Precio de servicio en zona metropolitana de Guadalajara, instalaciones foráneas tienen costo extra. </li>
+	<li>Garantía en equipos contra defectos de fabricación de 12 meses.</li>
+	<li>Existe penalización en caso de que las unidades no se encuentren en el lugar y a la hora programada para instalación.</li>
+	<li>El tiempo de instalación y entrega será acordada con el cliente.</li>
+</ul>',1);
+
+insert into providers value
+(1716414596567,1716414596567,1,'Concox','Mexicana','Minería',1),
+(1716416650202,1716416650202,2,'Telcel','Mexicana','Minería',1);
+
+insert into products value
+(1716311578288,1716311578288,1,"Telcel","sim card","N/A",2000.00,36,"dia","Defectos de fabricación","circulante",1,2),
+(1716414276362,1716414276362,2,"Concox","qbit","N/A",2000.00,36,"dia","Defectos de fabricación","circulante",1,2);
+
+insert into services value
+(1716491236412,1716491236412,1,"Material e instalación",100,"dia",1500.00,1);
+
+insert into packages value
+(1716508097215,1716508097215,1,"Paquete Telcel",1);
+
+insert into providers value
+(1716508328241,1716508328241,3,"REPORTNOW","MEXICANA","Minería",1);
+
+insert into provider_services value
+(1716591506934,1716591506934,1,1,"año",1,1,3,1);
+
+insert into provider_products value
+(1716508612942,1716591506929,1,1,"año",1,1,3,1),
+(1716591506932,1716591506932,2,1,"año",1,1,3,2);
+
+insert into provider_locations value
+(1716508612937,1716591506927,1,"sdf","R. Guilherme - Costa e Silva, Joinville - SC, 89218-501, Brasil",1,3);
+
+insert into provider_contacts value
+(1716508612933,1716591506923,1,"df","df","diego.mercado@reportnow.com.mx",1,3);
+
+insert into locations value
+(1717175575369,1717175575369,1,"Oficina","México",000-000-00-00,23.6345005,-102.5527878,1);

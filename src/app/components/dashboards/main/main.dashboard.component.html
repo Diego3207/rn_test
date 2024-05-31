@@ -1,0 +1,79 @@
+<div class="layout-dashboard">
+
+    <div class="grid">
+        <div class="col-12 lg:col-6">
+            <div class="card">
+                <h4></h4>
+                <p>ESTATUS DE PRODUCTOS</p>
+                <div class="flex justify-content-center align-items-center">
+                    <p-chart type="pie" [data]="chartSupplyStatus" [options]="chartOption" [style]="{'width': '50%'}"></p-chart>
+                </div>
+            </div>
+        </div>
+        <div class="col-12 lg:col-6">
+            <div class="card">
+                <h4></h4>
+                <p>CATEGORÍA DE PRODUCTOS</p>
+                <div class="flex justify-content-center align-items-center">
+                    <p-chart type="pie" [data]="chartCategory" [options]="chartOption" [style]="{'width': '50%'}"></p-chart>
+                </div>
+            </div>
+        </div>
+        <!--<div class="col-12 lg:col-4">
+            <div class="card">
+                <h4></h4>
+                <p>---</p>
+                <div class="flex justify-content-center align-items-center">
+                    <p-chart type="pie" [data]="xChart" [options]="chartOption" [style]="{'width': '100%'}"></p-chart>
+                </div>
+            </div>
+        </div>-->
+    </div>
+    <div class="grid">
+        <div class="col-12 lg:col-12">
+            <div class="card">
+                <h4></h4>
+                <p>PRODUCTOS DISPONIBLES</p>
+                <div class="flex justify-content-center align-items-center">
+                    <p-chart type="pie" [data]="chartModelBrand" [options]="chartOption" [style]="{'width': '100%'}"></p-chart>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="grid">
+        <div class="col-12 lg:col-12">
+            <div class="card">
+                <h4></h4>
+                <p>CLIENTES ACTIVOS</p>
+                <div class="flex justify-content-center align-items-center">
+                    <p-chart type="line" [data]="chartActiveClients" [options]="chartOption" [style]="{'width': '100%'}"></p-chart>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="grid">
+        <div class="col-12 lg:col-12">
+            <div class="card">
+                <h4></h4>
+                <p>COTIZACIONES DE VENTA</p>
+                <div class="flex justify-content-center align-items-center">
+                    <p-chart type="line" [data]="chartQuotation" [options]="chartOption" [style]="{'width': '100%'}"></p-chart>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="grid">
+        <div class="col-12 lg:col-12">
+            <div class="card">
+                <h4></h4>
+                <p>ORDENES DE VENTA</p>
+                <div class="flex justify-content-center align-items-center">
+                    <p-chart type="line" [data]="chartSaleOrders" [options]="chartOption" [style]="{'width': '100%'}"></p-chart>
+                </div>
+            </div>
+        </div>
+    </div>
+
+
+</div>

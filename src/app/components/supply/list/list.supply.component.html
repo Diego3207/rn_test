@@ -1,0 +1,122 @@
+<p-dialog header="Alerta" [(visible)]="confirmDisplaySelected" [modal]="true" showEffect="fade" [style]="{width: '30vw'}" [breakpoints]="{'960px': '75vw'}" [closable]="false" [draggable]="false">
+    <p class="line-height-3 m-0">
+        {{content}}
+        
+    </p>
+</p-dialog>
+<p-dialog header="Alerta" [(visible)]="confirmDisplay" [modal]="true" showEffect="fade" [style]="{width: '30vw'}" [breakpoints]="{'960px': '75vw'}" [closable]="false" [draggable]="false">
+    <p class="line-height-3 m-0">
+        {{content}}
+    </p>
+</p-dialog>
+<p-toast key="msg"></p-toast>
+<div class="grid">
+    <div class="col-12">
+        <div class="card px-6 py-6">
+            <!--<p-toast></p-toast> -->
+            
+            <p-table #dt 
+            [columns]="supplys"
+            [value]="supplys"  
+            [lazy]="true"
+            [resetPageOnSort]="false"
+            [multiSortMeta]="[{field: 'id', order: 1}]"
+            sortMode="multiple" 
+            (onLazyLoad)="load($event)" 
+            [lazyLoadOnInit]="true"
+            [paginator]="true" 
+            [totalRecords]="totalRows"
+            [rowsPerPageOptions]="[10,25,50]" 
+            [loading]="loading"    
+            [showCurrentPageReport]="true"
+            [globalFilterFields]="['supplyProductId', 'supplyPurchaseOrderId', 'supplyLocationId', 'supplyKey', 'supplyStatus']"
+            currentPageReportTemplate=" {{ getPageRange(page, limit, totalRows) }} " 
+            [(selection)]="selectedSupplys" selectionMode="multiple"
+            [rows]="10" [rowHover]="true"  dataKey="id" responsiveLayout="stack" [breakpoint]="'760px'"  >
+                
+            <ng-template pTemplate="caption">
+                <div class="flex">
+                    <button type="button" pButton pRipple icon="pi pi-file-pdf"  (click)="getSupplies('pdf')" class="p-button-warning mr-2" pTooltip="PDF" tooltipPosition="bottom"></button>
+                    <button type="button" pButton pRipple icon="pi pi-file-excel"  (click)="getSupplies('csv')" class="p-button-success mr-2" pTooltip="XLS" tooltipPosition="bottom"></button>     
+                </div>
+            </ng-template>
+            
+            <ng-template pTemplate="header">
+                <tr>
+                    <th pSortableColumn="id">
+                        ID<p-sortIcon field="id"></p-sortIcon>
+                    </th>
+                    <th pSortableColumn="supplyKey">
+                        # SERIE <p-sortIcon field="supplyKey"></p-sortIcon>
+                    </th>
+                    <th >
+                        PRODUCTO 
+                    </th>
+                    <th pSortableColumn="supplyDateSupplied">
+                        FECHA COMPRA <p-sortIcon field="supplyDateSupplied"></p-sortIcon>
+                    </th>
+                    <th >
+                        FECHA VENTA
+                    </th>
+                    <th>
+                        UBICACIÓN
+                    </th>
+                    <th pSortableColumn="supplyStatus">
+                        ESTADO <p-sortIcon field="supplyStatus"></p-sortIcon>
+                    </th>
+                    <th >
+                        ACTIVO
+                    </th>
+                    <th>
+                        <!-- Espacio para que se vea bien las columnas -->
+                    </th>
+                </tr>
+               <tr>
+                    <th>
+                        <p-columnFilter type="numeric"  [showButtons]="false" field="id"  [matchModeOptions]="matchModeOptionsNumber" > </p-columnFilter>
+                    </th>
+                    <th>
+                        <p-columnFilter type="text" [showButtons]="false" field="supplyKey" [matchModeOptions]="matchModeOptionsNumber" ></p-columnFilter>
+                    </th>
+                    <th>
+                        <p-columnFilter type="text" field="supply.supplyProductId['productBrand']" [matchModeOptions]="matchModeOptionsText" ></p-columnFilter>
+                    </th>
+                    <th>
+                        <p-columnFilter type="text" field="supplyDateSupplied" [matchModeOptions]="matchModeOptionsText" ></p-columnFilter>
+                    </th>
+                    <th>
+                        <p-columnFilter type="text" field="supplySaleOrderId" [matchModeOptions]="matchModeOptionsText" ></p-columnFilter>
+                    </th>
+                    <th>
+                        <p-columnFilter type="text" field="supplyLocationId['locationName']" [matchModeOptions]="matchModeOptionsText" ></p-columnFilter>
+                    </th>
+                    <th>
+                        <p-columnFilter type="text" field="supplyStatus" [matchModeOptions]="matchModeOptionsText" ></p-columnFilter>
+                    </th>
+                    <th>
+                        <p-columnFilter type="text" field="supplyProductId['productAsset']" [matchModeOptions]="matchModeOptionsText" ></p-columnFilter>
+                    </th>
+                    <th>
+                        <!-- Espacio para que se vea bien las columnas -->
+                    </th>
+                </tr> 
+            </ng-template>
+            <ng-template pTemplate="body" let-supply>
+                <tr>
+                    <td>{{supply.id}}</td>
+                    <td>{{supply.supplyKey}}</td>
+                    <td>{{supply.supplyProductId['productBrand']}}  {{supply.supplyProductId['productModel']}}</td>
+                    <td>{{supply.supplyDateSupplied | date: 'dd-MM-yyyy' }}</td>
+                    <td>{{supply.supplySaleOrderId == null ? 'Sin registro' : supply.supplySaleOrderId['saleOrderDate'] | date: 'dd-MM-yyyy'}}</td>
+                    <td>{{supply.supplyLocationId['locationName']}}</td>
+                    <td>
+                        <i class="pi" [ngClass]="{ 'text-green-500 pi-check-circle': supply.supplyStatus == 'disponible', 'text-red-500 pi-times-circle': supply.supplyStatus == 'vendido'}"></i>
+                    </td>
+                    <td>{{supply.supplyProductId['productAsset']}}</td>
+                </tr>
+            </ng-template>
+            </p-table>
+        </div>
+    </div>
+</div>
+

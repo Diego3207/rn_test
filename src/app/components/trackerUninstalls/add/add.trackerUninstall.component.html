@@ -1,0 +1,170 @@
+<style>
+	.error-box {
+		border: 1px solid red;
+	}
+</style>
+<p-toast key="msg"></p-toast>
+<!--<div class="grid justify-content-center">
+    <div class="col-12 md:col-9 justify-content-between">
+        <p-fieldset legend="Datos de desinstalación" [toggleable]="true">
+            <div class="grid justify-content-center ">
+                <div class="col-12 md:col-9 justify-content-between">
+                </div>
+            </div>
+        </p-fieldset>
+    </div>
+</div>-->
+<p-confirmDialog [style]="{width: '50vw'}" rejectButtonStyleClass="p-button-outlined"></p-confirmDialog>
+
+<div class="grid justify-content-center ">
+   
+    <div class="col-12 md:col-9">
+       
+        <div class="card ">
+           <p-button (click)="showDialog()" icon="pi pi-external-link" label="Ver detalle de instalación"></p-button>
+
+           <p-dialog header="Instalación" [(visible)]="visible" [modal]="true" position="top" [breakpoints]="{ '960px': '75vw' }" [style]="{ width: '50vw' }" [draggable]="false" [resizable]="false">
+                <div class="grid justify-content-center ">
+                    <div class="col-12 md:col-9">
+                        <div class="flex align-content-start flex-wrap" style="min-height: 200px">
+                            <div class="flex align-items-center justify-content-center h-4rem border-round m-2">
+                                <label class="font-bold ">Cliente: </label>  <label class=" ml-2">{{ installationInfo['trackerInstallationCostumerId']?.costumerName }} </label>
+                            </div>
+                            <div class="flex align-items-center justify-content-center h-4rem  border-round m-2"> 
+                                <label class="font-bold ">Rastreador (IMEI): </label>  <label class=" ml-2">{{ installationInfo['trackerInstallationTrackerId']?.trackerImei }} </label>
+                            </div>
+                            <div class="flex align-items-center justify-content-center h-4rem  border-round m-2">
+                                <label class="font-bold ">Vehiculo: </label>  <label class=" ml-2">{{ installationInfo['trackerInstallationVehicleId']?.vehicleBrand  +' '+ installationInfo['trackerInstallationVehicleId']?.vehicleModel  +' / '+installationInfo['trackerInstallationVehicleId']?.vehicleYear}} </label>
+
+                            </div>
+                            <div class="flex align-items-center justify-content-center h-4rem  border-round m-2">
+                                <label class="font-bold ">Fecha de instalación: </label>  <label class=" ml-2">{{ installationInfo['trackerInstallationCostumerId']?.costumerName }} </label>
+                            </div>
+                            <div class="flex align-items-center justify-content-center h-4rem border-round m-2">
+                                <label class="font-bold ">Instalador: </label>  <label class=" ml-2">{{ installationInfo['trackerInstallationInstallerId']?.installerName }} </label>
+
+                            </div>
+                            <div class="flex align-items-center justify-content-center h-4rem  border-round m-2">
+                                <label class="font-bold ">Tipo de corte: </label>  <label class=" ml-2">{{ installationInfo['trackerInstallationTypeCut']}} </label>
+
+                            </div>
+                            <div class="flex align-items-center justify-content-center h-4rem  border-round m-2">
+                                <label class="font-bold ">Paro de motor: </label>  <label class=" ml-2">{{ (installationInfo['trackerInstallationEngineStop']) ? 'SI' : 'NO'}} </label>
+
+                            </div>
+                            <div class="flex align-items-center justify-content-center h-4rem  border-round m-2">
+                                <label class="font-bold ">Ubicación del reastreador: </label>  <label class=" ml-2">{{ installationInfo['trackerInstallationLocation']}} </label>
+
+                            </div>
+                        </div> 
+                    </div>
+                </div>
+            </p-dialog>
+            <div class="p-fluid mt-5">
+                <form [formGroup]="form" (ngSubmit)="onSubmit()">
+                    <div class="field">
+                        <label for="trackerInstallationCostumerId" class="font-semibold">Técnico asignado</label>
+                        <p-dropdown 
+                                formControlName="trackerUninstallUninstallerUserId" 
+                                [options]="listUninstallers" 
+                                placeholder="Seleciona una opción"
+                                [filter]="true" 
+                                filterBy="installerName" 
+                                [showClear]="true"  
+                                optionLabel="installerName" 
+                                optionValue="id">
+                        </p-dropdown>
+                        <div *ngIf="form.controls.trackerUninstallUninstallerUserId.invalid">
+                            <small class="text-red-600 flex justify-content-end" *ngIf="form.controls.trackerUninstallUninstallerUserId.errors?.['required']" >*Campo requerido</small>
+                        </div>
+                    </div>
+                
+                    <div class="field">
+                        <label for="trackerInstallationDate" class="font-semibold">Fecha de desinstalación</label>
+                        <p-calendar  formControlName="trackerUninstallDate" [showIcon]="true"></p-calendar>   
+                        <div *ngIf="form.controls.trackerUninstallDate.invalid">
+                            <small class="text-red-600 flex justify-content-end" *ngIf="form.controls.trackerUninstallDate.errors?.['required']" >*Campo requerido</small>
+                        </div>
+                    </div>
+                    
+                    <div class="field">
+                        <label class="font-semibold">Dirección</label>
+                        <input 
+                            pInputText 
+                            #search  
+                            type="text"                                                    
+                            (keydown.enter)="$event.preventDefault()"                                                    
+                            placeholder="Búsqueda"                                                     
+                            formControlName="trackerUninstallAddress"                                                    
+                            class="font-semibold"                                                     
+                            maxlength="251"                                                    
+                            autofocus 
+                        />
+
+                        <div *ngIf="form.controls.trackerUninstallAddress.invalid">
+                            <small class="text-red-600 flex justify-content-end" *ngIf="form.controls.trackerUninstallAddress.errors?.['required']" >*Campo requerido</small>
+                            <small class="text-red-600 flex justify-content-end" *ngIf="form.controls.trackerUninstallAddress.errors?.['maxlength']" >*Longitud máxima 255</small>
+                        </div>
+                    </div>
+                    
+                    <div class="field"  >  
+                        <label for="imag" class="font-semibold">Evidencia</label>
+                        <p-fileUpload #fileUpload 
+                        chooseLabel="Adjuntar"
+                        
+                        [multiple]="true" 
+                        accept=".pdf,image/png,image/jpeg"
+                        (onSelect)="onUpload($event)"
+                        [showUploadButton]="false" 
+                        [showCancelButton]="false" 
+                        [maxFileSize]=20000000>
+                            <ng-template let-file pTemplate="file"></ng-template>
+                            <ng-template pTemplate="content">
+    
+                                <div  *ngFor="let upload of uploadedFiles;">
+                                    <div class="grid border-bottom-1 surface-border m-2 surface-overlay font-bold "   >   
+                                        <div class="col-12 md:col-3 lg:col-2 align-content-center	 p-fileupload-filename" style="margin: 0.5rem;"> 
+                                            <p-image *ngIf="upload['file'].type != 'application/pdf'" [src]="upload['file'].objectURL" class="m-auto" alt="Image" width="150" [preview]="true"></p-image>
+                                            <span *ngIf="upload['file'].type == 'application/pdf'" style="font-size: 3rem; color: red"  class="pi pi-file-pdf m-auto"></span>
+
+                                        </div>                         
+                                        <div class="col-12 md:col-3 lg:col-3 align-content-center p-fileupload-filename" style="margin: 0.5rem;"> {{ upload.file.name}} </div> 
+                                        <div class="col-12 md:col-3 lg:col-2 align-content-center p-fileupload-filename" style="margin: 0.5rem;"> {{ (upload.file.size/1024).toFixed(2) }} KB  </div>
+                                        <div class="col-12 md:col-3 lg:col-3 align-content-center p-fileupload-filename" style="margin: 0.5rem;">
+                                            <div class="col-12 ">
+                                                <textarea  rows="2" cols="15" [(ngModel)]="upload.description" [ngModelOptions]="{standalone: true}" name="description" style="width: 100%;max-width: 100%;"  pInputTextarea></textarea>
+                                            </div>
+                                        </div>
+                                        <div class="col-12 md:col-3 lg:col-1 align-content-center">
+                                            <button type="button" icon="pi pi-times" pbutton="" (click)="removeFile(upload.file)" class="p-element p-button p-component p-button-icon-only" ng-reflect-icon="pi pi-times"  ><span class="p-button-icon pi pi-times" aria-hidden="true"></span></button>
+                                        </div>
+                                    </div>
+                                </div>
+                            </ng-template>
+                        </p-fileUpload>
+    
+                    </div>
+                    <div class="field">
+
+                        <label  class="font-semibold">El dispositivo desinstalado no funciona <i class="pi pi-info-circle" style="font-size: 1rem" pTooltip="El switch apagado indica que el dispositivo es FUNCIONAL y cuando esta encendido indica que NO ES FUNCIONAL"></i></label>
+                        <div>
+                            <p-inputSwitch  formControlName="trackerUninstallTrackerIsNotFunctional" ></p-inputSwitch>
+                        </div>
+                    </div>
+                    <div class="field">
+
+                        <label class="font-semibold">Observaciones</label>
+                        <div class="col-12 ">
+                            <textarea rows="2" cols="15"  style="width: 100%;max-width: 100%;"  formControlName="trackerUninstallObservation" pInputTextarea></textarea>
+                        </div>
+
+                    </div>
+                    <div class="col-12 flex justify-content-end mt-4">
+                        <button pButton pRipple class="p-button-outlined w-8rem mr-3"  label="Cancelar" (click)="cancel($event)" ></button>
+                        <button pButton pRipple class="p-button-primary w-8rem"  label="Guardar" ></button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>

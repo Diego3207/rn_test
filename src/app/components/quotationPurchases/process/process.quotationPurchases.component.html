@@ -1,0 +1,179 @@
+
+<style>
+	.error-box {
+		border: 1px solid red;
+	}
+</style>
+<p-toast key="msg"></p-toast>
+<div class="grid justify-content-center">
+    <div class="col-12 md:col-10 justify-content-between">
+        <div class="card p-fluid">          
+            <form [formGroup]="form" (ngSubmit)="onSubmit()">
+                
+                <div class="field">
+                    <label for="name" class="font-semibold">Proveedor</label>
+                    <p-dropdown [options]="listProviders"  [filter]="true" formControlName="quotationPurchaseProviderId" filterBy="providerName" [showClear]="true" placeholder="Selecciona uno" optionValue="id" optionLabel="providerName"  ></p-dropdown>
+                    <div *ngIf="form.controls.quotationPurchaseProviderId.invalid">
+                        <small class="text-red-600 flex justify-content-end" *ngIf="form.controls.quotationPurchaseProviderId.errors?.['required']" >*Campo requerido</small>
+                    </div>
+                </div>
+                <div class="field">
+                    <label class="font-semibold">Tiempo de entrega</label>
+                    <p-calendar  formControlName="quotationPurchaseTimeDelivery" [showIcon]="true"></p-calendar>
+                    <div *ngIf="form.controls.quotationPurchaseTimeDelivery.invalid">
+                        <small class="text-red-600 flex justify-content-end" *ngIf="form.controls.quotationPurchaseTimeDelivery.errors?.['required']" >*Campo requerido</small>
+                    </div>
+                </div>
+                <div class="field">
+                    <label class="font-semibold">¿Cuenta con garantía?</label>
+                    <div>
+                        <p-inputSwitch  formControlName="quotationPurchaseGuaranty" ></p-inputSwitch>
+                    </div>
+                   
+
+                    <!--<div *ngIf="form.controls.quotationPurchaseGuaranty.invalid">
+                        <small class="text-red-600 flex justify-content-end" *ngIf="form.controls.quotationPurchaseGuaranty.errors?.['required']" >*Campo requerido</small>
+                    </div>-->
+                </div>
+                
+                <div  [ngClass]="{'error-box':form.controls.quotationPurchaseProducts.errors }">
+                    <div class="flex flex-wrap gap-2 m-2">
+                        <p-button label="Productos" [disabled]="form.controls.quotationPurchaseProviderId.value == null" (onClick)="addRow('product')" icon="pi pi-plus"   badge="{{form.controls.quotationPurchaseProducts.length}}"></p-button>
+                    </div>
+                    <div class="card mt-3" formArrayName="quotationPurchaseProducts">
+                       <div *ngIf="form.controls.quotationPurchaseProducts.invalid">
+							<small class="text-red-600 flex justify-content-end" *ngIf="form.controls.quotationPurchaseProducts.errors?.['duplicated']" >*Detalle duplicado</small>
+						</div>
+                        <p-table responsiveLayout="stack" [value]="infoProductsArray().controls" dataKey="index" editMode="row" >
+                            <ng-template pTemplate="header">
+                                <tr>
+                                    <th style="width:20%">Producto</th>
+                                    <th  style="width:20%">Unidad</th>
+                                    <th style="width:20%">Cantidad</th>
+                                    <th style="width:20%"> Precio </th>
+                                    <th style="width:20%"></th>
+                                </tr>
+                            </ng-template>
+                            <ng-template pTemplate="body" let-quotationPurchaseProducts  let-i="rowIndex">
+                                <tr   [pEditableRow]="quotationPurchaseProducts" [formGroupName]="i">
+                                    <td>
+                                        <div class="col-12 ">
+                                            <p-dropdown  [options]="listProducts"  [filter]="true" appendTo="body" placeholder="Selecciona uno" formControlName="quotationPurchaseProductProductId"   optionValue="value"  optionLabel="label"   [showClear]="true"  [pTooltip]="getLabel(form.controls.quotationPurchaseProducts.controls[i].controls.quotationPurchaseProductProductId.value,'product')" [style]="{'max-width':'17rem'}"></p-dropdown>
+                                            <div *ngIf="form.controls.quotationPurchaseProducts.controls[i].controls.quotationPurchaseProductProductId.invalid">
+                                                <small class="text-red-600 flex justify-content-end" *ngIf="form.controls.quotationPurchaseProducts.controls[i].controls.quotationPurchaseProductProductId.errors?.['required']">*Campo requerido</small>
+                                            </div>
+                                        </div>
+                                    </td>
+                                    <td>
+                                        <div class="col-12 ">
+                                            <p-dropdown [options]="listUnitProducts"    placeholder="Selecciona uno" appendTo="body"   formControlName="quotationPurchaseProductUnit"  optionValue="value"   [showClear]="true" ></p-dropdown>
+                                            <div *ngIf="form.controls.quotationPurchaseProducts.controls[i].controls.quotationPurchaseProductUnit.invalid">
+                                                <small class="text-red-600 flex justify-content-end" *ngIf="form.controls.quotationPurchaseProducts.controls[i].controls.quotationPurchaseProductUnit.errors?.['required']">*Campo requerido</small>
+                                            </div>
+                                        </div>
+                                    </td>
+                                    <td>
+                                        <div class="col-12 ">
+                                              <p-inputNumber   inputId="locale-us"  mode="decimal" locale="en-US" formControlName="quotationPurchaseProductQuantity" [useGrouping]="false"></p-inputNumber>
+                                              
+                                           <div *ngIf="form.controls.quotationPurchaseProducts.controls[i].controls.quotationPurchaseProductQuantity.invalid">
+                                                <small class="text-red-600 flex justify-content-end" *ngIf="form.controls.quotationPurchaseProducts.controls[i].controls.quotationPurchaseProductQuantity.errors?.['required']" >*Campo requerido</small>
+                                                <small class="text-red-600 flex justify-content-end" *ngIf="form.controls.quotationPurchaseProducts.controls[i].controls.quotationPurchaseProductQuantity.errors?.['max']" >*Cantidad máxima es 99999999</small>
+                                                <small class="text-red-600 flex justify-content-end" *ngIf="form.controls.quotationPurchaseProducts.controls[i].controls.quotationPurchaseProductQuantity.errors?.['min']" >*Cantidad mínima es 1</small>
+                                            </div>	 
+                                        </div>
+                                    </td>
+                                    <td>
+                                        <div class="col-12 ">
+                                            <p-inputNumber   mode="currency" currency="USD" locale="en-US" [minFractionDigits]="2" formControlName="quotationPurchaseProductPrice" ></p-inputNumber>
+                                            <div *ngIf="form.controls.quotationPurchaseProducts.controls[i].controls.quotationPurchaseProductPrice.invalid">
+                                                <small class="text-red-600 flex justify-content-end" *ngIf="form.controls.quotationPurchaseProducts.controls[i].controls.quotationPurchaseProductPrice.errors?.['required']" >*Campo requerido</small>
+                                                <small class="text-red-600 flex justify-content-end" *ngIf="form.controls.quotationPurchaseProducts.controls[i].controls.quotationPurchaseProductPrice.errors?.['min']" >*Cantidad mínima es 1</small>
+                                            </div>	 
+                                        </div>
+                                    </td>
+                                    <td>
+                                        <div class="flex align-items-center justify-content-center gap-2">
+                                            <button pButton pRipple type="button" (click)="removeRow('product',quotationPurchaseProducts,i)" pCancelEditableRow icon="pi pi-trash" class="p-button-rounded p-button-text p-button-danger"></button>                                                
+                                        </div>
+                                    </td>
+                                </tr>
+                            </ng-template>
+                        </p-table>
+                    </div>
+                </div>
+                <div  [ngClass]="{'error-box':form.controls.quotationPurchaseServices.errors }">
+                    <div class="flex flex-wrap gap-2 m-2">
+                        <p-button label="Servicios" [disabled]="form.controls.quotationPurchaseProviderId.value == null" (onClick)="addRow('service')" icon="pi pi-plus"   badge="{{form.controls.quotationPurchaseServices.length}}"></p-button>
+                    </div>
+                    <div class="card mt-3" formArrayName="quotationPurchaseServices">
+                       <div *ngIf="form.controls.quotationPurchaseServices.invalid">
+							<small class="text-red-600 flex justify-content-end" *ngIf="form.controls.quotationPurchaseServices.errors?.['duplicated']" >*Detalle duplicado</small>
+						</div>
+                        <p-table responsiveLayout="stack" [value]="infoServicesArray().controls" dataKey="index" editMode="row">
+                            <ng-template pTemplate="header">
+                                <tr>
+                                    <th style="width:20%">Servicio</th>
+                                    <th  style="width:20%">Unidad</th>
+                                    <th style="width:20%">Cantidad</th>
+                                    <th style="width:20%">Precio</th>
+                                    <th style="width:20%"></th>
+                                </tr>
+                            </ng-template>
+                            <ng-template pTemplate="body" let-quotationPurchaseServices  let-i="rowIndex">
+                                <tr   [pEditableRow]="quotationPurchaseServices" [formGroupName]="i">
+                                    <td>
+                                        <div class="col-12 ">
+                                            <p-dropdown  [options]="listServices"  [filter]="true" appendTo="body" placeholder="Selecciona uno" formControlName="quotationPurchaseServiceServiceId"   optionValue="value"  optionLabel="label"  [pTooltip]="getLabel(form.controls.quotationPurchaseServices.controls[i].controls.quotationPurchaseServiceServiceId.value,'service')" [style]="{'max-width':'17rem'}"  [showClear]="true" ></p-dropdown>
+                                            <div *ngIf="form.controls.quotationPurchaseServices.controls[i].controls.quotationPurchaseServiceServiceId.invalid">
+                                                <small class="text-red-600 flex justify-content-end" *ngIf="form.controls.quotationPurchaseServices.controls[i].controls.quotationPurchaseServiceServiceId.errors?.['required']">*Campo requerido</small>
+                                            </div>
+                                        </div>
+                                    </td>
+                                    <td>
+                                        <div class="col-12 ">
+                                            <p-dropdown [options]="listUnitServices"    placeholder="Selecciona uno" appendTo="body"   formControlName="quotationPurchaseServiceUnit"  optionValue="value"   [showClear]="true" ></p-dropdown>
+                                            <div *ngIf="form.controls.quotationPurchaseServices.controls[i].controls.quotationPurchaseServiceUnit.invalid">
+                                                <small class="text-red-600 flex justify-content-end" *ngIf="form.controls.quotationPurchaseServices.controls[i].controls.quotationPurchaseServiceUnit.errors?.['required']">*Campo requerido</small>
+                                            </div>
+                                        </div>
+                                    </td>
+                                    <td>
+                                        <div class="col-12 ">
+                                              <p-inputNumber   inputId="locale-us"  mode="decimal" locale="en-US" formControlName="quotationPurchaseServiceQuantity" [useGrouping]="false"></p-inputNumber>
+                                              
+                                           <div *ngIf="form.controls.quotationPurchaseServices.controls[i].controls.quotationPurchaseServiceQuantity.invalid">
+                                                <small class="text-red-600 flex justify-content-end" *ngIf="form.controls.quotationPurchaseServices.controls[i].controls.quotationPurchaseServiceQuantity.errors?.['required']" >*Campo requerido</small>
+                                                <small class="text-red-600 flex justify-content-end" *ngIf="form.controls.quotationPurchaseServices.controls[i].controls.quotationPurchaseServiceQuantity.errors?.['max']" >*Cantidad máxima es 99999999</small>
+                                                <small class="text-red-600 flex justify-content-end" *ngIf="form.controls.quotationPurchaseServices.controls[i].controls.quotationPurchaseServiceQuantity.errors?.['min']" >*Cantidad mínima es 1</small>
+                                            </div>	 
+                                        </div>
+                                    </td>
+                                    <td>
+                                        <div class="col-12 ">
+                                            <p-inputNumber   mode="currency" currency="USD" locale="en-US" [minFractionDigits]="2" formControlName="quotationPurchaseServicePrice" ></p-inputNumber>
+                                            <div *ngIf="form.controls.quotationPurchaseServices.controls[i].controls.quotationPurchaseServicePrice.invalid">
+                                                <small class="text-red-600 flex justify-content-end" *ngIf="form.controls.quotationPurchaseServices.controls[i].controls.quotationPurchaseServicePrice.errors?.['required']" >*Campo requerido</small>
+                                                <small class="text-red-600 flex justify-content-end" *ngIf="form.controls.quotationPurchaseServices.controls[i].controls.quotationPurchaseServicePrice.errors?.['min']" >*Cantidad mínima es 1</small>
+                                            </div>	 
+                                        </div>
+                                    </td>
+                                    <td>
+                                        <div class="flex align-items-center justify-content-center gap-2">
+                                            <button pButton pRipple type="button" (click)="removeRow('servicio',quotationPurchaseServices,i)" pCancelEditableRow icon="pi pi-trash" class="p-button-rounded p-button-text p-button-danger"></button>                                                
+                                        </div>
+                                    </td>
+                                </tr>
+                            </ng-template>
+                        </p-table>
+                    </div>
+                </div>
+          
+                <div class="col-12 flex justify-content-end mt-4">
+                    <button pButton pRipple class="p-button-outlined w-8rem mr-3"  label="Cancelar" [routerLink]="['/quotationPurchases']" ></button>
+                    <button pButton pRipple class="p-button-primary w-8rem"  label="Guardar" ></button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>

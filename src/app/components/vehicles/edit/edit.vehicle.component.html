@@ -1,0 +1,113 @@
+<style>
+	.error-box {
+		border: 1px solid red;
+	}
+</style>
+<p-toast key="msg"></p-toast>
+<div class="grid justify-content-center">
+    <div class="col-12 md:col-6 justify-content-between">
+        <div class="card p-fluid">
+            <form [formGroup]="form" (ngSubmit)="onSubmit()">
+                <div class="field">
+                    <label for="vehicleCostumerId" class="font-semibold">Cliente</label>
+                    <p-dropdown 
+                            formControlName="vehicleCostumerId" 
+                            [options]=" listCostumers" 
+                            placeholder="Seleciona una opción"
+                            [filter]="true" 
+                            filterBy="costumerName" 
+                            [showClear]="true"  
+                            optionLabel="costumerName" 
+                            optionValue="id">
+                    </p-dropdown>
+                    <div *ngIf="form.controls.vehicleCostumerId.invalid">
+                        <small class="text-red-600 flex justify-content-end" *ngIf="form.controls.vehicleCostumerId.errors?.['required']" >*Campo requerido</small>
+                    </div>
+                </div>
+                <div class="field">
+                    <label for="vehicleBrand" class="font-semibold">Marca</label>
+                    <input 
+                        pInputText 
+                        id="vehicleBrand" 
+                        type="text" 
+                        formControlName="vehicleBrand" 
+                        autofocus />
+                    <div *ngIf="form.controls.vehicleBrand.invalid">
+                        <small class="text-red-600 flex justify-content-end" *ngIf="form.controls.vehicleBrand.errors?.['required']" >*Campo requerido</small>
+                        <small class="text-red-600 flex justify-content-end" *ngIf="form.controls.vehicleBrand.errors?.['maxlength']" >*Longitud máxima 100</small>
+                    </div>
+                </div>
+                <div class="field">
+                    <label for="vehicleModel" class="font-semibold">Modelo</label>
+                    <input 
+                        pInputText 
+                        id="vehicleModel" 
+                        type="text" 
+                        formControlName="vehicleModel" 
+                        autofocus />
+                    <div *ngIf="form.controls.vehicleModel.invalid">
+                        <small class="text-red-600 flex justify-content-end" *ngIf="form.controls.vehicleModel.errors?.['required']" >*Campo requerido</small>
+                        <small class="text-red-600 flex justify-content-end" *ngIf="form.controls.vehicleModel.errors?.['maxlength']" >*Longitud máxima 100</small>
+                    </div>
+                </div>
+                <div class="field">
+                    <label for="vehicleYear" class="font-semibold">Año</label>
+                    <input 
+                        pInputText 
+                        id="vehicleYear" 
+                        type="text" 
+                        formControlName="vehicleYear" 
+                        autofocus />
+                    <div *ngIf="form.controls.vehicleYear.invalid">
+                        <small class="text-red-600 flex justify-content-end" *ngIf="form.controls.vehicleYear.errors?.['required']" >*Campo requerido</small>
+                        <small class="text-red-600 flex justify-content-end" *ngIf="form.controls.vehicleYear.errors?.['maxlength']" >*Longitud máxima 100</small>
+                    </div>
+                </div>
+                <div class="field">
+                    <label for="vehicleVin" class="font-semibold">Número de VIN o Serie</label>
+                    <input 
+                        pInputText 
+                        id="vehicleVin" 
+                        type="text" 
+                        formControlName="vehicleVin" 
+                        autofocus />
+                    <div *ngIf="form.controls.vehicleVin.invalid">
+                        <small class="text-red-600 flex justify-content-end" *ngIf="form.controls.vehicleVin.errors?.['required']" >*Campo requerido</small>
+                        <small class="text-red-600 flex justify-content-end" *ngIf="form.controls.vehicleVin.errors?.['maxlength']" >*Longitud máxima 100</small>
+                    </div>
+                </div>
+                <div class="field">
+                    <label for="vehiclePlateNumber" class="font-semibold">Placa o Matrícula</label>
+                    <input 
+                        pInputText 
+                        id="vehiclePlateNumber" 
+                        type="text" 
+                        formControlName="vehiclePlateNumber" 
+                        autofocus />
+                    <div *ngIf="form.controls.vehiclePlateNumber.invalid">
+                        <small class="text-red-600 flex justify-content-end" *ngIf="form.controls.vehiclePlateNumber.errors?.['required']" >*Campo requerido</small>
+                        <small class="text-red-600 flex justify-content-end" *ngIf="form.controls.vehiclePlateNumber.errors?.['maxlength']" >*Longitud máxima 100</small>
+                    </div>
+                </div>
+                <div class="field">
+                    <label for="vehicleColor" class="font-semibold">Color</label>
+                    <input 
+                        pInputText 
+                        id="vehicleColor" 
+                        type="text" 
+                        formControlName="vehicleColor" 
+                        autofocus />
+                    <div *ngIf="form.controls.vehicleColor.invalid">
+                        <small class="text-red-600 flex justify-content-end" *ngIf="form.controls.vehicleColor.errors?.['required']" >*Campo requerido</small>
+                        <small class="text-red-600 flex justify-content-end" *ngIf="form.controls.vehicleColor.errors?.['maxlength']" >*Longitud máxima 100</small>
+                    </div>
+                </div>         
+
+                <div class="col-12 flex justify-content-end mt-4">
+                    <button pButton pRipple class="p-button-outlined w-8rem mr-3"  label="Cancelar" (click)="cancel($event)" ></button>
+                    <button pButton pRipple class="p-button-primary w-8rem"  label="Guardar" ></button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>

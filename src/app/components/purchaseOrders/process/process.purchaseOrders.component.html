@@ -1,0 +1,308 @@
+<style>
+	.error-box {
+		border: 1px solid red;
+	}
+</style>
+<p-toast key="msg"></p-toast>
+
+<!--<p-toast key="msg" [breakpoints]="{'0px': {width: '100%', right: '0', left: '0'}}"></p-toast>-->
+<div *ngIf="dataOrder.purchaseOrderStatus != 'abastecida'">
+    <div  class="grid justify-content-center">
+        <div class="col-12 md:col-12 justify-content-between">
+            <div class="card p-fluid">
+                <p-timeline [value]="events" layout="horizontal" align="top" >
+                    <ng-template pTemplate="marker" let-event>                    
+
+                        <p-chip styleClass="bg-green-700" *ngIf="event.check ">
+                            <div class="p-2"><span class="pi pi-check text-white font-bold"></span></div>
+                        </p-chip>
+
+                        <p-chip styleClass="bg-green-100" *ngIf="!event.check" >
+                            <div class="p-2"  ><span class="pi pi-times text-white font-bold"></span></div>
+                        </p-chip>
+
+                    </ng-template>
+                <ng-template pTemplate="content" let-event>
+                        {{ event.label }}
+                    </ng-template>
+                </p-timeline> 
+
+            </div>
+        </div>
+    </div>
+    <div class="grid justify-content-center">
+        <div class="col-12 md:col-12 justify-content-between">
+            <div class="card p-fluid">
+                <p-tabView [(activeIndex)]="activeIndex">
+                    <p-tabPanel *ngIf="dataOrder.purchaseOrderStatus != 'pendiente'" header="RECIBIR">
+                        <div >
+                            <div class="text-900 font-bold text-3xl my-2">Orden de compra ID # {{dataOrder.id}}</div>
+                        </div>
+                        <div class="overflow-hidden">
+                            <div class="flex">
+                                <div class="flex-1 flex align-items-start justify-content-start   m-2 px-5 py-3 border-round" >Proveedor:  {{ dataOrder.purchaseOrderProviderId?.providerName  }}</div>
+                                <div class="flex-1 flex align-items-start justify-content-start   m-2 px-5 py-3 border-round">Fecha de recepción:  {{ date | date: 'yyyy-MM-dd'   }}</div>
+                            </div>
+                        </div>
+                        <div class="grid justify-content-center">
+                            <div class="col-12 md:col-6 justify-content-between" >
+                                <div *ngIf="dataOrder.purchaseOrderProducts?.length" >
+                                    <p-accordion [activeIndex]="0">
+                                        <p-accordionTab header="Productos">
+                                            <div class="grid " *ngFor="let product of dataOrder.purchaseOrderProducts" >
+                                                <div class="col-12"> 
+                                                    
+                                                    <div class="mt-auto"><span class="font-bold"> Producto: </span>{{ product.purchaseOrderProductProductId['productBrand'] +" "+ product.purchaseOrderProductProductId['productModel'] }} </div>
+                                                    <div class="mt-auto"><span class="font-bold"> Precio: </span> {{ product.purchaseOrderProductPrice  | currency}} </div>
+                                                    <div class="mt-auto"><span class="font-bold"> Cantidad:  </span>{{  product.purchaseOrderProductQuantity  }} </div>
+                                                    <p-divider></p-divider>
+                                                </div>
+                                                
+                                            </div>
+                                        </p-accordionTab>
+                                        
+                                    </p-accordion>
+                                </div>
+                            </div> 
+                            <div class="col-12 md:col-6 justify-content-between" >
+                                <div *ngIf=" dataOrder.purchaseOrderServices?.length" >
+                                    <p-accordion [activeIndex]="0">
+                                        <p-accordionTab header="Servicios">
+                                            <div class="grid " *ngFor="let service of dataOrder.purchaseOrderServices" >
+                                                <div class="col-12"> 
+                                                    <div class="mt-auto"><span class="font-bold"> Servicio: </span>{{ service.purchaseOrderServiceServiceId['serviceDescription'] }} </div>
+                                                    <div class="mt-auto"><span class="font-bold"> Precio: </span> {{ service.purchaseOrderServicePrice  | currency}} </div>
+                                                    <div class="mt-auto"><span class="font-bold"> Cantidad:  </span>{{  service.purchaseOrderServiceQuantity  }} </div>
+                                                    <p-divider></p-divider>
+                                                </div>
+                                            </div>
+                                        </p-accordionTab>                                    
+                                    </p-accordion>
+                                </div>
+                            </div> 
+                        </div>
+                        
+                        <div style="height:3px;background:linear-gradient(90deg, var(--primary-color) 0%, rgba(33, 150, 243, 0) 50%);"></div>
+                        <form  class="m-4 " [formGroup]="formReceived" >
+                            <div class="field">
+                                <p>
+                                    <label for="name" class="font-semibold">Observaciones</label> 
+                                    <i class="pi pi-info-circle" style="font-size: 1rem" pTooltip='Ejemplo:Se recibio "X" cantidad de producto'></i>
+                                </p>
+                                <textarea id="reason" rows="5" style="width: 100%;max-width: 100%;" formControlName="purchaseOrderStatusObservation" pInputTextarea></textarea>
+                                <div *ngIf="formReceived.controls.purchaseOrderStatusObservation.invalid">
+                                    <small class="text-red-600 flex justify-content-end" *ngIf="formReceived.controls.purchaseOrderStatusObservation.errors?.['required']" >*Campo requerido</small>
+                                </div>	
+                            </div>
+                            
+                            <div class="field">                           
+
+                                <label for="imag" class="font-semibold">Evidencia</label>
+                                <small class="text-red-600 flex justify-content-start" >*Tamaño máximo permitido es de 20MB</small>
+                                <p-fileUpload #fileUpload 
+                                name="demo[]" 
+                                chooseLabel="Adjuntar"
+                                (onUpload)="onUpload($event)"
+                                (onRemove) ="onRemove($event)"
+                                [multiple]="true" 
+                                accept=".xlsx,.pdf,.csv,.xls,image/*"
+                                (onSelect)="onUpload($event)"
+                                [showUploadButton]="false" 
+                                [showCancelButton]="false" 
+                                [maxFileSize]=20000000>
+
+                                <ng-template pTemplate="content">
+                                    <div *ngIf="listEvidence.length" >
+                                        <div class="p-fileupload-row ng-star-inserted" *ngFor="let file of listEvidence" style="justify-content: flex-end;">
+                                            <div></div>
+                                            <div class="p-fileupload-filename" style="margin: 0.5rem;"> {{ file.purchaseOrderEvidenceName}}  </div> 
+                                            <div class="p-fileupload-filename" style="margin: 0.5rem;"> {{ file.purchaseOrderEvidenceSize }} KB  </div>
+                                            <div><button type="button" icon="pi pi-times" pbutton="" class="p-element p-button p-component p-button-icon-only" ng-reflect-icon="pi pi-times" (click)="pushFile( file.purchaseOrderEvidencePatch , file.id )"><span class="p-button-icon pi pi-times" aria-hidden="true"></span></button></div>
+                                        </div>
+                                    </div>
+                                </ng-template>
+                                
+                                </p-fileUpload>
+                            </div>
+                            
+                            <div *ngIf="(uploadedFiles.length + listEvidence.length) == 0 ">
+                                <small class="text-red-600 flex justify-content-end"  >*Campo requerido</small>
+                            </div>	
+                            
+                        </form>
+                        <div  class="col-12 flex justify-content-end mt-4" style="padding: .5em 0 1em 0">
+                            <button pButton pRipple class="p-button-outlined w-8rem mr-3"  label="Cancelar" [routerLink]="['/orders']" ></button>
+                            <button pButton pRipple *ngIf="updateReceived" (click)="saveReceived()" class="p-button-secondary mr-3 w-8rem"  label="Actualizar"  ></button>
+                            <button pButton pRipple *ngIf="dataOrder.purchaseOrderStatus == 'nueva'" (click)="saveReceived()" class="p-button-primary w-8rem"  label="Recibir"  ></button>
+                            <button pButton pRipple *ngIf="dataOrder.purchaseOrderStatus == 'recibida'" (click)="activeIndex = 1" class="p-button-primary w-8rem"  label="Siguiente"  ></button>
+                        </div>
+                    </p-tabPanel>
+                    <p-tabPanel [disabled]="dataOrder.purchaseOrderStatus != 'recibida'" header="ABASTECER">
+                        
+                        <div class="field">
+                                
+                            <div class="field">
+                                <label class="font-semibold">Abastecimiento por lote <i class="pi pi-info-circle" style="font-size: 1rem" pTooltip="El switch apagado indica que el abastecimiento se realizará de forma manual y de lo contrario indica que se realizará por lote mediante un archivo CSV"></i></label>
+                                <div>
+                                    <p-inputSwitch  [(ngModel)]="massiveOption"  ></p-inputSwitch>
+                                </div>
+                            </div>                           
+                        </div>
+                        <div *ngIf="massiveOption">
+                            <p-table [value]="dataOrder.purchaseOrderProducts" [tableStyle]="{ 'min-width': '50rem' }">
+                                <ng-template pTemplate="caption">
+                                    <div class="flex ">
+
+                                        <button pButton pRipple type="button" icon="pi pi-file-excel"   class="p-button-success  " pTooltip="Descargar plantilla CSV" tooltipPosition="bottom" (click)="generateTempleteCSV(dataOrder.purchaseOrderProducts)"></button>                                    </div>
+                                </ng-template>
+                                <ng-template pTemplate="header">
+                                    <tr>
+                                        <th>Producto</th>
+                                        <th>Cantidad solicitada</th>
+                                        <th *ngIf="dataOrder.purchaseOrderStatus == 'pendiente' ">Cantidad pendiente</th>
+                                        <!--<th>DESCARGAR CSV <button pButton pRipple type="button" icon="pi pi-file-excel"  size="large" class="p-button-rounded p-button-success p-button-text mt-auto" (click)="generateTempleteCSV('S')"></button></th>-->
+                                    </tr>
+                                </ng-template>
+                                <ng-template pTemplate="body" let-product>
+                                    <tr>
+                                        <td>{{ product.purchaseOrderProductProductId['productBrand'] +" "+ product.purchaseOrderProductProductId['productModel'] }}</td>
+                                        <td>{{ product.purchaseOrderProductQuantity  }}</td>
+                                        <td *ngIf="dataOrder.purchaseOrderStatus == 'pendiente' ">{{ product.purchaseOrderProductQuantity -  product.purchaseOrderProductSupplies.length }}</td>
+                                        <!--<td> <button pButton pRipple type="button" icon="pi pi-file-excel"  size="large" class="p-button-rounded p-button-success p-button-text mt-auto" (click)="generateTempleteCSV(product)"></button> </td>-->
+                                    </tr>
+                                </ng-template>
+                            </p-table>
+                            <p-fileUpload #fileUpload 
+                                name="file[]" 
+                                chooseLabel="Adjuntar plantillas CSV"
+                                cancelLabel ="Cancelar"
+                                uploadLabel = "Enviar"
+                                (onBeforeUpload) = "sendData($event)"
+                                [multiple]="true" 
+                                (onClear)="clearCSV()"
+                                accept=".csv"
+                                (onSelect)="importData($event)"
+                                uploadStyleClass ="p-button-success"
+                                cancelStyleClass ="p-button-secondary"
+                                [maxFileSize]=100000000>
+
+                                <ng-template let-file pTemplate='file'>
+                                    <div class="p-fileupload-row ng-star-inserted"  style="justify-content: flex-end;">
+                                        <div></div>
+                                        <div class="p-fileupload-filename" style="margin: 0.5rem;"> {{ file.name}}  </div> 
+                                        <div class="p-fileupload-filename" style="margin: 0.5rem;"> {{ file.size }} KB  </div>
+                                    </div>
+                                    
+                                </ng-template>	
+
+                                
+                            </p-fileUpload> 
+                            
+                        </div>
+                        <div *ngIf="!massiveOption">
+                            <form  [formGroup]="formSupply" >
+                                <div class="field">
+                                    <label for="name" class="font-semibold">Asginar persona para resguardo</label>
+                                    <p-dropdown [options]="listUsers" [filter]="true" formControlName="supplyAssignedPersonId" filterBy="userFullName" [showClear]="true" placeholder="Selecciona uno" optionValue="id" optionLabel="userFullName"  ></p-dropdown>
+                                    <div *ngIf="formSupply.controls.supplyAssignedPersonId.invalid">
+                                        <small class="text-red-600 flex justify-content-end" *ngIf="formSupply.controls.supplyAssignedPersonId.errors?.['required']" >*Campo requerido</small>
+                                    </div>
+                                </div>
+                                
+
+                                <div class="card mt-3" formArrayName="supplies">
+                                    <p-table responsiveLayout="stack" [value]="infoSuppliesArray().controls" dataKey="index" editMode="row">
+                                        <ng-template pTemplate="header">
+                                            <tr>
+                                                <th >Producto</th>
+                                                <th >Serial</th> 
+                                                <th >Ubicación</th> 
+                                                <th >Estado</th>  <!--style="width:20%"-->
+                                                <th >Observación</th> 
+                                                <th ></th>
+                                            </tr>
+                                        </ng-template>
+                                        <ng-template pTemplate="body" let-supplies  let-i="rowIndex">
+                                            <tr   [pEditableRow]="supplies" [formGroupName]="i">
+                                                <td>
+                                                   
+                                                    <div class="surface-overlay  p-3 white-space-nowrap overflow-hidden text-overflow-ellipsis" [pTooltip]="formSupply.value.supplies[i].supplyProductName "style="max-width:200px">
+                                                        {{formSupply.value.supplies[i].supplyProductName  }} 
+                                                    </div>
+                                                    <input  pInputText id="name"   type="hidden"  formControlName="supplyProductId" autofocus />
+                                                    
+                                                </td>
+                                                <td>
+                                                    <div class="col-12 ">
+                
+                                                        <input id="key" pInputText  type="text"  formControlName="supplyKey"   />
+                                                        <div *ngIf="formSupply.controls.supplies.controls[i].controls.supplyKey.invalid">
+                                                            <small class="text-red-600 flex justify-content-end" *ngIf="formSupply.controls.supplies.controls[i].controls.supplyKey.errors?.['required']">*Campo requerido</small>
+                                                        </div>
+                                                    </div>
+                                                </td>
+                                                <td>
+                                                    <div class="col-12 ">
+                                                        <p-dropdown [options]="listLocations"  appendTo="body" [filter]="true" formControlName="supplyLocationId" filterBy="locationName" [showClear]="true" placeholder="Selecciona uno" optionValue="id" optionLabel="locationName"  ></p-dropdown>
+                                                        <div *ngIf="formSupply.controls.supplies.controls[i].controls.supplyLocationId.invalid">
+                                                            <small class="text-red-600 flex justify-content-end" *ngIf="formSupply.controls.supplies.controls[i].controls.supplyLocationId.errors?.['required']" >*Campo requerido</small>
+                                                        </div>
+                                                    </div>
+                                                </td>
+                                                <td>
+                                                    <div class="col-12 ">
+                                                        <p-dropdown [options]="listStatus"  [filter]="true" appendTo="body"  formControlName="supplyStatus" filterBy="label" [showClear]="true" placeholder="Selecciona uno" optionValue="value" optionLabel="label"  ></p-dropdown>
+                                                        <div *ngIf="formSupply.controls.supplies.controls[i].controls.supplyStatus.invalid">
+                                                            <small class="text-red-600 flex justify-content-end" *ngIf="formSupply.controls.supplies.controls[i].controls.supplyStatus.errors?.['required']" >*Campo requerido</small>
+                                                        </div>
+                                                        
+                                                    </div>
+                                                </td>
+                                                <td>
+                                                    <div class="col-12 ">
+                                                        <textarea id="reason" rows="2" cols="15"  style="width: 100%;max-width: 100%;" formControlName="supplyObservation" pInputTextarea></textarea>
+                                                    </div>
+                                                </td>
+                                                <td>
+                                                    <div class="flex align-items-center justify-content-center gap-2">
+                                                        <button pButton pRipple type="button" (click)="removeRow(i)" pCancelEditableRow icon="pi pi-trash" class="p-button-rounded p-button-text p-button-danger"></button>                                                
+                                                    </div>
+
+                                                </td>
+                                            
+                                            </tr>
+                                        </ng-template>
+                                    </p-table>
+                                </div>
+                            </form>
+                        
+                        </div>
+                        <div  class="col-12 flex justify-content-end mt-4" style="padding: .5em 0 1em 0">
+                            <button pButton pRipple class="p-button-outlined w-8rem mr-3"   *ngIf="dataOrder.purchaseOrderStatus == 'pendiente' " [routerLink]="['/orders']" label="Salir" ></button>
+                            <button pButton pRipple class="p-button-outlined w-8rem mr-3"   *ngIf="dataOrder.purchaseOrderStatus != 'pendiente'  && !massiveOption" label="Atrás" (click)="activeIndex = 0" ></button>
+                            <button pButton pRipple (click)="saveSupply()"  *ngIf="dataOrder.purchaseOrderStatus != 'nueva'  && !massiveOption" class="p-button-primary w-8rem"  label="Abastecer" ></button>
+                        </div>
+                    </p-tabPanel>
+                    
+                </p-tabView>
+                
+            
+            </div>
+        </div>
+    </div>
+</div>
+<div *ngIf="dataOrder.purchaseOrderStatus == 'abastecida'">
+    <div class="grid justify-content-center">
+        <div class="col-12 md:col-10 justify-content-between">
+            <div class="card p-fluid">
+                <p-messages severity="info">
+                    <ng-template pTemplate>
+                        <i class="pi pi-info-circle" style="font-size: 2rem"></i>
+                        <div class="ml-2">Esta orden ya fue abastecida.</div>
+                    </ng-template>
+                </p-messages>
+                
+            </div>
+        </div>
+    </div>
+</div>

@@ -1,0 +1,35 @@
+<style>
+	.error-box {
+		border: 1px solid red;
+	}
+</style>
+<p-toast key="msg"></p-toast>
+<div class="grid justify-content-center">
+    <div class="col-12 md:col-6 justify-content-between">
+        <div class="card p-fluid">
+            <form [formGroup]="form" (ngSubmit)="onSubmit()">
+                
+                <div class="field">
+                    <label for="associationTrackerServiceQuotationSaleServiceId" class="font-semibold">Servicio</label>
+                    <p-dropdown [options]="listServices"  appendTo="body" [filter]="true" formControlName="associationTrackerServiceQuotationSaleServiceId" filterBy="label" [showClear]="true" placeholder="Selecciona uno" optionValue="value" optionLabel="label"  ></p-dropdown>
+                    <div *ngIf="form.controls.associationTrackerServiceQuotationSaleServiceId.invalid">
+                        <small class="text-red-600 flex justify-content-end" *ngIf="form.controls.associationTrackerServiceQuotationSaleServiceId.errors?.['required']" >*Campo requerido</small>
+                    </div>
+                </div> 
+                
+                <div class="field">
+                    <label for="associationTrackerServiceTrackerInstallationId" class="font-semibold">Instalación</label>
+                    <p-dropdown [options]="listInstallations"  appendTo="body" [filter]="true" formControlName="associationTrackerServiceTrackerInstallationId" filterBy="label" [showClear]="true" placeholder="Selecciona uno" optionValue="value" optionLabel="label"  ></p-dropdown>
+                    <div *ngIf="form.controls.associationTrackerServiceTrackerInstallationId.invalid">
+                        <small class="text-red-600 flex justify-content-end" *ngIf="form.controls.associationTrackerServiceTrackerInstallationId.errors?.['required']" >*Campo requerido</small>
+                    </div>
+                </div>  
+                
+                <div class="col-12 flex justify-content-end mt-4">
+                    <button pButton pRipple class="p-button-outlined w-8rem mr-3"  label="Cancelar" (click)="cancel($event)" ></button>
+                    <button pButton pRipple class="p-button-primary w-8rem"  label="Guardar" ></button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>

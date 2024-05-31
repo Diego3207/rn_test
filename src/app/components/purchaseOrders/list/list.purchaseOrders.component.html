@@ -1,0 +1,94 @@
+<p-confirmDialog     [style]="{width: '50vw'}" rejectButtonStyleClass="p-button-outlined" ></p-confirmDialog>
+<p-toast key="msg"></p-toast>
+<div class="grid">
+    <div class="col-12">
+        <div class="card px-6 py-6">
+            <!--<p-toast></p-toast> (click)="deleteSelectedElements()" -->
+            <p-toolbar styleClass="mb-4 gap-2">
+                <ng-template pTemplate="left">
+                    <div class="my-2">  
+                        <button pButton pRipple label="Agregar" icon="pi pi-plus" class="p-button-success  m-2" [routerLink]="['/orders/add/']"></button>
+                        <button pButton pRipple label="Eliminar" icon="pi pi-trash" class="p-button-danger m-2" (click)="delete(1,null)" [disabled]="!selectedElements || !selectedElements.length"></button>
+                    </div> 
+                </ng-template>
+            </p-toolbar>
+
+            <p-table #dt 
+            [value]="orders"  
+            [lazy]="true"
+            [resetPageOnSort]="false"
+            [multiSortMeta]="[{field: 'id', order: 1}]"
+            sortMode="multiple" 
+            (onLazyLoad)="load($event)" 
+            [lazyLoadOnInit]="true"
+            [paginator]="true" 
+            [totalRecords]="totalRows"
+            [rowsPerPageOptions]="[10,25,50]" 
+            [showCurrentPageReport]="true"
+            currentPageReportTemplate=" {{ getPageRange(page, limit, totalRows) }}" 
+            [(selection)]="selectedElements" selectionMode="multiple"
+            [responsive]="true"
+            [rows]="10" [rowHover]="true"  dataKey="id" responsiveLayout="scroll"  [breakpoint]="'760px'" [tableStyle]="{'min-width': '50rem'}"   >
+                <ng-template pTemplate="header">
+                    <tr>
+                        <th style="width: 3rem">
+                            <p-tableHeaderCheckbox></p-tableHeaderCheckbox>
+                        </th>
+                        <th pSortableColumn="id">
+                            ID <p-sortIcon field="id"></p-sortIcon>
+                        </th>
+                        <th pSortableColumn="purchaseOrderDescription" >
+                            DESCRIPCIÓN <p-sortIcon field="purchaseOrderDescription"></p-sortIcon>
+                        </th>
+                        <th  >
+                            PROVEEDOR 
+                        </th>
+                        <th pSortableColumn="purchaseOrderStatus" >
+                            ESTADO <p-sortIcon field="purchaseOrderStatus"></p-sortIcon>
+                        </th>
+                        <th></th>
+                    </tr>
+                    <tr>
+                        <th>
+                        </th>
+                        <th>
+                            <p-columnFilter type="numeric"  [showButtons]="false" field="id"  [matchModeOptions]="matchModeOptionsNumber" > </p-columnFilter>
+                        </th>
+                        <th>
+                            <p-columnFilter type="text" field="purchaseOrderDescription" [matchModeOptions]="matchModeOptionsText" ></p-columnFilter>
+                        </th>
+                        <th>
+                            <p-columnFilter type="text" field="purchaseOrderProviderId['providerName']" [matchModeOptions]="matchModeOptionsText" ></p-columnFilter>
+                        </th>
+                        <th>
+                            <p-columnFilter type="text" field="purchaseOrderStatus" [matchModeOptions]="matchModeOptionsText" ></p-columnFilter>
+                        </th>
+                        <th></th>
+                    </tr> 
+                </ng-template>
+                <ng-template pTemplate="body" let-purchaseOrder>
+                    <tr>
+                        <td>
+                            <p-tableCheckbox [value]="purchaseOrder"></p-tableCheckbox>
+                        </td>
+                        <td>{{purchaseOrder.id}}</td>
+                        <td>{{purchaseOrder.purchaseOrderDescription}}</td>
+                        <td>{{purchaseOrder.purchaseOrderProviderId['providerName']}}</td>
+                        <td>{{purchaseOrder.purchaseOrderStatus}}</td>
+                    
+                        <td>
+                            <div class="flex">
+                                <button pButton pRipple pTooltip="Modificar orden"  *ngIf="purchaseOrder.purchaseOrderStatus == 'nueva' " icon="pi pi-pencil" class="p-button-rounded p-button-info  p-button-text p-mr-3" [routerLink]="['/orders/edit/', purchaseOrder.id]"></button>
+                                <button pButton pRipple pTooltip="Descargar CSV orden de compra" type="button" icon="pi pi-file-excel" *ngIf="purchaseOrder.purchaseOrderStatus == 'abastecida' || purchaseOrder.purchaseOrderStatus == 'pendiente' " size="large" class="p-button-rounded p-button-success p-button-text mt-auto" (click)="generateTempleteCSV(purchaseOrder)"></button> 
+                                <button pTooltip="Abasteser orden de compra" *ngIf="purchaseOrder.purchaseOrderStatus == 'recibida' || purchaseOrder.purchaseOrderStatus == 'pendiente' " [routerLink]="['/orders/process/', purchaseOrder.id]"  pButton pRipple icon="pi pi-cart-plus" class="p-button-rounded p-button-help  p-button-text  p-mr-4" ></button>
+                                <button pTooltip="Recibir orden compra"   *ngIf="purchaseOrder.purchaseOrderStatus == 'nueva' "  [routerLink]="['/orders/process/', purchaseOrder.id]"  pButton pRipple icon="pi pi-truck" class="p-button-rounded p-button-success  p-button-text  p-mr-4" ></button>
+                                <button pButton pRipple pTooltip="Eliminar orden" icon="pi pi-trash" class="p-button-rounded p-button-danger  p-button-text" (click)="delete(2,purchaseOrder)" ></button>
+                            </div>
+                        </td>
+                    </tr>
+                </ng-template>
+            </p-table>
+        </div>
+    </div>
+</div>
+

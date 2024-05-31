@@ -1,0 +1,56 @@
+<style>
+	.error-box {
+		border: 1px solid red;
+	}
+</style>
+<p-toast key="msg"></p-toast>
+<div class="grid justify-content-center">
+    <div class="col-12 md:col-6 justify-content-between">
+        <div class="card p-fluid">
+            <form [formGroup]="form" (ngSubmit)="onSubmit()">
+                <div class="field">
+                    <label for="installerName" class="font-semibold">Nombre del instalador</label>
+                    <input 
+                        pInputText 
+                        id="installerName" 
+                        type="text" 
+                        formControlName="installerName" 
+                        autofocus />
+                    <div *ngIf="form.controls.installerName.invalid">
+                        <small class="text-red-600 flex justify-content-end" *ngIf="form.controls.installerName.errors?.['required']" >*Campo requerido</small>
+                        <small class="text-red-600 flex justify-content-end" *ngIf="form.controls.installerName.errors?.['maxlength']" >*Longitud máxima 100</small>
+                    </div>
+                </div>
+                <div class="field">
+                    <label for="installerAddress" class="font-semibold">Ciudad</label>
+                    <input 
+                        pInputText
+                        #search 
+                        id="installerAddress" 
+                        type="text"
+                        (keydown.enter)="$event.preventDefault()"
+                        placeholder="Búsqueda" 
+                        formControlName="installerAddress"
+                        class="font-semibold" 
+                        autofocus />
+                    <div *ngIf="form.controls.installerAddress.invalid">
+                        <small class="text-red-600 flex justify-content-end" *ngIf="form.controls.installerAddress.errors?.['required']" >*Campo requerido </small>
+                        <small class="text-red-600 flex justify-content-end" *ngIf="form.controls.installerAddress.errors?.['maxlength']" >*Longitud máxima 250</small>
+                    </div>
+                    
+                </div>   
+                <div class="field">
+                    <label for="installerPhone" class="font-semibold">Teléfono</label>
+                    <p-inputMask mask="999-999-99-99" placeholder="999-999-99-99" formControlName="installerPhone"></p-inputMask>
+                    <div *ngIf="form.controls.installerPhone.invalid">
+                        <small class="text-red-600 flex justify-content-end" *ngIf="form.controls.installerPhone.errors?.['required']" >*Campo requerido</small>
+                    </div>
+                </div>                
+                <div class="col-12 flex justify-content-end mt-4">
+                    <button pButton pRipple class="p-button-outlined w-8rem mr-3"  label="Cancelar" (click)="cancel($event)" ></button>
+                    <button pButton pRipple class="p-button-primary w-8rem"  label="Guardar" ></button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>

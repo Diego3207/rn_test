@@ -1,0 +1,8 @@
+npm install //para cargar las dependencias
+
+npm audit
+	prismjs  <=1.24.1
+	Severity: high
+
+	quill  <=1.3.7
+	Severity: moderate

@@ -1,0 +1,139 @@
+<p-dialog header="Alerta" [(visible)]="confirmDisplaySelected" [modal]="true" showEffect="fade" [style]="{width: '30vw'}" [breakpoints]="{'960px': '75vw'}" [closable]="false" [draggable]="false">
+    <p class="line-height-3 m-0">
+        {{content}}
+        
+    </p>
+</p-dialog>
+<p-dialog header="Alerta" [(visible)]="confirmDisplay" [modal]="true" showEffect="fade" [style]="{width: '30vw'}" [breakpoints]="{'960px': '75vw'}" [closable]="false" [draggable]="false">
+    <p class="line-height-3 m-0">
+        {{content}}
+    </p>
+</p-dialog>
+<p-toast key="msg"></p-toast>
+<div class="grid">
+    <div class="col-12">
+        <div class="card px-6 py-6">
+            <!--<p-toast></p-toast> -->
+            
+            <p-table #dt 
+            [columns]="quotationSaleServices"
+            [value]="quotationSaleServices"  
+            [lazy]="true"
+            [resetPageOnSort]="false"
+            [multiSortMeta]="[{field: 'id', order: 1}]"
+            sortMode="multiple" 
+            (onLazyLoad)="load($event)" 
+            [lazyLoadOnInit]="true"
+            [paginator]="true" 
+            [totalRecords]="totalRows"
+            [rowsPerPageOptions]="[10,25,50]" 
+            [loading]="loading"    
+            [showCurrentPageReport]="true"
+            [globalFilterFields]="['supplyProductId', 'supplyPurchaseOrderId', 'supplyLocationId', 'supplyKey', 'supplyStatus']"
+            currentPageReportTemplate=" {{ getPageRange(page, limit, totalRows) }} " 
+            [(selection)]="selectedQuotationSaleServices" selectionMode="multiple"
+            [rows]="10" [rowHover]="true"  dataKey="id" responsiveLayout="stack" [breakpoint]="'760px'"  >
+            
+            <ng-template pTemplate="header">
+                <tr>
+                    <th >
+                        <!-- expander -->
+                    </th>
+                    <th pSortableColumn="id">
+                        Folio<p-sortIcon field="id"></p-sortIcon>
+                    </th>
+                    <th pSortableColumn="supplyKey">
+                        Cliente <p-sortIcon field="supplyKey"></p-sortIcon>
+                    </th>
+                    <th pSortableColumn="supplyKey">
+                        Cantidad <p-sortIcon field="supplyKey"></p-sortIcon>
+                    </th>
+                    <th pSortableColumn="supplyKey">
+                        Servicio <p-sortIcon field="supplyKey"></p-sortIcon>
+                    </th>
+                    <th pSortableColumn="supplyKey">
+                        Fecha de contratación <p-sortIcon field="supplyKey"></p-sortIcon>
+                    </th>
+                    <th pSortableColumn="supplyKey">
+                        Fecha de renovación <p-sortIcon field="supplyKey"></p-sortIcon>
+                    </th>
+                </tr>
+               <tr>
+                    <th>
+                        <!-- expander -->
+                    </th>
+                    <th>
+                        <p-columnFilter type="numeric"  [showButtons]="false" field="id"  [matchModeOptions]="matchModeOptionsNumber" > </p-columnFilter>
+                    </th>
+                    <th>
+                        <p-columnFilter type="text" [showButtons]="false" field="supplyKey" [matchModeOptions]="matchModeOptionsNumber" ></p-columnFilter>
+                    </th>
+                    <th>
+                        <p-columnFilter type="text" [showButtons]="false" field="supplyKey" [matchModeOptions]="matchModeOptionsNumber" ></p-columnFilter>
+                    </th>
+                    <th>
+                        <p-columnFilter type="text" [showButtons]="false" field="supplyKey" [matchModeOptions]="matchModeOptionsNumber" ></p-columnFilter>
+                    </th>
+                    <th>
+                        <p-columnFilter type="text" [showButtons]="false" field="supplyKey" [matchModeOptions]="matchModeOptionsNumber" ></p-columnFilter>
+                    </th>
+                    <th>
+                        <p-columnFilter type="text" [showButtons]="false" field="supplyKey" [matchModeOptions]="matchModeOptionsNumber" ></p-columnFilter>
+                    </th>
+                </tr> 
+            </ng-template>
+            <ng-template pTemplate="body" let-quotationSaleService let-expanded="expanded">
+                <tr>
+                    <td>
+                        <button type="button" pButton pRipple [pRowToggler]="quotationSaleService" class="p-button-text p-button-rounded p-button-plain" [icon]="expanded ? 'pi pi-chevron-down' : 'pi pi-chevron-right'"></button>
+                    </td>
+                    <td>{{quotationSaleService.quotationSaleServiceQuotationSaleId['quotationSaleFolio']}}</td>
+                    <td>{{quotationSaleService.quotationSaleServiceCustomerInformation['costumerName']}}</td>
+                    <td>{{quotationSaleService.quotationSaleServiceQuantity}}</td>
+                    <td>{{quotationSaleService.quotationSaleServiceServiceId['serviceDescription']}}</td>
+                    <td>{{quotationSaleService.quotationSaleServiceSaleOrderInformation['saleOrderShippingDate'] | date: 'dd-MM-yyyy'}}</td>
+                    <td>{{getDateRenovation(quotationSaleService.quotationSaleServiceServiceId['serviceQuantityTemporality'],quotationSaleService.quotationSaleServiceServiceId['serviceTemporality'],quotationSaleService.quotationSaleServiceSaleOrderInformation['saleOrderShippingDate']) }}</td>
+                </tr>
+            </ng-template>
+
+            <ng-template pTemplate="rowexpansion" let-quotationSaleService>
+                <tr>
+                    <td colspan="12">
+                        <div class="p-3" >
+                            <p-table [value]="quotationSaleService.quotationSaleServiceAssociations" dataKey="id">                                     
+                                <ng-template pTemplate="header" class="grid">
+                                    <tr>
+                                        <th class="col-2">Marca</th>
+                                        <th class="col-2">Modelo</th>
+                                        <th class="col-2">Año</th>
+                                        <th class="col-2">VIN</th>
+                                        <th class="col-2">Placas</th>
+                                        <th class="col-2">IMEI</th>
+                                    </tr>
+                                </ng-template>
+                                <ng-template pTemplate="body" let-quotationSaleServiceAssociations>
+                                    <tr>
+                                        <td>{{ quotationSaleServiceAssociations['vehicle']['vehicleBrand']}}</td>
+                                        <td>{{ quotationSaleServiceAssociations['vehicle']['vehicleModel']}}</td>
+                                        <td>{{ quotationSaleServiceAssociations['vehicle']['vehicleYear']}}</td>
+                                        <td>{{ quotationSaleServiceAssociations['vehicle']['vehicleVin']}}</td>
+                                        <td>{{ quotationSaleServiceAssociations['vehicle']['vehiclePlateNumber']}}</td>
+                                        <td>{{ quotationSaleServiceAssociations['tracker']['trackerImei'] == null ? 'Sin equipo' : quotationSaleServiceAssociations['tracker']['trackerImei'] }}</td>
+                                    </tr>
+                                </ng-template>
+                                <ng-template pTemplate="emptymessage">
+                                    <tr>
+                                        <td colspan="6">No tiene vehiculos asignados.</td>
+                                    </tr>
+                                </ng-template>
+                            </p-table>								
+                        </div>
+                    </td>
+                </tr>
+            </ng-template>
+
+            </p-table>
+        </div>
+    </div>
+</div>
+

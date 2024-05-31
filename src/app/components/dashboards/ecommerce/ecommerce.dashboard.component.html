@@ -1,0 +1,59 @@
+<div class="layout-dashboard">
+    <div class="grid">
+        
+
+        <!--
+		<div class="card">
+            <h5>Advanced</h5> 
+            <p-fileUpload name="file" url="https://adm.reportnow.com.mx/:1338/file?path=imgs" (onUpload)="onUpload($event)"
+                          [multiple]="false" [maxFileSize]="1000000">
+                <ng-template pTemplate="content">
+                    <ul *ngIf="uploadedFiles.length">
+                        <li *ngFor="let file of uploadedFiles">{{file.name}} - {{file.size}} bytes</li>
+                    </ul>
+                </ng-template>
+            </p-fileUpload>
+        </div>
+
+		<ul>
+			<li *ngFor="let file of images">{{ file }}</li>
+		</ul>
+	
+		<div class="col-12">
+			<div class="card">
+				<h5>Galleria</h5>
+				
+				<p-galleria [value]="images" [responsiveOptions]="galleriaResponsiveOptions" [containerStyle]="{'max-width': '800px', 'margin':'auto'}" [numVisible]="6" [circular]="true">
+					<ng-template pTemplate="item" let-item>
+						<img [src]="item.itemImageSrc" style="width: 100%; display: block;"/>
+					</ng-template>
+					<ng-template pTemplate="thumbnail" let-item>
+						<div class="grid nogutter justify-center">
+							<img [src]="item.thumbnailImageSrc" style="display: block;"/>
+						</div>
+					</ng-template>
+				</p-galleria>
+			</div>
+		</div>
+
+        <div class="col-12 xl:col-12">
+            <div class="card">
+                
+            </div>
+        </div> 
+        -->
+
+        <div class="col-12 lg:col-12"> 
+            <div class="card">
+                <h4></h4>
+                <p>.</p>
+                <div class="flex justify-content-center align-items-center">
+                    <p-chart type="pie" [data]="revenueChart" [options]="revenueChartOptions" [style]="{'width': '50%'}"></p-chart>
+                </div>
+            </div>
+
+        </div>
+        
+    </div>
+
+</div>

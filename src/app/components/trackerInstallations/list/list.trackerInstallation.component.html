@@ -1,0 +1,168 @@
+<p-confirmDialog  #confirm [style]="{width: '50vw'}" rejectButtonStyleClass="p-button-outlined"></p-confirmDialog>
+<p-toast key="msg"></p-toast>
+<p-dialog header="Historial" [(visible)]="visibleHistorial"  [modal]="true"[breakpoints]="{ '960px': '75vw' }" [style]="{ width: '50vw' }" [draggable]="false" [resizable]="false">
+    <p-table #dt 
+    [value]="listHistorial"  
+    [lazy]="true"
+    [resetPageOnSort]="false"
+    [multiSortMeta]="[{field: 'id', order: 1}]"
+    sortMode="multiple" 
+    (onLazyLoad)="load($event)" 
+    [lazyLoadOnInit]="true"
+    [paginator]="true" 
+    [totalRecords]="totalRowsHistorial"
+    [rowsPerPageOptions]="[10,25,50]" 
+    [loading]="loading"    
+    [showCurrentPageReport]="true"
+    currentPageReportTemplate="{{ getPageRange(page, limit, totalRowsHistorial) }}"
+    [rows]="10" [rowHover]="true"  dataKey="id" responsiveLayout="scroll" [breakpoint]="'760px'" [tableStyle]="{'minx-width': '50rem'}">
+        
+        <ng-template pTemplate="header">
+            <tr>
+                <th>
+                    FECHA 
+                </th>
+                <th>
+                    DESCRIPCIÓN 
+                 </th>
+                 <th>
+                   
+                 </th>
+            </tr>
+        </ng-template>
+
+        <ng-template pTemplate="body" let-historial > 
+            <tr>
+                <td>
+                    {{historial.date | date: 'dd-MM-yyyy' }}
+
+                </td>
+
+                <td>
+                    {{historial.description }} 
+                </td>
+                <td>
+                    <button *ngIf="historial.type == 'installation'" target="_blank" pButton pRipple label="Ver detalle" icon="pi pi-window-maximize" class="p-button-rounded p-button-info p-button-text" fragment="ayudaDiv" [routerLink]="['/trackerInstallations/edit/', historial.id]"></button>
+                    <button *ngIf="historial.type == 'review'"  target="_blank" pButton pRipple  label="Ver detalle" icon="pi pi-window-maximize" class="p-button-rounded p-button-info p-button-text" fragment="ayudaDiv" [routerLink]="['/trackerInstallationReviews/edit/', historial.id]"></button>
+                    <button *ngIf="historial.type == 'uninstall'"  target="_blank" pButton pRipple  label="Ver detalle" icon="pi pi-window-maximize" class="p-button-rounded p-button-info p-button-text" fragment="ayudaDiv" [routerLink]="['/trackerUninstalls/edit/', historial.id]"></button>
+
+                </td>
+
+                
+            </tr>
+        </ng-template>
+    </p-table>
+</p-dialog>
+<div class="grid">
+    <div class="col-12">
+        <div class="card px-6 py-6">
+            <!--<p-toast></p-toast> -->
+            <p-toolbar styleClass="mb-4">
+                <ng-template pTemplate="left">
+                    <div class="my-2">
+                        <button pButton pRipple label="Agregar" icon="pi pi-plus" class="p-button-success mr-2" [routerLink]="['/trackerInstallations/add/']"></button>
+                        <button pButton pRipple label="Eliminar" icon="pi pi-trash" class="p-button-danger" (click)="delete(1,null)" [disabled]="!selectedTrackerInstallations || !selectedTrackerInstallations.length"></button>
+                    </div>
+                </ng-template>
+            </p-toolbar>
+
+            <p-table #dt 
+            [value]="trackerInstallations"  
+            [lazy]="true"
+            [resetPageOnSort]="false"
+            [multiSortMeta]="[{field: 'id', order: 1}]"
+            sortMode="multiple" 
+            (onLazyLoad)="load($event)" 
+            [lazyLoadOnInit]="true"
+            [paginator]="true" 
+            [totalRecords]="totalRows"
+            [rowsPerPageOptions]="[10,25,50]" 
+            [loading]="loading"    
+            [showCurrentPageReport]="true"
+            currentPageReportTemplate="{{ getPageRange(page, limit, totalRows) }}"
+            [(selection)]="selectedTrackerInstallations" selectionMode="multiple"
+            [rows]="10" [rowHover]="true"  dataKey="id" responsiveLayout="scroll" [breakpoint]="'760px'" [tableStyle]="{'minx-width': '50rem'}">
+                
+                <ng-template pTemplate="header">
+                    <tr>
+                        <th style="width: 3rem">
+                            <p-tableHeaderCheckbox></p-tableHeaderCheckbox>
+                        </th>
+                        <th pSortableColumn="id">
+                            ID <p-sortIcon field="id"></p-sortIcon>
+                        </th>
+                        <th >
+                           RASTREADOR 
+                        </th>
+                        <th >
+                            CLIENTE
+                        </th>
+                        <th >
+                            INSTALADOR 
+                        </th>
+                        <th pSortableColumn="trackerInstallationDate">
+                            FECHA <p-sortIcon field="trackerInstallationDate"></p-sortIcon>
+                        </th>
+                        <th pSortableColumn="trackerInstallationIsUninstalled">
+                            CON DESINTALACION <p-sortIcon field="trackerInstallationIsUninstalled"></p-sortIcon>
+                        </th>
+                        <th>
+                            <!-- Espacio para que se vea bien las columnas -->
+                        </th>
+                    </tr>
+                   <tr>
+                        <th>
+                            <!-- Espacio para que se vea bien las columnas -->
+                        </th>
+                        <th>
+                            <p-columnFilter type="numeric"  [showButtons]="false" field="id"  [matchModeOptions]="matchModeOptionsNumber" > </p-columnFilter>
+                        </th>
+                        <th>
+                            <p-columnFilter type="text" field="trackerInstallationTrackerId['trackerImei']" [matchModeOptions]="matchModeOptionsText" ></p-columnFilter>
+                        </th>
+                        <th>
+                            <p-columnFilter type="text" field="trackerInstallationCostumerId['costumerName']" [matchModeOptions]="matchModeOptionsText" ></p-columnFilter>
+                        </th>
+                        <th>
+                            <p-columnFilter type="text" field="trackerInstallationInstallerId" [matchModeOptions]="matchModeOptionsText" ></p-columnFilter>
+                        </th>
+                        <th>
+                            <p-columnFilter type="text" field="trackerInstallationDate" [matchModeOptions]="matchModeOptionsText" ></p-columnFilter>
+                        </th>
+                        <th>
+                            <p-columnFilter type="boolean" field="trackerInstallationIsUninstalled"  ></p-columnFilter>
+                        </th>
+                        <th>
+                            <!-- Espacio para que se vea bien las columnas -->
+                        </th>
+                    </tr> 
+                </ng-template>
+
+                <ng-template pTemplate="body" let-trackerInstallation let-expanded="expanded"> 
+                    <tr>
+                        <td>
+                            <p-tableCheckbox [value]="trackerInstallation"></p-tableCheckbox>
+                        </td>
+                        <td>{{trackerInstallation.id}}</td>
+                        <td>{{trackerInstallation.trackerInstallationTrackerId['trackerImei']}}</td>
+                        <td>{{trackerInstallation.trackerInstallationCostumerId['costumerName']}}</td>
+                        <td>{{trackerInstallation.trackerInstallationInstallerId['installerName']}}</td>
+                        <td>{{trackerInstallation.trackerInstallationDate | date: 'dd-MM-yyyy' }}</td>
+                        <td>{{(trackerInstallation.trackerInstallationIsUninstalled  ? 'SI':'NO')}}</td>
+                        <td>
+                            <div class="flex">
+                                <button pTooltip="Editar instalación" *ngIf="!trackerInstallation.trackerInstallationIsUninstalled"  pButton pRipple icon="pi pi-pencil" class="p-button-rounded p-button-info p-button-text" [routerLink]="['/trackerInstallations/edit/', trackerInstallation.id]"></button>
+                                <button pTooltip="Asignar revisión"  *ngIf="!trackerInstallation.trackerInstallationIsUninstalled" pButton pRipple icon="pi pi-book" class="p-button-rounded p-button-success p-button-text" [routerLink]="['/trackerInstallationReviews/add/', trackerInstallation.id]"></button>
+                                <button pTooltip="Realizar desintalación"  *ngIf="!trackerInstallation.trackerInstallationIsUninstalled" pButton pRipple icon="pi pi-qrcode" class="p-button-rounded p-button-warning p-button-text text-yellow-800" [routerLink]="['/trackerUninstalls/add/', trackerInstallation.id]"></button>
+                                <button pTooltip="Ver historial de instalación" pButton pRipple icon="pi pi-align-justify" class="p-button-rounded p-button-help p-button-text" (click)="getHistorial(trackerInstallation.id)"></button>
+                                <button pTooltip="Eliminar instalación" pButton pRipple icon="pi pi-trash" class="p-button-rounded p-button-danger p-button-text" (click)="delete(2,trackerInstallation)"></button>
+
+                            </div>
+                        </td>
+                    </tr>
+                </ng-template>
+            </p-table>
+        </div>
+    </div>
+</div>
+

@@ -1,0 +1,23 @@
+{
+    "proveedor":"Report",
+    "producto1":"qbit",
+    "producto2":"sim",
+    "precio":"1200",
+    "serial1":"355087093979655",
+    "serial2":"355087093974284",
+    "serial3":"8952020922393755116",
+    "serial4":"8952020020694292101",
+    "descripcionValida":"1 chip telcel",
+    "clienteValida":"Mattel",
+    "condicionesComercialesValida":"equipo gps fijo",
+    "tipoMonedaValida":"MXN",
+    "productoValida":"sim card",
+    "cantidadValida":"2",
+    "descuentoValida":"3.33",
+    "servicioValida":"Instalacion",
+    "direccionPagovalida":"Mar de bering",
+    "cfdiValida":"Adquisi",
+    "formaPagoValida":"cheque",
+    "metodoPagoValida":"diferido",
+    "notasValida":"Venta de RNLITE"
+}

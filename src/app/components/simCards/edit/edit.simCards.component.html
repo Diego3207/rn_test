@@ -1,0 +1,79 @@
+<style>
+	.error-box {
+		border: 1px solid red;
+	}
+</style>
+<p-toast key="msg"></p-toast>
+<div class="grid justify-content-center">
+    <div class="col-12 md:col-6 justify-content-between">
+        <div class="card p-fluid">
+            <form [formGroup]="form" (ngSubmit)="onSubmit()">
+                <div class="field">
+                    <label for="simCardSupplyId" class="font-semibold">Suministro</label>
+                    <p-dropdown 
+                        formControlName="simCardSupplyId" 
+                        [options]="listSupplies" 
+                        placeholder="Seleciona una opción"
+                        [filter]="true" 
+                        filterBy="label" 
+                        [showClear]="true"  
+                        optionLabel="label" 
+                        optionValue="value">
+                    </p-dropdown>
+                    <div *ngIf="form.controls.simCardSupplyId.invalid">
+                        <small class="text-red-600 flex justify-content-end" *ngIf="form.controls.simCardSupplyId.errors?.['required']" >*Campo requerido</small>
+                        <small class="text-red-600 flex justify-content-end" *ngIf="form.controls.simCardSupplyId.errors?.['maxlength']" >*Longitud máxima 100</small>
+                    </div>
+                </div>
+                <div class="field">
+                    <label for="simCardNumber" class="font-semibold">Número de teléfono</label>
+                    <input 
+                        pInputText 
+                        id="simCardNumber" 
+                        type="text" 
+                        formControlName="simCardNumber" 
+                        autofocus />
+                    <div *ngIf="form.controls.simCardNumber.invalid">
+                        <small class="text-red-600 flex justify-content-end" *ngIf="form.controls.simCardNumber.errors?.['required']" >*Campo requerido</small>
+                        <small class="text-red-600 flex justify-content-end" *ngIf="form.controls.simCardNumber.errors?.['maxlength']" >*Longitud máxima 100</small>
+                    </div>
+                </div>
+                <div class="field">
+                    <label for="line" class="font-semibold">Nombre de la compañia</label>
+                    <p-dropdown 
+                        formControlName="simCardTsp" 
+                        [options]="tsp" 
+                        placeholder="Seleciona una opción"
+                        [filter]="true" 
+                        filterBy="name" 
+                        [showClear]="true"  
+                        optionLabel="name" 
+                        optionValue="name">
+                    </p-dropdown>
+                    <div *ngIf="form.controls.simCardTsp.invalid">
+                        <small class="text-red-600 flex justify-content-end" *ngIf="form.controls.simCardTsp.errors?.['required']" >*Campo requerido</small>
+                        <small class="text-red-600 flex justify-content-end" *ngIf="form.controls.simCardTsp.errors?.['maxlength']" >*Longitud máxima 100</small>
+                    </div>
+                </div>
+                
+                <div class="field">
+                    <label for="simCardServicePlan" class="font-semibold">Plan del servicio</label>
+                    <input 
+                        pInputText 
+                        id="simCardServicePlan" 
+                        type="text" 
+                        formControlName="simCardServicePlan" 
+                        autofocus />
+                    <div *ngIf="form.controls.simCardServicePlan.invalid">
+                        <small class="text-red-600 flex justify-content-end" *ngIf="form.controls.simCardServicePlan.errors?.['required']" >*Campo requerido</small>
+                        <small class="text-red-600 flex justify-content-end" *ngIf="form.controls.simCardServicePlan.errors?.['maxlength']" >*Longitud máxima 100</small>
+                    </div>
+                </div>
+                <div class="col-12 flex justify-content-end mt-4">
+                    <button pButton pRipple class="p-button-outlined w-8rem mr-3"  label="Cancelar" (click)="cancel($event)" ></button>
+                    <button pButton pRipple class="p-button-primary w-8rem"  label="Guardar" ></button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>

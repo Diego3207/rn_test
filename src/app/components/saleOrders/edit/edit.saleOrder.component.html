@@ -1,0 +1,163 @@
+<style>
+	.error-box {
+		border: 1px solid red;
+	}
+</style>
+<p-toast key="msg"></p-toast>
+<p-dialog header="Header" [(visible)]="visible" [modal]="true" [style]="{ width: '50vw' }" [draggable]="true" [resizable]="true" [closable]="false">
+    <ng-template pTemplate="header">
+        <span class="text-xl font-bold">Asignación</span>
+    </ng-template>
+            <div class="grid justify-content-center m-3">
+                <div class="col-12 justify-content-between">
+                    <div class="card">
+                        <p-table 
+                        #dt 
+                        [value]="listAllRegisters" 
+                        [tableStyle]="{ 'min-width': '50rem' }" 
+                        [globalFilterFields]="['key', 'purchase', 'status']"
+                        selectionMode="multiple">
+                            <ng-template pTemplate="caption">
+                                <div class="flex">
+                                    <!--- <button type="button" pButton pRipple icon="pi pi-file" (click)="dt.exportCSV()" class="mr-2" pTooltip="CSV" tooltipPosition="bottom"></button> --->
+                                    
+                                    <span class="p-input-icon-left ml-auto"> 
+                                        <input pInputText #textInput type="text" (input)="dt.filterGlobal(textInput.value, 'contains')" placeholder="Búsqueda" />
+                                    </span> 
+                                </div>
+                            </ng-template>
+                            <ng-template pTemplate="header" class="grid">
+                                <tr>
+                                    <th class="col-1">
+                                    </th>
+                                    <th class="col-2">No. Serie</th>
+                                    <th class="col-2">Producto</th>
+                                    <th class="col-2">ID Orden de compra</th>
+                                    <th class="col-2">Fecha de compra</th>
+                                    <th class="col-2">Status</th>
+                                </tr>
+                            </ng-template>
+                            <ng-template pTemplate="body" let-register let-i="rowIndex">
+                                <tr>
+                                    <td>
+                                        <!--<p-tableCheckbox [value]="register" [disabled]="disabled"></p-tableCheckbox>-->
+                                        <p-checkbox  [binary]="true"  [(ngModel)]="register.supplyIsSelected" [ngModelOptions]="{standalone: true}"  [disabled]="register.supplyIsSelected ? false: getStatusCheck(register,i)" ></p-checkbox>
+                                    </td>
+                                    <td> {{register.id }}</td>
+                                    <td> {{register.supplyProductId['productBrand'] + " " +  register.supplyProductId['productModel']}}</td>
+                                    <td>{{ register.supplyPurchaseOrderId.id}}</td>
+                                    <td>{{ register.supplyDateSupplied | date: 'dd-MM-yyyy h:mm a ' }}</td>
+                                    <td>
+                                        <i class="pi" [ngClass]="{ 'text-green-500 pi-check-circle': register.status == 'disponible', 'text-red-500 pi-times-circle': register.status == 'vendido'}"></i>
+                                    </td>
+                                </tr>
+                            </ng-template>
+
+                            <ng-template pTemplate="emptymessage">
+                                <tr>
+                                    <td colspan="6">No hay productos disponibles en inventario.</td>
+                                </tr>
+                            </ng-template>
+                        </p-table>
+                    </div>
+                </div>
+            </div>
+    <ng-template pTemplate="footer">
+        <button type="button" pButton (click)="closeModalMap()" pRipple  class="p-button-outlined"  label="Cerrar" ></button>
+        <button type="button" pButton (click)="assignProduct()" pRipple  class="p-button-success mr-2" label="Asignar" ></button>
+    </ng-template>
+
+</p-dialog>
+<div class="grid justify-content-center">
+    <div class="col-12 md:col-6 justify-content-between">
+        <div class="card p-fluid">
+            <form [formGroup]="form" (ngSubmit)="onSubmit()">
+                <div class="field">
+                    <label class="font-semibold">Cotización</label>
+                    <p-dropdown [options]="listQuotationSale" appendTo="body" formControlName="saleOrderQuotationSaleId" optionValue="value" optionLabel="label"></p-dropdown>
+                    <div *ngIf="form.controls.saleOrderQuotationSaleId.invalid">
+                        <small class="text-red-600 flex justify-content-end" *ngIf="form.controls.saleOrderQuotationSaleId.errors?.['required']" >*Campo requerido</small>
+                        <small class="text-red-600 flex justify-content-end" *ngIf="form.controls.saleOrderQuotationSaleId.errors?.['maxlength']" >*Longitud máxima 100</small>
+                    </div>
+                </div>
+
+                <div *ngIf="listProducts.length" > 
+                    <p class="font-semibold">Productos: <i class="pi pi-info-circle" style="font-size: 1rem" pTooltip="Asignar los productos a la orden de venta"></i></p>
+                    <div class="grid field p-inputtext" *ngFor="let product of listProducts" style="margin: 1rem; width: initial;">
+                        <div class="col-9"> 
+                            <p> Cantidad por asignar: {{ product.quantity }} </p>
+                            <p> Marca: {{ product.brand }} </p>
+                            <p> Modelo: {{ product.model }} </p>
+                            <p> Garantía: {{ product.guarranty }} </p>
+                        </div>
+                        <div class="col-3" style="display: flex; justify-content: end; align-items: center;">
+                            <button pTooltip="Asignar productos a orden de venta" type="button" pButton pRipple icon="pi pi-arrow-circle-up" style="height: fit-content;"  (click)="getAllProducts( product.id,product.quantity)"></button>
+                        </div>
+                    </div>
+                </div>
+
+                <div *ngIf="listServices.length" >
+                    <p class="font-semibold">Servicios:</p>
+                    <div class="grid field p-inputtext" *ngFor="let service of listServices" style="margin: 1rem; width: initial;">
+                        <div class="col-12"> 
+                            <p> Cantidad: {{ service.quantity }} </p>
+                            <p> Descripción: {{ service.description }} </p>
+                            <p *ngIf="service.temporalityQuantity"> Temporalidad: {{ service.temporalityQuantity}} {{ service.temporality }}</p>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="field">
+                    <label for="saleOrderShippingDate" class="font-semibold">Fecha de contratación</label>
+                    <p-calendar id="saleOrderShippingDate" formControlName="saleOrderShippingDate" [showIcon]="true"></p-calendar>
+                    <div *ngIf="form.controls.saleOrderShippingDate.invalid">
+                        <small class="text-red-600 flex justify-content-end" *ngIf="form.controls.saleOrderShippingDate.errors?.['required']" >*Campo requerido</small>
+                        <small class="text-red-600 flex justify-content-end" *ngIf="form.controls.saleOrderShippingDate.errors?.['maxlength']" >*Longitud máxima 100</small>
+                    </div>
+                </div>
+                <div class="field">
+                    <label for="saleOrderShippingAddress" class="font-semibold">Dirección de Envío</label>
+                    <input 
+                        pInputText
+                        #search 
+                        id="saleOrderShippingAddress" 
+                        type="text"
+                        (keydown.enter)="$event.preventDefault()"
+                        placeholder="Búsqueda" 
+                        formControlName="saleOrderShippingAddress"
+                        class="font-semibold" 
+                        maxlength="251"
+                        autofocus />
+                    <div *ngIf="form.controls.saleOrderShippingAddress.invalid">
+                        <small class="text-red-600 flex justify-content-end" *ngIf="form.controls.saleOrderShippingAddress.errors?.['required']" >*Campo requerido</small>
+                        <small class="text-red-600 flex justify-content-end" *ngIf="form.controls.saleOrderShippingAddress.errors?.['maxlength']" >*Longitud máxima 100</small>
+                    </div>
+                </div>
+                <div class="field">
+                    <label class="font-semibold">CFDI</label>
+                    <p-dropdown [options]="listCfdi" appendTo="body" [filter]="true" formControlName="saleOrderCfdiId" filterBy="label" [showClear]="true" placeholder="Selecciona uno" optionValue="value" optionLabel="label"  ></p-dropdown>
+                </div>
+
+                <div class="field">
+                    <label class="font-semibold">Forma de Pago</label>
+                    <p-dropdown [options]="listPayWay" appendTo="body" [filter]="true" formControlName="saleOrderPayWayId" filterBy="label" [showClear]="true" placeholder="Selecciona uno" optionValue="value" optionLabel="label"  ></p-dropdown>
+                </div>
+
+                <div class="field">
+                    <label class="font-semibold">Método de Pago</label>
+                    <p-dropdown [options]="listPayMethod" appendTo="body" [filter]="true" formControlName="saleOrderPayMethodId" filterBy="label" [showClear]="true" placeholder="Selecciona uno" optionValue="value" optionLabel="label"  ></p-dropdown>
+                </div>
+
+                <div class="field">
+                    <label for="saleOrderAdditionalComments" class="font-semibold">Notas</label>
+                    <input id="saleOrderAdditionalComments" pInputText  type="text"  formControlName="saleOrderAdditionalComments"/>
+                </div>
+            
+                <div class="col-12 flex justify-content-end mt-4">
+                    <button pButton pRipple class="p-button-outlined w-8rem mr-3"  label="Cancelar" (click)="cancel($event)" ></button>
+                    <button pButton pRipple class="p-button-primary w-8rem"  label="Guardar" ></button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>

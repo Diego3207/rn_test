@@ -1,0 +1,30 @@
+<p-toast key="msg" [breakpoints]="{'0px': {width: '100%', right: '0', left: '0'}}"></p-toast>
+<div class="grid justify-content-center">
+	<div class="col-12 md:col-8 justify-content-between">
+		<div class="card p-fluid">
+		   		   
+			<form [formGroup]="form" (ngSubmit)="onSubmit()">
+				<div class="field">
+					<label for="name" class="font-semibold">Nombre</label>
+					<input pInputText id="name" maxlength="255" formControlName="moduleName" autofocus [ngClass]="{'ng-invalid ng-dirty':form.controls.moduleName.errors }" />
+					<div *ngIf="form.controls.moduleName.invalid">
+						<small class="text-red-600 flex justify-content-end" *ngIf="form.controls.moduleName.errors?.['required']" >*Campo requerido</small>
+						<small class="text-red-600 flex justify-content-end" *ngIf="form.controls.moduleName.errors?.['maxlength']" >*Longitud máxima 255</small>
+					</div>
+				</div>
+				<div class="field">
+					<label for="name" class="font-semibold">Descripción</label>
+					<input pInputText id="name" maxlength="255" formControlName="moduleDescription" autofocus [ngClass]="{'ng-invalid ng-dirty':form.controls.moduleDescription.errors }" />
+					<div *ngIf="form.controls.moduleDescription.invalid">
+						<small class="text-red-600 flex justify-content-end" *ngIf="form.controls.moduleDescription.errors?.['maxlength']" >*Longitud máxima 255</small>
+					</div>
+				</div>
+				
+				<div class="col-12 flex justify-content-end mt-4">
+					<button pButton pRipple class="p-button-outlined w-8rem mr-3"  label="Cancelar" (click)="cancel($event)" ></button>
+					<button pButton pRipple class="p-button-primary w-8rem"  label="Guardar" ></button>
+				</div>
+			</form>
+		</div>
+	</div>
+</div>

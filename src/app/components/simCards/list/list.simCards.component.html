@@ -1,0 +1,159 @@
+<p-confirmDialog  #confirm [style]="{width: '50vw'}" rejectButtonStyleClass="p-button-outlined"></p-confirmDialog>
+<p-dialog [(visible)]="visible" header="Proceso de importacion" [modal]="true" [style]="{ width: '50vw' }"  [closable]="false" [draggable]="false" [resizable]="false">
+    <p-fileUpload #fileUpload 
+        name="file" 
+        chooseLabel="Seleccionar archivo"
+        cancelLabel ="Cancelar"
+        uploadLabel = "Enviar"
+        (onBeforeUpload) = "sendData($event)"
+        [multiple]="false" 
+        (onClear)="clearCSV()"
+        accept=".csv"
+        (onSelect)="importData($event)"
+        uploadStyleClass ="p-button-success"
+        cancelStyleClass ="p-button-secondary"
+        [maxFileSize]=100000000>
+        <ng-template pTemplate="content">
+           
+                <small>*Adjuntar archivo</small>
+                <table cellspacing="0" cellpadding="0">
+                    <tr>
+                      <th *ngFor="let header of tableTitle">{{ header }}</th>
+                    </tr>
+                    <tr *ngFor="let data of tableRecords; let i = index">
+                      <td *ngFor="let header of tableTitle">
+                        {{ data[header] }}
+                      </td>
+                    </tr>
+                  </table>
+                    <div></div>
+                   
+                
+          
+        </ng-template>
+    </p-fileUpload> 
+    <ng-template pTemplate="footer">
+        <p-button icon="pi pi-times" (click)="visible = false" label="Cerrar" styleClass="p-button-outlined p-button-primary"></p-button>
+
+    </ng-template>
+</p-dialog>
+<p-toast key="msg"></p-toast>
+<div class="grid">
+    <div class="col-12">
+        <div class="card px-6 py-6">
+            <!--<p-toast></p-toast> -->
+            <p-toolbar styleClass="mb-4 gap-2">
+                <ng-template pTemplate="left">
+                    <div class="my-2">
+                        <button pButton pRipple label="Importar" icon="pi pi-upload" class="p-button-warning  m-2" (click)="showDialog()"></button>
+                        <button pButton pRipple label="Agregar" icon="pi pi-plus" class="p-button-success m-2" [routerLink]="['/simCards/add/']"></button>
+                        <button pButton pRipple label="Eliminar" icon="pi pi-trash" class="p-button-danger m-2" (click)="delete(1,null)" [disabled]="!selectedSimCards || !selectedSimCards.length"></button>
+                    </div>
+                </ng-template>
+            </p-toolbar>
+
+            <p-table #dt 
+            [value]="simCards"  
+            [lazy]="true"
+            [resetPageOnSort]="false"
+            [multiSortMeta]="[{field: 'id', order: 1}]"
+            sortMode="multiple" 
+            (onLazyLoad)="load($event)" 
+            [lazyLoadOnInit]="true"
+            [paginator]="true" 
+            [totalRecords]="totalRows"
+            [rowsPerPageOptions]="[10,25,50]" 
+            [loading]="loading"    
+            [showCurrentPageReport]="true"
+            currentPageReportTemplate="{{ getPageRange(page, limit, totalRows) }}"
+            [(selection)]="selectedSimCards" selectionMode="multiple"
+            [rows]="10" [rowHover]="true"  dataKey="id" responsiveLayout="scroll" [breakpoint]="'760px'" [tableStyle]="{'minx-width': '50rem'}">
+                
+                <ng-template pTemplate="header">
+                    <tr>
+                        <th>
+                            <!-- Espacio para que se vea bien las columnas -->
+                        </th>
+                        <th style="width: 3rem">
+                            <p-tableHeaderCheckbox></p-tableHeaderCheckbox>
+                        </th>
+                        <th pSortableColumn="id">
+                            ID<p-sortIcon field="id"></p-sortIcon>
+                        </th>
+                        <th >
+                            ICCID 
+                        </th>
+                        <th pSortableColumn="simCardNumber">
+                            NÚMERO <p-sortIcon field="simCardNumber"></p-sortIcon>
+                        </th>
+                        <th pSortableColumn="simCardTsp">
+                            COMPAÑÍA <p-sortIcon field="simCardTsp"></p-sortIcon>
+                        </th>
+                        <th pSortableColumn="simCardServicePlan">
+                            PLAN <p-sortIcon field="simCardServicePlan"></p-sortIcon>
+                        </th>
+                        <th pSortableColumn="simCardStatus">
+                            ESTADO <p-sortIcon field="simCardStatus"></p-sortIcon>
+                        </th>
+                        <th>
+                            <!-- Espacio para que se vea bien las columnas -->
+                        </th>
+                    </tr>
+                   <tr>
+                        <th>
+                            <!-- Espacio para que se vea bien las columnas -->
+                        </th>
+                        <th>
+                            <!-- Espacio para que se vea bien las columnas -->
+                        </th>
+                        <th>
+                            <p-columnFilter type="numeric"  [showButtons]="false" field="id"  [matchModeOptions]="matchModeOptionsNumber" > </p-columnFilter>
+                        </th>
+                        <th>
+                            <p-columnFilter type="text" field="simCard.simCardSupplyId['supplyKey']" [matchModeOptions]="matchModeOptionsText" ></p-columnFilter>
+                        </th>
+                        <th>
+                            <p-columnFilter type="text" field="simCardNumber" [matchModeOptions]="matchModeOptionsText" ></p-columnFilter>
+                        </th>
+                        <th>
+                            <p-columnFilter type="text" field="simCardTsp" [matchModeOptions]="matchModeOptionsText" ></p-columnFilter>
+                        </th>
+                        <th>
+                            <p-columnFilter type="text" field="simCardServicePlan" [matchModeOptions]="matchModeOptionsText" ></p-columnFilter>
+                        </th>
+                        <th>
+                            <p-columnFilter type="text" field="simCardStatus" [matchModeOptions]="matchModeOptionsText" ></p-columnFilter>
+                        </th>
+                        <th>
+                            <!-- Espacio para que se vea bien las columnas -->
+                        </th>
+                    </tr> 
+                </ng-template>
+
+                <ng-template pTemplate="body" let-simCard let-expanded="expanded"> 
+                    <tr>
+                        <td>
+							<button type="button" pButton pRipple [pRowToggler]="simCard" class="p-button-text p-button-rounded p-button-plain" [icon]="expanded ? 'pi pi-chevron-down' : 'pi pi-chevron-right'"></button>
+						</td>
+                        <td>
+                            <p-tableCheckbox [value]="simCard"></p-tableCheckbox>
+                        </td>
+                        <td>{{simCard.id}}</td>
+                        <td>{{simCard.simCardSupplyId['supplyKey']}}</td>
+                        <td>{{simCard.simCardNumber}}</td>
+                        <td>{{simCard.simCardTsp}}</td>
+                        <td>{{simCard.simCardServicePlan}}</td>
+                        <td>{{simCard.simCardStatus}}</td>
+                        <td>
+                            <div class="flex">
+                                <button pTooltip="Editar SIM Card" pButton pRipple icon="pi pi-pencil" class="p-button-rounded p-button-info p-button-text" [routerLink]="['/simCards/edit/', simCard.id]"></button>
+                                <button pTooltip="Eliminar SIM Card" pButton pRipple icon="pi pi-trash" class="p-button-rounded p-button-danger p-button-text" (click)="delete(2,simCard)"></button>
+                            </div>
+                        </td>
+                    </tr>
+                </ng-template>
+            </p-table>
+        </div>
+    </div>
+</div>
+

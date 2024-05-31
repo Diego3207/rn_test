@@ -1,0 +1,17 @@
+{
+    "nombreValido":"911 (Escudo Urbano)",
+    "categoriaValido":"Protección Civil",
+    "direccionValido": "P.º de La Cima S/N, El Palomar, 45640 Palomar, Jal.",
+    "numeroValido":"911",
+    "extensionValido":"3285",
+    "viaComunicacionValido":"L",
+    "nombrePersonaValido":"Juan Manuel",
+    "puestoValido":"Judicial",
+    "correoValido":"juan@hotmail.com",
+    "nombreInvalido":"911 (Escudo Urbano)911 (Escudo Urbano)911 (Escudo Urbano)911 (Escudo Urbano)911 (Escudo Urbano)911 (Escudo Urbano)911 (Escudo Urbano)911 (Escudo Urbano)911 (Escudo Urbano)911 (Escudo Urbano)911 (Escudo Urbano)911 (Escudo Urbano)911 (Escudo Urbano)911 (Escudo U",
+    "direccionInvalido": "mar, Jal.P.º de La Cima S/N, El Palomar, 45640 Palomar, Jal.P.º de La Cima S/N, El Palomar, 45640 Palomar, Jal.P.º de La Cima S/N, El Palomar, 45640 Palomar, Jal.P.º de La Cima S/N, El Palomar, 45640 Palomar, Jal.lomar, Jal.lomar, Jal.lomar, Jal.lomar, Jal.lomar, Jal.lomar, Jal.",
+    "extensionInvalido":"3285332853328533285332853328533285332853328533285332853",
+    "nombrePersonaInvalido":"Juan ManuelJuan ManuelJuan ManuelJuan ManuelJuan ManuelJuan ManuelJuan ManuelJuan ManuelJuan ManuelJuan ManuelJuan ManuelJuan ManuelJuan ManuelJuan ManuelJuan ManuelJuan ManuelJuan ManuelJuan ManuelJuan ManuelJuan ManuelJuan ManuelJuan ManuelJuan ManuelJuan ManuelJuan ManuelJuan ManuelJuan Manuel",
+    "puestoInvalido":"JudicialJudicialJudicialJudicialJudicialJudicialJudicialJudicialJudicialJudicialJudicialJudicialJudicialJudicialJudicialJudicialJudicialJudicialJudicialJudicialJudicialJudicialJudicialJudicialJudicialJudicialJudicialJudicialJudicialJudicialcialJudicial",
+    "correoInvalido":"juan@.com"
+}

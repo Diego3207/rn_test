@@ -1,0 +1,63 @@
+<style>
+	.error-box {
+		border: 1px solid red;
+	}
+</style>
+<p-toast key="msg"></p-toast>
+<div class="grid justify-content-center">
+    <div class="col-12 md:col-6 justify-content-between">
+        <div class="card p-fluid">
+            <form [formGroup]="form" (ngSubmit)="onSubmit()">
+                <div class="field">
+                    <label for="monitoringDeviceName" class="font-semibold">Nombre del Dispositivo</label>
+                    <input 
+                        pInputText 
+                        id="monitoringDeviceName" 
+                        type="text" 
+                        formControlName="monitoringDeviceName" 
+                        autofocus />
+                    <div *ngIf="form.controls.monitoringDeviceName.invalid">
+                        <small class="text-red-600 flex justify-content-end" *ngIf="form.controls.monitoringDeviceName.errors?.['required']" >*Campo requerido</small>
+                        <small class="text-red-600 flex justify-content-end" *ngIf="form.controls.monitoringDeviceName.errors?.['maxlength']" >*Longitud máxima 255</small>
+                    </div>
+                </div>
+
+                <div class="field">
+                    <label class="font-semibold">Cliente</label>
+                    <p-dropdown [options]="listCostumers" appendTo="body" [filter]="true" formControlName="monitoringDeviceCostumerId" filterBy="label" [showClear]="true" placeholder="Selecciona uno" optionValue="value" optionLabel="label"  ></p-dropdown>
+                    <div *ngIf="form.controls.monitoringDeviceCostumerId.invalid">
+                        <small class="text-red-600 flex justify-content-end" *ngIf="form.controls.monitoringDeviceCostumerId.errors?.['required']" >*Campo requerido</small>
+                    </div>
+                </div>
+
+                <div class="field">
+                    <label class="font-semibold">Tipo de dispositivo</label>
+                    <p-dropdown 
+                        formControlName="monitoringDeviceType" 
+                        [options]="typeDevices" 
+                        placeholder="Selecciona uno"
+                        appendTo="body"
+                        [showClear]="true"  
+                        optionLabel="name" 
+                        optionValue="name">
+                    </p-dropdown>
+                    <div *ngIf="form.controls.monitoringDeviceType.invalid">
+                        <small class="text-red-600 flex justify-content-end" *ngIf="form.controls.monitoringDeviceType.errors?.['required']" >*Campo requerido</small>
+                    </div>
+                </div>
+
+                <div class="field">
+                    <label for="monitoringDeviceProvider" class="font-semibold">Proveedor Interno </label>
+                    <div>
+                        <p-inputSwitch  inputId="monitoringDeviceProvider" formControlName="monitoringDeviceProvider" ></p-inputSwitch>
+                    </div>
+                </div>
+
+                <div class="col-12 flex justify-content-end mt-4">
+                    <button pButton pRipple class="p-button-outlined w-8rem mr-3"  label="Cancelar" (click)="cancel($event)" ></button>
+                    <button pButton pRipple class="p-button-primary w-8rem"  label="Guardar" ></button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>

@@ -1,0 +1,166 @@
+<style>
+	.error-box {
+		border: 1px solid red;
+	}
+</style>    
+    <p-toast key="msg"></p-toast>
+    <div class="grid justify-content-center">
+        <div class="col-12 md:col-10 justify-content-between">
+            <div class="card p-fluid">
+                <form [formGroup]="form" (ngSubmit)="onSubmit()">
+                    <div class="field">
+                        <label for="costumerName" class="font-semibold">Nombre</label>
+                        <input pInputText id="costumerName" maxlength="101" formControlName="costumerName" autofocus/>
+                        <div *ngIf="form.controls.costumerName.invalid">
+                        <small class="text-red-600 flex justify-content-end" *ngIf="form.controls.costumerName.errors?.['required']" >*Campo requerido</small>
+                        <small class="text-red-600 flex justify-content-end" *ngIf="form.controls.costumerName.errors?.['maxlength']" >*Longitud máxima 100</small>
+                        </div>
+                    </div>
+                    <div class="field">
+                        <label for="costumerBussinessName" class="font-semibold">Nombre Comercial</label>
+                        <input pInputText id="costumerBussinessName" maxlength="101" formControlName="costumerBussinessName" autofocus/>
+                        <div *ngIf="form.controls.costumerBussinessName.invalid">
+                        <small class="text-red-600 flex justify-content-end" *ngIf="form.controls.costumerBussinessName.errors?.['maxlength']" >*Longitud máxima 100</small>
+                        </div>
+                    </div>
+                    <div class="field">
+                        <label for="costumerRfc" class="font-semibold">RFC</label>
+                        <input pInputText id="costumerRfc" maxlength="101" formControlName="costumerRfc" autofocus/>
+                        <div *ngIf="form.controls.costumerRfc.invalid">
+                        <small class="text-red-600 flex justify-content-end" *ngIf="form.controls.costumerRfc.errors?.['maxlength']" >*Longitud máxima 100</small>
+                        </div>
+                    </div>
+                    <div class="field">
+                        <label for="costumerAddress" class="font-semibold">Dirección</label>
+                        <input 
+                            pInputText
+                            #search 
+                            id="costumerAddress" 
+                            type="text"
+                            (keydown.enter)="$event.preventDefault()"
+                            placeholder="Búsqueda" 
+                            formControlName="costumerAddress"
+                            class="font-semibold" 
+                            maxlength="251"
+                            autofocus />
+                        <div *ngIf="form.controls.costumerAddress.invalid">
+                        <small class="text-red-600 flex justify-content-end" *ngIf="form.controls.costumerAddress.errors?.['maxlength']" >*Longitud máxima 250</small>
+                        </div>
+                    </div>
+                    <div class="field">
+                        <label for="costumerWebSite" class="font-semibold">Sitio Web</label>
+                        <input pInputText id="costumerWebSite" maxlength="101" formControlName="costumerWebSite" autofocus/>
+                        <div *ngIf="form.controls.costumerWebSite.invalid">
+                        <small class="text-red-600 flex justify-content-end" *ngIf="form.controls.costumerWebSite.errors?.['maxlength']" >*Longitud máxima 100</small>
+                        </div>
+                    </div>
+                    <div class="field">
+                        <label for="costumerIsClient" class="font-semibold">Estatus <i class="pi pi-info-circle" style="font-size: 1rem" pTooltip="El switch apagado indica que el cliente es un prospecto, si desea indicar que se trata de un cliente activo favor de activar el switch"></i></label>
+                        <div>
+                            <p-inputSwitch  inputId="costumerIsClient" formControlName="costumerIsClient" ></p-inputSwitch>
+                        </div>
+                    </div>
+                    <div class="field"> 
+                        <label for="costumerGroup" class="font-semibold">Grupo <i class="pi pi-info-circle" style="font-size: 1rem" pTooltip="Seleccionar un grupo existente o crear uno nuevo"></i> </label>
+                        <p-autoComplete placeholder="Seleccionar un grupo existente o crear uno nuevo" formControlName="costumerGroup" [dropdown]="true"  [suggestions]="listGroupFiltered" (completeMethod)="filterElement($event)" field="label"></p-autoComplete>
+
+                    </div>
+                    
+                    <div>
+                        <div class="flex flex-wrap gap-2 m-2">
+                            <p-button label="Contactos"  (onClick)="addRow('contact')" icon="pi pi-plus"  badge="{{form.controls.costumerContacts.length}}" ></p-button>
+                        </div>
+                     
+                       <div class="card mt-3" formArrayName="costumerContacts">
+                            <p-table responsiveLayout="stack" [value]="infoContactsArray().controls" dataKey="index" editMode="column" [tableStyle]="{'minx-width': '100rem'}">
+                                <ng-template pTemplate="header">
+                                    <tr>
+                                        <th style="width:20%">Nombre</th>
+                                        <th style="width:20%">Teléfono</th>
+                                        <th style="width:20%">Email</th>
+                                        <th style="width:20%">Departamento</th>
+                                    </tr>
+                                </ng-template>
+                                <ng-template pTemplate="body" let-costumerContact  let-i="rowIndex">
+                                    <tr   [pEditableRow]="costumerContact" [formGroupName]="i">
+                                        <td>
+                                            <div class="col-12 ">
+                                                <input  pInputText type="text" placeholder="Nombre" formControlName="costumerContactName" >
+                                                <div *ngIf="form.controls.costumerContacts.controls[i].controls.costumerContactName.invalid">
+                                                    <small class="text-red-600 flex justify-content-end" *ngIf="form.controls.costumerContacts.controls[i].controls.costumerContactName.errors?.['maxlength']" >*Longitud máxima 100 </small>
+                                                </div>	
+                                            </div>
+                                        </td>
+                                        <td >
+                                            <div class="col-12 ">
+                                                <p-inputMask mask="999-999-99-99" placeholder="999-999-99-99" formControlName="costumerContactPhone"></p-inputMask>
+                                            </div>
+                                        </td>
+                                        <td>
+                                            <div class="col-12 ">
+                                                <input pInputText type="text" placeholder="Correo Electronico"  formControlName="costumerContactEmail">
+                                                <div *ngIf="form.controls.costumerContacts.controls[i].controls.costumerContactEmail.invalid">
+                                                    <small class="text-red-600 flex justify-content-end" *ngIf="form.controls.costumerContacts.controls[i].controls.costumerContactEmail.errors?.['email'] || form.controls.costumerContacts.controls[i].controls.costumerContactEmail.errors?.['pattern']" >*Formato  inválido</small>
+                                                </div>
+                                            </div>
+                                        </td>
+                                        <td>
+                                            <div class="col-12 ">
+                                                <input pInputText type="text" placeholder="Departamento"  formControlName="costumerContactDepartment">
+                                                <div *ngIf="form.controls.costumerContacts.controls[i].controls.costumerContactDepartment.invalid">
+                                                    <small class="text-red-600 flex justify-content-end" *ngIf="form.controls.costumerContacts.controls[i].controls.costumerContactDepartment.errors?.['maxlength']" >*Longitud máxima 100 </small>
+                                                </div>
+                                            </div>
+                                        </td>
+                                        <td>
+                                            <div class="flex align-items-center justify-content-center gap-2">
+                                                <button pButton pRipple type="button"  (click)="removeRow('contact',costumerContact,i)" pCancelEditableRow icon="pi pi-trash" class="p-button-rounded p-button-text p-button-danger"></button>                                                
+                                            </div>
+                                        </td>
+                                    </tr>
+                                </ng-template>
+                            </p-table>
+                        </div> 
+                    </div>
+
+                    <div >
+                        <div class="flex flex-wrap gap-2 m-2">
+                            <p-button label="Cuentas Bancarias"  (onClick)="addRow('databank')" icon="pi pi-plus"  badge="{{form.controls.costumerDataBanks.length}}" ></p-button>
+                        </div>
+                        <div class="card mt-3" formArrayName="costumerDataBanks">
+                            <div *ngIf="form.controls.costumerDataBanks.invalid">
+                                <small class="text-red-600 flex justify-content-end" *ngIf="form.controls.costumerDataBanks.errors?.['duplicated']" >*Cuenta bancaria duplicado</small>
+                            </div>
+                            <p-table responsiveLayout="stack" [breakpoint]="'760px'" [value]="infoDatabanksArray().controls" dataKey="index" editMode="row" [tableStyle]="{'minx-width': '50rem'}">
+                                <ng-template pTemplate="header">
+                                    <tr>
+                                        <th style="width:20%">Cuentas Bancarias</th>     
+                                        <th></th>                                  
+                                    </tr>
+                                </ng-template>
+                                <ng-template pTemplate="body" let-costumerDatabank  let-i="rowIndex">
+                                    <tr   [pEditableRow]="costumerDatabank" [formGroupName]="i">
+                                        <td>
+                                            <div class="col-12 ">
+                                                <p-dropdown [options]="listDataBanks"  appendTo="body" [filter]="true" formControlName="costumerDataBankDataBankId" filterBy="label" [showClear]="true" placeholder="Selecciona uno" optionValue="value" optionLabel="label"  ></p-dropdown>
+                                            </div>
+                                        </td>
+                                        <td>
+                                            <div class="flex align-items-center justify-content-center gap-2">
+                                                <button pButton pRipple type="button"  (click)="removeRow('databank',costumerDatabank,i)" pCancelEditableRow icon="pi pi-trash" class="p-button-rounded p-button-text p-button-danger"></button>                                                
+                                            </div>
+                                        </td>
+                                    </tr>
+                                </ng-template>
+                            </p-table>
+                        </div>
+                    </div>
+
+                    <div class="col-12 flex justify-content-end mt-4">
+                        <button pButton pRipple class="p-button-outlined w-8rem mr-3"  label="Cancelar" (click)="cancel($event)" ></button>
+                        <button pButton pRipple class="p-button-primary w-8rem"  label="Guardar" ></button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>

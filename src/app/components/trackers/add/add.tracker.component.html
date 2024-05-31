@@ -1,0 +1,70 @@
+<style>
+	.error-box {
+		border: 1px solid red;
+	}
+</style>
+<p-toast key="msg"></p-toast>
+    <div class="grid justify-content-center">
+        <div class="col-12 md:col-6 justify-content-between">
+            <div class="card p-fluid">
+               
+                <form [formGroup]="form" (ngSubmit)="onSubmit()">
+                    <div class="field">
+                        <label for="line" class="font-semibold">Suministro</label>
+                        <p-dropdown 
+                            formControlName="trackerSupplyId" 
+                            [options]="listSupplies" 
+                            placeholder="Seleciona una opción"
+                            [filter]="true" 
+                            filterBy="label" 
+                            [showClear]="true"  
+                            optionLabel="label" 
+                            optionValue="value">
+                        </p-dropdown>
+                        <div *ngIf="form.controls.trackerSupplyId.invalid">
+                            <small class="text-red-600 flex justify-content-end" *ngIf="form.controls.trackerSupplyId.errors?.['required']" >*Campo requerido</small>
+                        </div>
+                    </div>
+                    <div class="field">
+                        <label for="name" class="font-semibold">IMEI</label>
+                        <input  pInputText id="name"   type="text"  formControlName="trackerImei" autofocus />
+                        <div *ngIf="form.controls.trackerImei.invalid">
+                            <small class="text-red-600 flex justify-content-end" *ngIf="form.controls.trackerImei.errors?.['required']" >*Campo requerido</small>
+                            <small class="text-red-600 flex justify-content-end" *ngIf="form.controls.trackerImei.errors?.['maxlength']" >*Longitud máxima 16</small>
+                        </div>
+                    </div>
+                    
+                    <div class="field">
+                        <label for="line" class="font-semibold">Tarjeta SIM</label>
+                        <p-dropdown 
+                            formControlName="trackerSimCardId" 
+                            [options]="listSimCards" 
+                            placeholder="Seleciona una opción"
+                            [filter]="true" 
+                            filterBy="label" 
+                            [showClear]="true"  
+                            optionLabel="label" 
+                            optionValue="value">
+                        </p-dropdown>
+                        <div *ngIf="form.controls.trackerSimCardId.invalid">
+                            <small class="text-red-600 flex justify-content-end" *ngIf="form.controls.trackerSimCardId.errors?.['required']" >*Campo requerido</small>
+                        </div>
+                    </div>
+                    <div class="field">
+                        <label for="line"  class="font-semibold">Voltaje máximo</label>
+                        <p-inputNumber   [minFractionDigits]="2"  inputId="locale-us"  mode="decimal" locale="en-US" formControlName="trackerMaximumVoltage" [useGrouping]="false"></p-inputNumber>
+                        
+                    </div>
+                    <div class="field">
+                        <label for="line"  class="font-semibold">Voltaje mínimo</label>
+                        <p-inputNumber   [minFractionDigits]="2" inputId="locale-us"  mode="decimal" locale="en-US" inputId="locale-us"  mode="decimal" locale="en-US" formControlName="trackerMinimumVoltage" [useGrouping]="false"></p-inputNumber>
+                    </div>
+                   
+                    <div class="col-12 flex justify-content-end mt-4">
+                        <button pButton pRipple class="p-button-outlined w-8rem mr-3"  label="Cancelar" (click)="cancel($event)" ></button>
+                        <button pButton pRipple class="p-button-primary w-8rem"  label="Guardar" ></button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>

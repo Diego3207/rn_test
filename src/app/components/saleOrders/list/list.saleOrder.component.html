@@ -1,0 +1,147 @@
+<p-confirmDialog  #confirm [style]="{width: '50vw'}" rejectButtonStyleClass="p-button-outlined"></p-confirmDialog>
+<p-toast key="msg"></p-toast>
+<div class="grid">
+    <div class="col-12">
+        <div class="card px-6 py-6">
+            <!--<p-toast></p-toast> -->
+            <p-toolbar styleClass="mb-4">
+                <ng-template pTemplate="left">
+                    <div class="my-2">
+                        <!--<button pButton pRipple label="Agregar" icon="pi pi-plus" class="p-button-success mr-2" [routerLink]="['/saleOrders/add/']"></button> -->
+                        <button pButton pRipple label="Eliminar" icon="pi pi-trash" class="p-button-danger" (click)="delete(1,null)" [disabled]="!selectedSaleOrders || !selectedSaleOrders.length"></button>
+                    </div>
+                </ng-template>
+            </p-toolbar>
+
+            <p-table #dt 
+            [value]="saleOrders"  
+            [lazy]="true"
+            [resetPageOnSort]="false"
+            [multiSortMeta]="[{field: 'id', order: 1}]"
+            sortMode="multiple" 
+            (onLazyLoad)="load($event)" 
+            [lazyLoadOnInit]="true"
+            [paginator]="true" 
+            [totalRecords]="totalRows"
+            [rowsPerPageOptions]="[10,25,50]" 
+            [showCurrentPageReport]="true"
+            currentPageReportTemplate="{{ getPageRange(page, limit, totalRows) }}"
+            [(selection)]="selectedSaleOrders" selectionMode="multiple"
+            [rows]="10" [rowHover]="true"  dataKey="id" responsiveLayout="scroll" [breakpoint]="'760px'"  [tableStyle]="{'minx-width': '50rem'}" >
+                
+                <ng-template pTemplate="header">
+                    <tr>
+                        <th >
+							<!-- expander -->
+						</th>
+                        <th style="width: 3rem">
+                            <p-tableHeaderCheckbox></p-tableHeaderCheckbox>
+                        </th>
+                        <th pSortableColumn="id">
+                            Id<p-sortIcon field="id"></p-sortIcon>
+                        </th>
+                        <th pSortableColumn="saleOrderQuotationSaleId['quotationSaleFolio']">
+                            Folio<p-sortIcon field="saleOrderQuotationSaleId['quotationSaleFolio']"></p-sortIcon>
+                        </th>
+                        <th pSortableColumn="saleOrderQuotationSaleId['quotationSaleDescription']">
+                            Descripción <p-sortIcon field="saleOrderQuotationSaleId['quotationSaleDescription']"></p-sortIcon>
+                        </th>
+                        <th pSortableColumn="saleOrderTransmitter['userFullName']">
+                            Emisor <p-sortIcon field="saleOrderTransmitter['userFullName']"></p-sortIcon>
+                        </th>
+                        <th pSortableColumn="saleOrderShippingDate">
+                            Fecha de contratación <p-sortIcon field="saleOrderShippingDate"></p-sortIcon>
+                        </th>
+                        <th pSortableColumn="saleOrderStatus">
+                            Estado <p-sortIcon field="saleOrderStatus"></p-sortIcon>
+                        </th>
+                        <th>
+                            <!-- Espacio para que se vea bien las columnas -->
+                        </th>
+                    </tr>
+                   <tr>
+                        <th >
+                            <!-- expander -->
+                        </th>
+                        <th>
+                            <!-- Espacio para que se vea bien las columnas -->
+                        </th>
+                        <th >
+                            <p-columnFilter type="numeric"  [showButtons]="false" field="id"  [matchModeOptions]="matchModeOptionsNumber" > </p-columnFilter>
+                        </th>
+                        <th>
+                            <p-columnFilter type="text" field="saleOrderQuotationSaleId['quotationSaleFolio']" [matchModeOptions]="matchModeOptionsText" ></p-columnFilter>
+                        </th>
+                        <th>
+                            <p-columnFilter type="text" field="saleOrderQuotationSaleId['quotationSaleDescription']" [matchModeOptions]="matchModeOptionsText" ></p-columnFilter>
+                        </th>
+                        <th>
+                            <p-columnFilter type="text" field="saleOrderTransmitter['userFullName']" [matchModeOptions]="matchModeOptionsText" ></p-columnFilter>
+                        </th>
+                        <th>
+                            <p-columnFilter type="text" field="saleOrderShippingDate" [matchModeOptions]="matchModeOptionsText" ></p-columnFilter>
+                        </th>
+                        <th>
+                            <p-columnFilter type="text" field="saleOrderStatus" [matchModeOptions]="matchModeOptionsText" ></p-columnFilter>
+                        </th>
+                        <th>
+                            <!-- Espacio para que se vea bien las columnas -->
+                        </th>
+                    </tr> 
+                </ng-template>
+
+                <ng-template pTemplate="body" let-saleOrder let-expanded="expanded"> 
+                    <tr>
+                        <td>
+							<button type="button" pButton pRipple [pRowToggler]="saleOrder" class="p-button-text p-button-rounded p-button-plain" [icon]="expanded ? 'pi pi-chevron-down' : 'pi pi-chevron-right'"></button>
+						</td>
+                        <td>
+                            <p-tableCheckbox [value]="saleOrder"></p-tableCheckbox>
+                        </td>
+                        <td >{{saleOrder.id}}</td>
+                        <td >{{saleOrder.saleOrderQuotationSaleId['quotationSaleFolio']}}</td>
+                        <td >{{saleOrder.saleOrderQuotationSaleId['quotationSaleDescription']}}</td>
+                        <td >{{saleOrder.saleOrderTransmitter['userFullName']}}</td>
+                        <td >{{saleOrder.saleOrderShippingDate == null ? 'Pendiente' : saleOrder.saleOrderShippingDate | date: 'dd-MM-yyyy'}}</td>
+                        <td >{{saleOrder.saleOrderStatus}}</td>
+                        <td>
+                            <div class="flex">
+                                <button pTooltip="Reanudar Orden de venta" *ngIf="saleOrder.saleOrderStatus == 'nueva' || saleOrder.saleOrderStatus == 'pendiente' " [routerLink]="['/saleOrders/resume/', saleOrder.id]" pButton pRipple icon="pi pi-arrow-circle-up" class="p-button-rounded p-button-help  p-button-text  p-mr-4" ></button>
+                                <button pTooltip="Generar PDF" pButton pRipple icon="pi pi-file-pdf" class="p-button-rounded p-button-secondary  p-button-text  p-mr-4" (click)="importPDF(saleOrder)" ></button>
+                                <button pTooltip="Eliminar orden de venta" pButton pRipple icon="pi pi-trash" class="p-button-rounded p-button-danger p-button-text" (click)="delete(2,saleOrder)"></button>
+                            </div>
+                        </td>
+                    </tr>
+                </ng-template>
+                <ng-template pTemplate="rowexpansion" let-saleOrder>
+					<tr>
+						<td colspan="12">
+							<div class="p-3" >
+								<p-table [value]="saleOrder.saleOrderSupplies" dataKey="id">                                     
+									<ng-template pTemplate="header" class="grid">
+                                        <tr>
+                                            <th class="col-6">Id. Serie</th>
+                                            <th class="col-6">Fecha de asignación</th>
+                                        </tr>
+									</ng-template>
+									<ng-template pTemplate="body" let-saleOrderSupplies>
+                                        <tr>
+                                            <td>{{ saleOrderSupplies.supplyKey}}</td>
+                                            <td>{{ saleOrderSupplies.supplyDateSupplied | date: 'dd-MM-yyyy' }}</td>
+                                        </tr>
+									</ng-template>
+									<ng-template pTemplate="emptymessage">
+										<tr>
+											<td colspan="12">No tiene productos asignados.</td>
+										</tr>
+									</ng-template>
+								</p-table>								
+							</div>
+						</td>
+					</tr>
+				</ng-template>
+            </p-table>
+        </div>
+    </div>
+</div>
+

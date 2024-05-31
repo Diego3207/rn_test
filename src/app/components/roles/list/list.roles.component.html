@@ -1,0 +1,146 @@
+<p-confirmDialog  #confirm [style]="{width: '50vw'}" rejectButtonStyleClass="p-button-outlined"></p-confirmDialog>
+
+<p-toast key="msg"></p-toast>
+
+<div class="grid">
+    <div class="col-12">
+        <div class="card px-6 py-6">
+            <p-toolbar styleClass="mb-4 gap-2">
+                <ng-template pTemplate="left">
+                    <div class="my-2"> 
+                        <button pButton pRipple label="Agregar" icon="pi pi-plus" class="p-button-success  m-2" [routerLink]="['/roles/add/']"></button>
+                        <button pButton pRipple label="Eliminar" icon="pi pi-trash" class="p-button-danger m-2" (click)="delete(1,null)" [disabled]="!selectedElements || !selectedElements.length"></button>
+                    </div> 
+                </ng-template>
+            </p-toolbar>
+
+            <p-table #dt 
+            [value]="roles"  
+            [lazy]="true"
+            [resetPageOnSort]="false"
+            [multiSortMeta]="[{field: 'id', order: 1}]"
+            sortMode="multiple" 
+            (onLazyLoad)="load($event)" 
+            [lazyLoadOnInit]="true"
+            [paginator]="true" 
+            [totalRecords]="totalRows"
+            [rowsPerPageOptions]="[10,25,50]" 
+            [showCurrentPageReport]="true"
+            currentPageReportTemplate=" {{ getPageRange(page, limit, totalRows) }}" 
+            [(selection)]="selectedElements" selectionMode="multiple"
+            [responsive]="true"
+            [rows]="10" [rowHover]="true"  dataKey="id" responsiveLayout="scroll"  [breakpoint]="'760px'" [tableStyle]="{'min-width': '50rem'}"   >
+                <ng-template pTemplate="header">
+                    <tr>
+                        <th></th> <!-- expnad -->
+						<th style="width: 3rem">
+                            <p-tableHeaderCheckbox></p-tableHeaderCheckbox>
+                        </th>
+                        <th pSortableColumn="id">
+                            ID <p-sortIcon field="id"></p-sortIcon>
+                        </th>
+                        <th pSortableColumn="roleName">
+                            NOMBRE <p-sortIcon field="moduleName"></p-sortIcon>
+                        </th>
+                        <th></th> <!-- actions -->
+                    </tr>
+                    <tr>
+                        <th></th> <!-- expand -->
+						<th></th> <!-- check -->
+                        <th>
+                            <p-columnFilter type="numeric"  [showButtons]="false" field="id"  [matchModeOptions]="matchModeOptionsNumber" > </p-columnFilter>
+                        </th>
+                        <th>
+                            <p-columnFilter type="text" field="roleName" [matchModeOptions]="matchModeOptionsText" ></p-columnFilter>
+                        </th>
+						
+                        <th></th>
+                    </tr> 
+                </ng-template>
+                <ng-template pTemplate="body" let-role let-expanded="expanded">
+                    <tr>
+                        <td>
+							<button type="button" pButton pRipple [pRowToggler]="role" class="p-button-text p-button-rounded p-button-plain" [icon]="expanded ? 'pi pi-chevron-down' : 'pi pi-chevron-right'"></button>
+						</td>
+						<td>
+                            <p-tableCheckbox [value]="roles"></p-tableCheckbox>
+                        </td>
+                        <td>{{role.id}}</td>
+                        <td>{{role.roleName}}</td>
+						<td >
+                            <div class="flex">
+                                <button pButton pRipple icon="pi pi-pencil" class="p-button-rounded p-button-info p-button-text" [routerLink]="['/roles/edit/', role.id]"></button>
+                                <button pButton pRipple icon="pi pi-trash" class="p-button-rounded p-button-danger p-button-text" (click)="delete(2,role)"></button>
+                            </div>
+                        </td>
+                    </tr>
+                </ng-template>
+				
+				<ng-template pTemplate="rowexpansion" let-role>
+					<tr>
+						<td colspan="7">
+							<div class="p-3" >
+								<p-table [value]="role.roleRights" dataKey="id">
+									<ng-template pTemplate="header">
+										<tr>
+											<th pSortableColumn="id">Id <p-sortIcon field="id"></p-sortIcon></th>
+											<th pSortableColumn="moduleName">Modulo <p-sortIcon field="moduleName"></p-sortIcon></th>
+											
+											<th pSortableColumn="roleRightList">Listar<p-sortIcon field="roleRightList"></p-sortIcon></th>											
+											<th pSortableColumn="roleRightAdd">Agregar<p-sortIcon field="roleRightAdd"></p-sortIcon></th>
+											<th pSortableColumn="roleRightUpdate">Actualizar<p-sortIcon field="roleRightUpdate"></p-sortIcon></th>
+											<th pSortableColumn="roleRightDisable">Desactivar<p-sortIcon field="roleRightDisable"></p-sortIcon></th>
+											<th pSortableColumn="roleRightDelete">Eliminar<p-sortIcon field="roleRightDelete"></p-sortIcon></th>
+							
+											<th style="width: 4rem"></th>
+										</tr>
+									</ng-template>
+									<ng-template pTemplate="body" let-roleRights>
+										<tr>
+											<td>{{ roleRights.id }}</td>
+											<td>{{ roleRights.roleRightModule.moduleName }}</td>
+											
+											<td>
+												<i class="pi" [ngClass]="{'true-icon pi-check-circle text-green-500': roleRights.roleRightList == true,
+													'false-icon pi-times-circle text-pink-500': roleRights.roleRightList == false}">
+												</i>
+											</td>
+											<td>
+												<i class="pi" [ngClass]="{'true-icon pi-check-circle text-green-500': roleRights.roleRightAdd == true,
+													'false-icon pi-times-circle text-pink-500': roleRights.roleRightAdd == false}">
+												</i>
+											</td>
+											<td>
+												<i class="pi" [ngClass]="{'true-icon pi-check-circle text-green-500': roleRights.roleRightUpdate == true,
+													'false-icon pi-times-circle text-pink-500': roleRights.roleRightUpdate == false}">
+												</i>
+											</td>
+											<td>
+												<i class="pi" [ngClass]="{'true-icon pi-check-circle text-green-500': roleRights.roleRightDisable == true,
+													'false-icon pi-times-circle text-pink-500': roleRights.roleRightDisable == false}">
+												</i>
+											</td>
+											<td>
+												<i class="pi" [ngClass]="{'true-icon pi-check-circle text-green-500': roleRights.roleRightDelete == true,
+													'false-icon pi-times-circle text-pink-500': roleRights.roleRightDelete == false}">
+												</i>
+											</td>
+											
+											
+										</tr>
+									</ng-template>
+									<ng-template pTemplate="emptymessage">
+										<tr>
+											<td colspan="6">No hay permisos asignados.</td>
+										</tr>
+									</ng-template>
+								</p-table>								
+							</div>
+						</td>
+					</tr>
+				</ng-template>
+				
+            </p-table>
+        </div>
+    </div>
+</div>

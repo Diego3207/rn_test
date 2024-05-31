@@ -1,0 +1,5 @@
+<nav class="layout-breadcrumb">
+    <ng-template ngFor let-item let-last="last" [ngForOf]="breadcrumbs$ | async">
+        <span class="viewname" style="text-transform: uppercase">{{item.label}}</span>
+    </ng-template>
+</nav>

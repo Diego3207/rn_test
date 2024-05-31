@@ -1,0 +1,140 @@
+<style>
+	.error-box {
+		border: 1px solid red;
+	}
+</style>
+<p-toast key="msg"></p-toast>
+    <div class="grid justify-content-center">
+        <div class="col-12 md:col-12 justify-content-between">
+            <div class="card p-fluid">
+               
+                <form [formGroup]="form" (ngSubmit)="onSubmit()">
+                    <div class="field">
+                        <label for="name" class="font-semibold">Nombre</label>
+                        <input  pInputText id="name"   type="text"  formControlName="dependencyDescription" autofocus />
+                        <div *ngIf="form.controls.dependencyDescription.invalid">
+                            <small class="text-red-600 flex justify-content-end" *ngIf="form.controls.dependencyDescription.errors?.['required']" >*Campo requerido</small>
+                            <small class="text-red-600 flex justify-content-end" *ngIf="form.controls.dependencyDescription.errors?.['maxlength']" >*Longitud máxima 255</small>
+                        </div>
+                    </div>
+                    <div class="field">
+                        <label for="nationality" class="font-semibold">Categoria</label>
+                        <p-dropdown 
+                            formControlName="dependencyDependencyCategoryId" 
+                            [options]="listCategories" 
+                            placeholder="Seleciona una opción"
+                            [filter]="true" 
+                            filterBy="dependencyCatergoryDescription" 
+                            [showClear]="true"  
+                            optionLabel="dependencyCatergoryDescription" 
+                            optionValue="id">
+                        </p-dropdown>
+                        <div *ngIf="form.controls.dependencyDependencyCategoryId.invalid">
+                            <small class="text-red-600 flex justify-content-end" *ngIf="form.controls.dependencyDependencyCategoryId.errors?.['required']" >*Campo requerido</small>
+                            <small class="text-red-600 flex justify-content-end" *ngIf="form.controls.dependencyDependencyCategoryId.errors?.['maxlength']" >*Longitud máxima 55</small>
+                        </div>
+                    </div>
+                    <div class="field">
+                        <label for="line" class="font-semibold">Dirección</label>
+                        <input 
+                            pInputText 
+                            #search  
+                            type="text"                                                    
+                            (keydown.enter)="$event.preventDefault()"                                                    
+                            placeholder="Búsqueda"                                                     
+                            formControlName="dependencyAddress"                                                    
+                            class="font-semibold"                                                     
+                            maxlength="251"                                                    
+                            autofocus 
+                        />
+
+                        <div *ngIf="form.controls.dependencyAddress.invalid">
+                            <small class="text-red-600 flex justify-content-end" *ngIf="form.controls.dependencyAddress.errors?.['required']" >*Campo requerido</small>
+                            <small class="text-red-600 flex justify-content-end" *ngIf="form.controls.dependencyAddress.errors?.['maxlength']" >*Longitud máxima 255</small>
+                        </div>
+                    </div>
+                    <div [ngClass]="{'error-box  ':form.controls.dependencyPhones.errors  }" >
+                        <div class="flex flex-wrap gap-2 m-2">
+                            <p-button label="Teléfono"  (onClick)="addRow()" icon="pi pi-plus"  badge="{{form.controls.dependencyPhones.length}}" ></p-button>
+                        </div>
+                        <div formArrayName="dependencyPhones">
+                            <div *ngIf="form.controls.dependencyPhones.invalid">
+                                <small class="text-red-600 flex justify-content-end" *ngIf="form.controls.dependencyPhones.errors?.['required']" >*Campo requerido</small>
+                                <small class="text-red-600 flex justify-content-end" *ngIf="form.controls.dependencyPhones.errors?.['minlength']" >*Longitud mínima 1</small>
+                            </div>
+                            <div *ngFor="let phone of infoPhonesArray().controls; let phoneIndex=index">
+                                <div  class="grid justify-content-center " [formGroupName]="phoneIndex">
+                                    <div class="col-12 md:col-12 justify-content-between">
+                                        <div class="card p-fluid border-1 border-primary-500">
+                                            <p-divider align="left" type="solid"><b>Teléfono {{phoneIndex +1}}</b></p-divider>
+                                            <div class="p-formgrid grid">
+                                                <div class="field col">
+                                                    <label htmlFor="number"  class="font-semibold">Número</label>
+                                                    <p-inputMask mask="9?99-999-9999-9" placeholder="999-999-99-999" id="number" formControlName="dependencyPhoneNumber"></p-inputMask>
+                                                    <div *ngIf="form.controls.dependencyPhones.controls[phoneIndex].controls.dependencyPhoneNumber.invalid">
+                                                        <small class="text-red-600 flex justify-content-end" *ngIf="form.controls.dependencyPhones.controls[phoneIndex].controls.dependencyPhoneNumber.errors?.['required']" >*Campo requerido</small>
+                                                    </div>
+                                                </div>
+                                                <div class="field col">
+                                                    <label htmlFor="extension"  class="font-semibold">Extensión</label>
+                                                    <input pInputText type="text" id="extension" formControlName="dependencyPhoneExtension" placeholder="Ejemplo:  3285" />
+                                                    <div *ngIf="form.controls.dependencyPhones.controls[phoneIndex].controls.dependencyPhoneExtension.invalid">
+                                                        <small class="text-red-600 flex justify-content-end" *ngIf="form.controls.dependencyPhones.controls[phoneIndex].controls.dependencyPhoneExtension.errors?.['maxlength']" >*Longitud máxima 50</small>
+                                                    </div>
+                                                </div> 
+                                                <div class="field col">
+                                                    <label htmlFor="extension"  class="font-semibold">Vía de comunicación</label>
+                                                    <p-autoComplete [dropdown]="true" formControlName="dependencyPhoneCommunicationChannel"  [suggestions]="listFilteredChannel" (completeMethod)="filterChannel($event)"></p-autoComplete>
+                                                    <div *ngIf="form.controls.dependencyPhones.controls[phoneIndex].controls.dependencyPhoneCommunicationChannel.invalid">
+                                                        <small class="text-red-600 flex justify-content-end" *ngIf="form.controls.dependencyPhones.controls[phoneIndex].controls.dependencyPhoneCommunicationChannel.errors?.['required']" >*Campo requerido</small>
+                                                        <small class="text-red-600 flex justify-content-end" *ngIf="form.controls.dependencyPhones.controls[phoneIndex].controls.dependencyPhoneCommunicationChannel.errors?.['maxlength']" >*Longitud máxima 50</small>
+                                                    </div>
+                                                </div>     
+                                                <div class="field col flex justify-content-evenly flex-wrap">
+                                                    <p-checkbox formControlName="dependencyPhoneHaveContact" label="¿Esta ligado a una persona ?"   class="font-semibold" [binary]="true" inputId="ny"></p-checkbox>
+                                                    <button pButton pRipple type="button"  (click)="removeRow(phoneIndex,phone)"  icon="pi pi-trash" class="p-button-rounded p-button-text p-button-danger"></button>                                                
+                                                </div>                                                     
+                                            </div>                                            
+                                            <div *ngIf="form.value.dependencyPhones[phoneIndex].dependencyPhoneHaveContact" class="m-0"  formArrayName="dependencyPhoneContact">
+                                                <p-divider align="left" type="solid"><b>Contacto</b></p-divider>
+                                                <div class="p-formgrid grid bg-blue-50 " [formGroupName]="0">
+                                                        
+                                                    <div class="field col">
+                                                        <label htmlFor="name"  class="font-semibold">Nombre</label>
+                                                        <input pInputText id="name"   type="text" formControlName="dependencyPhoneContactName"/>
+                                                        <div *ngIf="form.controls.dependencyPhones.controls[phoneIndex].controls.dependencyPhoneContact.controls[0].controls.dependencyPhoneContactName.invalid || !form.controls.dependencyPhones.controls[phoneIndex].controls.dependencyPhoneContact.controls[0].controls.dependencyPhoneContactName.value == null || form.controls.dependencyPhones.controls[phoneIndex].controls.dependencyPhoneContact.controls[0].controls.dependencyPhoneContactName.value == ''">
+                                                            <small class="text-red-600 flex justify-content-end" *ngIf="form.controls.dependencyPhones.controls[phoneIndex].controls.dependencyPhoneContact.controls[0].controls.dependencyPhoneContactName.value == null || form.controls.dependencyPhones.controls[phoneIndex].controls.dependencyPhoneContact.controls[0].controls.dependencyPhoneContactName.value == '' " >*Campo requerido</small>                                                            
+                                                            <small class="text-red-600 flex justify-content-end" *ngIf="form.controls.dependencyPhones.controls[phoneIndex].controls.dependencyPhoneContact.controls[0].controls.dependencyPhoneContactName.errors?.['maxlength'] " >*Longitud máxima 255</small>                                                            
+                                                        </div>
+                                                    </div>
+                                                    <div class="field col">
+                                                        <label htmlFor="job" class="font-semibold">Puesto o Cargo</label>
+                                                        <input pInputText  id="job"  type="text" formControlName="dependencyPhoneContactJob" />
+                                                        <div *ngIf="form.controls.dependencyPhones.controls[phoneIndex].controls.dependencyPhoneContact.controls[0].controls.dependencyPhoneContactJob.invalid">
+                                                            <small class="text-red-600 flex justify-content-end" *ngIf="form.controls.dependencyPhones.controls[phoneIndex].controls.dependencyPhoneContact.controls[0].controls.dependencyPhoneContactJob.errors?.['maxlength']" >*Longitud máxima 255</small>                                                            
+                                                        </div>
+                                                    </div>
+                                                    <div class="field col">
+                                                        <label htmlFor="email"  class="font-semibold">Correo</label>
+                                                        <input pInputText  type="text" id="email" formControlName="dependencyPhoneContactEmail" />
+                                                        <div *ngIf="form.controls.dependencyPhones.controls[phoneIndex].controls.dependencyPhoneContact.controls[0].controls.dependencyPhoneContactEmail.invalid">
+                                                            <small class="text-red-600 flex justify-content-end" *ngIf="form.controls.dependencyPhones.controls[phoneIndex].controls.dependencyPhoneContact.controls[0].controls.dependencyPhoneContactEmail.errors?.['email'] || form.controls.dependencyPhones.controls[0].controls.dependencyPhoneContact.controls[0].controls.dependencyPhoneContactEmaill.errors?.['pattern']" >*Formato  inválido</small>                                                            
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        
+                    </div>
+                    <div class="col-12 flex justify-content-end mt-4">
+                        <button pButton pRipple class="p-button-outlined w-8rem mr-3"  label="Cancelar" (click)="cancel($event)" ></button>
+                        <button pButton pRipple class="p-button-primary w-8rem"  label="Guardar" ></button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>

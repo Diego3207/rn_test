@@ -1,0 +1,43 @@
+<div class="flex h-screen">
+    <div class="w-full lg:w-4 h-full text-center px-6 py-6 flex flex-column justify-content-between">
+        <img [src]="'assets/layout/images/logo-dark.svg'" class="h-4rem mt-4" alt="diamond-layout" />
+
+        <div class="flex flex-column align-items-center gap-4">
+		<!--<div class="flex flex-column w-full align-items-center gap-4">-->
+            <div class="mb-3">
+                <h2>Estado de verificación</h2>
+                <p>{{estadoVerificacion}}</p>
+                <!--<div class="flex align-items-center w-full justify-content-center">
+                    <i class="pi pi-envelope text-600 mr-2"></i>
+                    <span class="text-900 font-bold">dm**@gmail.com</span>
+                </div>-->
+            </div>
+
+            <div class="flex flex-column">
+                <!--<div class="flex justify-content-between w-full align-items-center mb-4 gap-3">
+                    <p-inputNumber [(ngModel)]="val1" inputStyleClass="w-3rem text-center" [maxlength]="1" (onInput)="focusOnNext(input2)"></p-inputNumber>
+                    <p-inputNumber #input2 [(ngModel)]="val2" inputStyleClass="w-3rem text-center" [maxlength]="1" (onInput)="focusOnNext(input3)"></p-inputNumber>
+                    <p-inputNumber #input3 [(ngModel)]="val3" inputStyleClass="w-3rem text-center" [maxlength]="1" (onInput)="focusOnNext(input4)"></p-inputNumber>
+                    <p-inputNumber #input4 [(ngModel)]="val4" inputStyleClass="w-3rem text-center" [maxlength]="1"></p-inputNumber>
+                </div>-->
+        
+                <div class="flex flex-wrap gap-2 justify-content-between">
+                    <button pButton pRipple label="Reenviar" class="flex-auto p-button-outlined" [routerLink]="['/']"></button>
+                    <button pButton pRipple label="Aceptar" class="flex-auto" [routerLink]="['/auth/login/']"></button>
+                </div>
+            </div>
+        </div>
+
+        <p class="text-color-secondary font-semibold">¿Necesitas ayuda? 
+			<a class="text-primary hover:underline cursor-pointer font-medium">Haz click aquí</a>.
+		</p>
+    </div>
+    <div class="w-8 hidden lg:flex flex-column justify-content-between align-items-center px-6 py-6 bg-cover bg-norepeat" style="background-image: url('assets/demo/images/auth/bg-login.jpg')">
+        <div class="mt-auto mb-auto">
+            <span class="block text-white text-7xl font-semibold">Verifica tu cuenta</span>
+            <!--<span class="block text-white text-3xl mt-4">Lorem ipsum dolor sit amet, consectetur<br/> adipiscing elit. Donec posuere velit nec enim<br/> sodales, nec placerat erat tincidunt. </span>-->
+        </div>
+    </div>
+</div>
+
+<app-config [minimal]="true"></app-config>

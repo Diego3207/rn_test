@@ -1,0 +1,184 @@
+<p-confirmDialog  #confirm [style]="{width: '50vw'}" rejectButtonStyleClass="p-button-outlined"></p-confirmDialog>
+<p-toast key="msg"></p-toast>
+<div class="grid">
+    <div class="col-12">
+        <div class="card px-6 py-6">
+            <!--<p-toast></p-toast> -->
+            <p-toolbar styleClass="mb-4">
+                <ng-template pTemplate="left">
+                    <div class="my-2">
+                        <button pButton pRipple label="Agregar" icon="pi pi-plus" class="p-button-success mr-2" [routerLink]="['/product/add/']"></button>
+                        <button pButton pRipple label="Eliminar" icon="pi pi-trash" class="p-button-danger" (click)="delete(1,null)" [disabled]="!selectedProducts || !selectedProducts.length"></button>
+                    </div>
+                </ng-template>
+            </p-toolbar>
+
+            <p-table #dt 
+            [value]="products"  
+            [lazy]="true"
+            [resetPageOnSort]="false"
+            [multiSortMeta]="[{field: 'id', order: 1}]"
+            sortMode="multiple" 
+            (onLazyLoad)="load($event)" 
+            [lazyLoadOnInit]="true"
+            [paginator]="true" 
+            [totalRecords]="totalRows"
+            [rowsPerPageOptions]="[10,25,50]" 
+            [showCurrentPageReport]="true"
+            currentPageReportTemplate="{{ getPageRange(page, limit, totalRows) }}"
+            [(selection)]="selectedProducts" selectionMode="multiple"
+            [rows]="10" [rowHover]="true"  dataKey="id" responsiveLayout="scroll" [breakpoint]="'760px'"  [tableStyle]="{'minx-width': '50rem'}" >
+                
+                <ng-template pTemplate="header">
+                    <tr>
+                        <th>
+                            <!-- Espacio para que se vea bien las columnas -->
+                        </th>
+                        <th style="width: 3rem">
+                            <p-tableHeaderCheckbox></p-tableHeaderCheckbox>
+                        </th>
+                        <th pSortableColumn="id">
+                            ID <p-sortIcon field="id"></p-sortIcon>
+                        </th>
+                        <th pSortableColumn="productBrand">
+                            MARCA <p-sortIcon field="productBrand"></p-sortIcon>
+                        </th>
+                        <th pSortableColumn="productModel">
+                            MODELO <p-sortIcon field="productModel"></p-sortIcon>
+                        </th>
+                        <th pSortableColumn="productDescription">
+                            DESCRIPCIÓN <p-sortIcon field="productDescription"></p-sortIcon>
+                        </th>
+                        <th >   <!-- 
+                                    PENDIENTE: calcular el dato de estatus en invetario para poder filtrar y ordenar
+                                    inventoryStatus
+                                -->
+                            ESTADO 
+                        </th>
+                        <th > </th>
+                       
+                    </tr>
+                   <tr>
+                        <th>
+                            <!-- Espacio para que se vea bien las columnas -->
+                        </th>
+                        <th>
+                            <!-- Espacio para que se vea bien las columnas -->
+                        </th>
+                        <th>
+                            <p-columnFilter type="numeric"  [showButtons]="false" field="id"  [matchModeOptions]="matchModeOptionsNumber" > </p-columnFilter>
+                        </th>
+                        <th>
+                            <p-columnFilter type="text" field="productBrand" [matchModeOptions]="matchModeOptionsText" ></p-columnFilter>
+                        </th>
+                        <th>
+                            <p-columnFilter type="text" field="productModel" [matchModeOptions]="matchModeOptionsText" ></p-columnFilter>
+                        </th>
+                        <th>
+                            <p-columnFilter type="text" field="productDescription" [matchModeOptions]="matchModeOptionsText" ></p-columnFilter>
+                        </th>
+                        <th>
+                           <!--
+                            
+                            <p-columnFilter type="text" [matchModeOptions]="matchModeOptionsText" ></p-columnFilter> 
+                            -->
+                        </th>
+                        <th>
+                            <!-- Espacio para que se vea bien las columnas -->
+                        </th>
+                    </tr> 
+                </ng-template>
+
+                <ng-template pTemplate="body" let-product let-expanded="expanded"> 
+                    <tr>
+                        <td>
+							<button pTooltip="Desplegar Producto" type="button" pButton pRipple [pRowToggler]="product" class="p-button-text p-button-rounded p-button-plain" [icon]="expanded ? 'pi pi-chevron-down' : 'pi pi-chevron-right'"></button>
+						</td> 
+                        <td>
+                            <p-tableCheckbox [value]="product"></p-tableCheckbox>
+                        </td>
+                        <td style="text-align: center;">{{product.id}}</td>
+                        <td>{{product.productBrand}}</td>
+                        <td>{{product.productModel}}</td>
+                        <td>{{product.productDescription}}</td>
+                        <td> 
+                            <p-tag value="outofstock" severity="danger"></p-tag> 
+                        </td>
+                        <td>
+                            <div class="flex">
+                                <button pTooltip="Editar Producto" pButton pRipple icon="pi pi-pencil" class="p-button-rounded p-button-info p-button-text" [routerLink]="['/product/edit/', product.id]"></button>
+                                <button pTooltip="Eliminar Producto" pButton pRipple icon="pi pi-trash" class="p-button-rounded p-button-danger p-button-text" (click)="delete(2,product)"></button>
+                            </div>
+                        </td>
+                    </tr>
+                </ng-template>
+
+                <ng-template pTemplate="rowexpansion" let-product>
+					<tr>
+						<td colspan="7">
+							<div class="p-3" >
+                                <p>Documentación</p>
+								<p-table [value]="product.productFile" dataKey="id">
+									<ng-template pTemplate="header">
+										<tr>
+                                            <th>
+                                                <!-- Espacio para que se vea bien las columnas -->
+                                            </th>
+											<th pSortableColumn="id">Id <p-sortIcon field="price"></p-sortIcon></th>
+											<th pSortableColumn="productFileName">Nombre <p-sortIcon field="customer"></p-sortIcon></th>
+                                            <th >Peso </th>
+                                            <th >Descarga </th>
+                                            <th>
+                                                <!-- Espacio para que se vea bien las columnas -->
+                                            </th>
+                                            <th>
+                                                <!-- Espacio para que se vea bien las columnas -->
+                                            </th>
+                                            <th>
+                                                <!-- Espacio para que se vea bien las columnas -->
+                                            </th>
+										</tr>
+									</ng-template>
+									<ng-template pTemplate="body" let-productFile>
+										<tr>
+                                            <th>
+                                                <!-- Espacio para que se vea bien las columnas -->
+                                            </th>
+											<td>{{ productFile.id }}</td>
+											<td>{{ productFile.productFileName }}</td>
+                                            <td>{{ productFile.productFileSize + " KB"}} </td>
+											<td>
+                                                <a 
+                                                pTooltip="Descargar archivo"
+                                                pButton pRipple class="p-button-rounded p-button-primary p-button-text" 
+                                                icon="pi pi-cloud-download" 
+                                                href="{{ fileURL+productFile.productFileDocumentation }}" 
+                                                download="{{ productFile.productFileName }}">
+                                                </a>
+                                            </td>
+                                            <th>
+                                                <!-- Espacio para que se vea bien las columnas -->
+                                            </th>
+                                            <th>
+                                                <!-- Espacio para que se vea bien las columnas -->
+                                            </th>
+                                            <th>
+                                                <!-- Espacio para que se vea bien las columnas -->
+                                            </th>
+										</tr>
+									</ng-template>
+                                    <ng-template pTemplate="emptymessage">
+										<tr>
+											<td colspan="12">Este producto no tiene archivos</td>
+										</tr>
+									</ng-template>
+								</p-table>								
+							</div>
+						</td>
+					</tr>
+				</ng-template>
+            </p-table>
+        </div>
+    </div>
+</div>
+

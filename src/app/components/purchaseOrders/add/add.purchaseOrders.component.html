@@ -1,0 +1,189 @@
+
+<style>
+	.error-box {
+		border: 1px solid red;
+	}
+</style>
+<p-toast key="msg"></p-toast>
+<div class="grid justify-content-center">
+    <div class="col-12 md:col-9 justify-content-between">
+        <div class="card p-fluid">          
+            <form [formGroup]="form" (ngSubmit)="onSubmit()">
+                <div class="field">
+                    <label for="name" class="font-semibold">Descripción</label>
+                    <input  pInputText id="name"   type="text"  formControlName="purchaseOrderDescription" autofocus />
+                    <div *ngIf="form.controls.purchaseOrderDescription.invalid">
+                        <small class="text-red-600 flex justify-content-end" *ngIf="form.controls.purchaseOrderDescription.errors?.['required']" >*Campo requerido</small>
+                        <small class="text-red-600 flex justify-content-end" *ngIf="form.controls.purchaseOrderDescription.errors?.['maxlength']" >*Longitud máxima 255</small>
+                    </div>
+                </div>
+                <div class="field">
+                    <label for="name" class="font-semibold">Cotización</label>
+                    <p-dropdown [options]="listQuotations"  (onChange)="getInfoQuotation($event.value)" [filter]="true" [disabled]="form.controls.purchaseOrderProviderId.value != null && !infoQuotation " formControlName="purchaseOrderQuotationPurchaseId" filterBy="description"  placeholder="Selecciona uno" optionValue="id" optionLabel="description" [showClear]="true" ></p-dropdown>
+                </div>
+               
+                <div class="field">
+                    <label for="name" class="font-semibold">Proveedor</label>
+                    <p-dropdown [options]="listProviders"  (onChange)="getFilter($event.value)"  [disabled]="form.controls. purchaseOrderQuotationPurchaseId.value != null && infoQuotation " [filter]="true" formControlName="purchaseOrderProviderId" filterBy="providerName" [showClear]="true" placeholder="Selecciona uno" optionValue="id" optionLabel="providerName"  ></p-dropdown>
+                    <div *ngIf="form.controls.purchaseOrderProviderId.invalid">
+                        <small class="text-red-600 flex justify-content-end" *ngIf="form.controls.purchaseOrderProviderId.errors?.['required']" >*Campo requerido</small>
+                    </div>
+                </div>
+                <div class="field">
+                    <label class="font-semibold">¿Cuenta con garantía?</label>
+                    <div>
+                        <p-inputSwitch  formControlName="purchaseOrderGuaranty" ></p-inputSwitch>
+                    </div>
+                   
+                </div>
+                
+                <div  [ngClass]="{'error-box':form.controls.purchaseOrderProducts.errors }">
+                    <div class="flex flex-wrap gap-2 m-2">
+                        <p-button label="Productos" [disabled]="form.controls.purchaseOrderProviderId.value == null" (onClick)="addRow('product')" icon="pi pi-plus"   badge="{{form.controls.purchaseOrderProducts.length}}"></p-button>
+                    </div>
+                    <div class="card mt-3" formArrayName="purchaseOrderProducts">
+                       <div *ngIf="form.controls.purchaseOrderProducts.invalid">
+							<small class="text-red-600 flex justify-content-end" *ngIf="form.controls.purchaseOrderProducts.errors?.['duplicated']" >*Detalle duplicado</small>
+						</div>
+                        <p-table responsiveLayout="stack" [value]="infoProductsArray().controls" dataKey="index" editMode="row" >
+                            <ng-template pTemplate="header">
+                                <tr>
+                                    <th style="width:20%">Producto</th>
+                                    <th  style="width:20%">Unidad</th>
+                                    <th style="width:20%">Cantidad</th>
+                                    <th style="width:20%">Precio</th>
+                                    <th style="width:20%"></th>
+                                </tr>
+                            </ng-template>
+                            <ng-template pTemplate="body" let-purchaseOrderProducts  let-i="rowIndex">
+                                <tr   [pEditableRow]="purchaseOrderProducts" [formGroupName]="i">
+                                    <td>
+                                        <div class="col-12 ">
+                                            <p-dropdown  [options]="listProducts" filterBy="labelFilter" [filter]="true" appendTo="body" placeholder="Selecciona uno" formControlName="purchaseOrderProductProductId"   optionValue="value"  optionLabel="label"   [showClear]="true"  [pTooltip]="getLabel(form.controls.purchaseOrderProducts.controls[i].controls.purchaseOrderProductProductId.value,'product')" [style]="{'max-width':'17rem'}" >
+                                                <ng-template let-product pTemplate="item">
+                                                   
+                                                    <div>{{ product.label }}</div>
+                                                    <small class="text-xs text-500">{{product.description}}</small>
+                                                
+                                                </ng-template>
+                                            </p-dropdown>
+                                            
+                                            <div *ngIf="form.controls.purchaseOrderProducts.controls[i].controls.purchaseOrderProductProductId.invalid">
+                                                <small class="text-red-600 flex justify-content-end" *ngIf="form.controls.purchaseOrderProducts.controls[i].controls.purchaseOrderProductProductId.errors?.['required']">*Campo requerido</small>
+                                            </div>
+                                        </div>
+                                    </td>
+                                    <td>
+                                        <div class="col-12 ">
+                                            <p-dropdown [options]="listUnitProducts" placeholder="Selecciona uno" appendTo="body"   formControlName="purchaseOrderProductUnit"  optionValue="value"   [showClear]="true" ></p-dropdown>
+                                            <div *ngIf="form.controls.purchaseOrderProducts.controls[i].controls.purchaseOrderProductUnit.invalid">
+                                                <small class="text-red-600 flex justify-content-end" *ngIf="form.controls.purchaseOrderProducts.controls[i].controls.purchaseOrderProductUnit.errors?.['required']">*Campo requerido</small>
+                                            </div>
+                                        </div>
+                                    </td>
+                                    <td>
+                                        <div class="col-12 ">
+                                            <p-inputNumber   inputId="locale-us"  mode="decimal" locale="en-US" formControlName="purchaseOrderProductQuantity" [useGrouping]="false"></p-inputNumber>
+                                              
+                                           <div *ngIf="form.controls.purchaseOrderProducts.controls[i].controls.purchaseOrderProductQuantity.invalid">
+                                                <small class="text-red-600 flex justify-content-end" *ngIf="form.controls.purchaseOrderProducts.controls[i].controls.purchaseOrderProductQuantity.errors?.['required']" >*Campo requerido</small>
+                                                <small class="text-red-600 flex justify-content-end" *ngIf="form.controls.purchaseOrderProducts.controls[i].controls.purchaseOrderProductQuantity.errors?.['max']" >*Cantidad máxima es 99999999</small>
+                                                <small class="text-red-600 flex justify-content-end" *ngIf="form.controls.purchaseOrderProducts.controls[i].controls.purchaseOrderProductQuantity.errors?.['min']" >*Cantidad mínima es 1</small>
+                                            </div>	 
+                                        </div>
+                                    </td>
+                                    <td>
+                                        <div class="col-12 ">
+                                            <p-inputNumber   mode="currency" currency="USD" locale="en-US" [minFractionDigits]="2" formControlName="purchaseOrderProductPrice" ></p-inputNumber>
+                                              
+                                            <div *ngIf="form.controls.purchaseOrderProducts.controls[i].controls.purchaseOrderProductPrice.invalid">
+                                                <small class="text-red-600 flex justify-content-end" *ngIf="form.controls.purchaseOrderProducts.controls[i].controls.purchaseOrderProductPrice.errors?.['required']" >*Campo requerido</small>
+                                                <small class="text-red-600 flex justify-content-end" *ngIf="form.controls.purchaseOrderProducts.controls[i].controls.purchaseOrderProductPrice.errors?.['min']" >*Cantidad mínima es $1.00</small>
+                                            </div>	 
+                                        </div>
+                                    </td>
+                                    <td>
+                                        <div class="flex align-items-center justify-content-center gap-2">
+                                            <button pButton pRipple type="button" (click)="removeRow('product',i)" pCancelEditableRow icon="pi pi-trash" class="p-button-rounded p-button-text p-button-danger"></button>                                                
+                                        </div>
+                                    </td>
+                                </tr>
+                            </ng-template>
+                        </p-table>
+                    </div>
+                </div>
+                <div  [ngClass]="{'error-box':form.controls.purchaseOrderServices.errors }">
+                    <div class="flex flex-wrap gap-2 m-2">
+                        <p-button label="Servicios" [disabled]="form.controls.purchaseOrderProviderId.value == null" (onClick)="addRow('service')" icon="pi pi-plus"   badge="{{form.controls.purchaseOrderServices.length}}"></p-button>
+                    </div>
+                    <div class="card mt-3" formArrayName="purchaseOrderServices">
+                       <div *ngIf="form.controls.purchaseOrderServices.invalid">
+							<small class="text-red-600 flex justify-content-end" *ngIf="form.controls.purchaseOrderServices.errors?.['duplicated']" >*Detalle duplicado</small>
+						</div>
+                        <p-table responsiveLayout="stack" [value]="infoServicesArray().controls" dataKey="index" editMode="row">
+                            <ng-template pTemplate="header">
+                                <tr>
+                                    <th style="width:20%">Servicio</th>
+                                    <th  style="width:20%">Unidad</th>
+                                    <th style="width:20%">Cantidad</th>
+                                    <th style="width:20%">Precio</th>
+                                    <th style="width:20%"></th>
+                                </tr>
+                            </ng-template>
+                            <ng-template pTemplate="body" let-purchaseOrderServices  let-i="rowIndex">
+                                <tr   [pEditableRow]="purchaseOrderServices" [formGroupName]="i">
+                                    <td>
+                                        <div class="col-12 ">
+                                            <p-dropdown  [options]="listServices"  [filter]="true" appendTo="body" placeholder="Selecciona uno" formControlName="purchaseOrderServiceServiceId"   optionValue="value"  optionLabel="label"   [showClear]="true" [pTooltip]="getLabel(form.controls.purchaseOrderServices.controls[i].controls.purchaseOrderServiceServiceId.value,'service')" [style]="{'max-width':'17rem'}"   ></p-dropdown>
+                                            <div *ngIf="form.controls.purchaseOrderServices.controls[i].controls.purchaseOrderServiceServiceId.invalid">
+                                                <small class="text-red-600 flex justify-content-end" *ngIf="form.controls.purchaseOrderServices.controls[i].controls.purchaseOrderServiceServiceId.errors?.['required']">*Campo requerido</small>
+                                            </div>
+                                        </div>
+                                    </td>
+                                    <td>
+                                        <div class="col-12 ">
+                                            <p-dropdown [options]="listUnitServices"    placeholder="Selecciona uno" appendTo="body"   formControlName="purchaseOrderServiceUnit"  optionValue="value"   [showClear]="true" ></p-dropdown>
+                                            <div *ngIf="form.controls.purchaseOrderServices.controls[i].controls.purchaseOrderServiceUnit.invalid">
+                                                <small class="text-red-600 flex justify-content-end" *ngIf="form.controls.purchaseOrderServices.controls[i].controls.purchaseOrderServiceUnit.errors?.['required']">*Campo requerido</small>
+                                            </div>
+                                        </div>
+                                    </td>
+                                    <td>
+                                        <div class="col-12 ">
+                                              <p-inputNumber   inputId="locale-us"  mode="decimal" locale="en-US" formControlName="purchaseOrderServiceQuantity" [useGrouping]="false"></p-inputNumber>
+                                              
+                                           <div *ngIf="form.controls.purchaseOrderServices.controls[i].controls.purchaseOrderServiceQuantity.invalid">
+                                                <small class="text-red-600 flex justify-content-end" *ngIf="form.controls.purchaseOrderServices.controls[i].controls.purchaseOrderServiceQuantity.errors?.['required']" >*Campo requerido</small>
+                                                <small class="text-red-600 flex justify-content-end" *ngIf="form.controls.purchaseOrderServices.controls[i].controls.purchaseOrderServiceQuantity.errors?.['max']" >*Cantidad máxima es 99999999</small>
+                                                <small class="text-red-600 flex justify-content-end" *ngIf="form.controls.purchaseOrderServices.controls[i].controls.purchaseOrderServiceQuantity.errors?.['min']" >*Cantidad mínima es 1</small>
+                                            </div>	 
+                                        </div>
+                                    </td>
+                                    <td>
+                                        <div class="col-12 ">
+                                            <p-inputNumber   mode="currency" currency="USD" locale="en-US" [minFractionDigits]="2" formControlName="purchaseOrderServicePrice" ></p-inputNumber>
+                                              
+                                            <div *ngIf="form.controls.purchaseOrderServices.controls[i].controls.purchaseOrderServicePrice.invalid">
+                                                <small class="text-red-600 flex justify-content-end" *ngIf="form.controls.purchaseOrderServices.controls[i].controls.purchaseOrderServicePrice.errors?.['required']" >*Campo requerido</small>
+                                                <small class="text-red-600 flex justify-content-end" *ngIf="form.controls.purchaseOrderServices.controls[i].controls.purchaseOrderServicePrice.errors?.['min']" >*Cantidad mínima es $1.00</small>
+                                            </div>	 
+                                        </div>
+                                    </td>
+                                    <td>
+                                        <div class="flex align-items-center justify-content-center gap-2">
+                                            <button pButton pRipple type="button" (click)="removeRow('service',i)" pCancelEditableRow icon="pi pi-trash" class="p-button-rounded p-button-text p-button-danger"></button>                                                
+                                        </div>
+                                    </td>
+                                </tr>
+                            </ng-template>
+                        </p-table>
+                    </div>
+                </div>
+          
+                <div class="col-12 flex justify-content-end mt-4">
+                    <button pButton pRipple class="p-button-outlined w-8rem mr-3"  label="Cancelar" (click)="cancel($event)" ></button>
+                    <button pButton pRipple class="p-button-primary w-8rem"  label="Guardar" ></button>
+                </div>
+        </form>
+    </div>
+</div>

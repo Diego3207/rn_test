@@ -1,0 +1,123 @@
+<style>
+	.error-box {
+		border: 1px solid red;
+	}
+</style>
+<p-toast key="msg"></p-toast>
+    <div class="grid justify-content-center">
+        <div class="col-12 md:col-8 justify-content-between">
+            <div class="card p-fluid">
+               
+                <form [formGroup]="form" (ngSubmit)="onSubmit()">
+                    <div class="field">
+                        <label for="name" class="font-semibold">Nombre</label>
+                        <input  pInputText id="name"   type="text"  formControlName="packageName" autofocus />
+                        <div *ngIf="form.controls.packageName.invalid">
+                            <small class="text-red-600 flex justify-content-end" *ngIf="form.controls.packageName.errors?.['required']" >*Campo requerido</small>
+                            <small class="text-red-600 flex justify-content-end" *ngIf="form.controls.packageName.errors?.['maxlength']" >*Longitud máxima 255</small>
+                        </div>
+                    </div>
+                    
+                    <div [ngClass]="{'error-box  ':form.controls.packageProducts.errors }" >
+                        <div class="flex flex-wrap gap-2 m-2">
+                            <p-button label="Productos"  (onClick)="addRow('product')" icon="pi pi-plus"  badge="{{form.controls.packageProducts.length}}" ></p-button>
+                        </div>
+                        <div class="card mt-3" formArrayName="packageProducts">
+                            <div *ngIf="form.controls.packageProducts.invalid ">
+                                <small class="text-red-600 flex justify-content-end" *ngIf="form.controls.packageProducts.errors?.['duplicated']" >*Producto duplicado</small>
+
+                            </div>
+                            <p-table responsiveLayout="stack" [breakpoint]="'760px'" [value]="infoProductsArray().controls" dataKey="index" editMode="row" [tableStyle]="{'minx-width': '50rem'}">
+                                <ng-template pTemplate="header">
+                                    <tr>
+                                        <th style="width:20%">Productos</th>  
+                                        <th>Cantidad</th>   
+                                        <th></th>                                  
+                                    </tr>
+                                </ng-template>
+                                <ng-template pTemplate="body" let-packageProduct  let-i="rowIndex">
+                                    <tr   [pEditableRow]="packageProduct" [formGroupName]="i">
+                                        <td>
+                                            <div class="col-12 ">
+                                                <p-dropdown [options]="listProducts"  appendTo="body" [filter]="true" formControlName="packageProductProductId" filterBy="label" [showClear]="true" placeholder="Selecciona uno" optionValue="value" optionLabel="label"  ></p-dropdown>
+                                                <div *ngIf="form.controls.packageProducts.controls[i].controls.packageProductProductId.invalid">
+                                                    <small class="text-red-600 flex justify-content-end" *ngIf="form.controls.packageProducts.controls[i].controls.packageProductProductId.errors?.['required']" >*Campo requerido</small>
+                                                </div>
+                                            </div>
+                                        </td>
+                                        <td>
+                                            <p-inputNumber [min]="0" inputId="locale-us"  mode="decimal" locale="en-US" formControlName="packageProductQuantity" [useGrouping]="false" ></p-inputNumber>
+                                              
+                                            <div *ngIf="form.controls.packageProducts.controls[i].controls.packageProductQuantity.invalid">
+                                                <small class="text-red-600 flex justify-content-end" *ngIf="form.controls.packageProducts.controls[i].controls.packageProductQuantity.errors?.['required']" >*Campo requerido</small>
+                                                <small class="text-red-600 flex justify-content-end" *ngIf="form.controls.packageProducts.controls[i].controls.packageProductQuantity.errors?.['max']" >*Cantidad máxima es 999999999999</small>
+                                                <small class="text-red-600 flex justify-content-end" *ngIf="form.controls.packageProducts.controls[i].controls.packageProductQuantity.errors?.['min']" >*Cantidad mínima es 1</small>
+
+                                            </div>
+                                        </td>
+                                        <td>
+                                            <div class="flex align-items-center justify-content-center gap-2">
+                                                <button pButton pRipple type="button"  (click)="removeRow('product',i)" pCancelEditableRow icon="pi pi-trash" class="p-button-rounded p-button-text p-button-danger"></button>                                                
+                                            </div>
+                                        </td>
+                                    </tr>
+                                </ng-template>
+                            </p-table>
+                        </div>
+                    </div>
+                    <div [ngClass]="{'error-box  mt-5 ':form.controls.packageServices.errors }" >
+                        <div class="flex flex-wrap gap-2 m-2">
+                            <p-button label="Servicios"  (onClick)="addRow('service')" icon="pi pi-plus"  badge="{{form.controls.packageServices.length}}" ></p-button>
+                        </div>
+                        <div class="card mt-3" formArrayName="packageServices">
+                            <div *ngIf="form.controls.packageServices.invalid ">
+                                <small class="text-red-600 flex justify-content-end" *ngIf="form.controls.packageServices.errors?.['duplicated']" >*Servicio duplicado</small>
+
+                            </div>
+                            <p-table responsiveLayout="stack" [breakpoint]="'760px'" [value]="infoServicesArray().controls" dataKey="index" editMode="row" [tableStyle]="{'minx-width': '50rem'}">
+                                <ng-template pTemplate="header">
+                                    <tr>
+                                        <th style="width:20%">Servicios</th>     
+                                        <th>Cantidad</th>
+                                        <th></th>                                  
+                                    </tr>
+                                </ng-template>
+                                <ng-template pTemplate="body" let-packageService  let-i="rowIndex">
+                                    <tr   [pEditableRow]="packageService" [formGroupName]="i">
+                                        <td>
+                                            <div class="col-12 ">
+                                                <p-dropdown [options]="listServices"  appendTo="body" [filter]="true" formControlName="packageServiceServiceId" filterBy="label" [showClear]="true" placeholder="Selecciona uno" optionValue="value" optionLabel="label"  ></p-dropdown>
+                                                <div *ngIf="form.controls.packageServices.controls[i].controls.packageServiceServiceId.invalid">
+                                                    <small class="text-red-600 flex justify-content-end" *ngIf="form.controls.packageServices.controls[i].controls.packageServiceServiceId.errors?.['required']" >*Campo requerido</small>
+                                                </div>
+                                            </div>
+                                        </td>
+                                        <td>
+                                            <p-inputNumber [min]="0" inputId="locale-us"  mode="decimal" locale="en-US" formControlName="packageServiceQuantity" [useGrouping]="false" ></p-inputNumber>
+                                              
+                                            <div *ngIf="form.controls.packageServices.controls[i].controls.packageServiceQuantity.invalid">
+                                                <small class="text-red-600 flex justify-content-end" *ngIf="form.controls.packageServices.controls[i].controls.packageServiceQuantity.errors?.['required']" >*Campo requerido</small>
+                                                <small class="text-red-600 flex justify-content-end" *ngIf="form.controls.packageServices.controls[i].controls.packageServiceQuantity.errors?.['max']" >*Cantidad máxima es 99999999</small>
+                                                <small class="text-red-600 flex justify-content-end" *ngIf="form.controls.packageServices.controls[i].controls.packageServiceQuantity.errors?.['min']" >*Cantidad mínima es 1</small>
+
+                                            </div>
+                                        </td>
+                                        <td>
+                                            <div class="flex align-items-center justify-content-center gap-2">
+                                                <button pButton pRipple type="button"  (click)="removeRow('service',i)" pCancelEditableRow icon="pi pi-trash" class="p-button-rounded p-button-text p-button-danger"></button>                                                
+                                            </div>
+                                        </td>
+                                    </tr>
+                                </ng-template>
+                            </p-table>
+                        </div>
+                    </div>
+                    
+                    <div class="col-12 flex justify-content-end mt-4">
+                        <button pButton pRipple class="p-button-outlined w-8rem mr-3"  label="Cancelar" (click)="cancel($event)" ></button>
+                        <button pButton pRipple class="p-button-primary w-8rem"  label="Guardar" ></button>
+                    </div>
+                </form>
+            
+        </div>
+    </div>

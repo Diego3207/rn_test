@@ -1,0 +1,61 @@
+<p-toast key="msg"></p-toast>
+<div class="grid justify-content-center">
+    <div class="col-12 md:col-8 justify-content-between">
+        <div class="card p-fluid">
+            <form [formGroup]="form" (ngSubmit)="onSubmit()">
+                <div class="field">
+                    <label for="name" class="font-semibold">Descripción</label>
+                    <input type="text" pInputText id="name"  formControlName="serviceDescription" autofocus />
+                    <div *ngIf="form.controls.serviceDescription.invalid">
+                        <small class="text-red-600 flex justify-content-end" *ngIf="form.controls.serviceDescription.errors?.['required']" >*Campo requerido</small>
+                        <small class="text-red-600 flex justify-content-end" *ngIf="form.controls.serviceDescription.errors?.['maxlength']" >*Longitud máxima 255</small>
+                    </div>
+                </div>
+                <div class="field">
+                    <label for="price" class="font-semibold">Precio</label>
+                    <p-inputNumber   for="price" inputId="locale-us"   mode="currency"  currency="USD" locale="en-US" [minFractionDigits]="2" formControlName="servicePrice"></p-inputNumber>  
+                    <div *ngIf="form.controls.servicePrice.invalid">
+                        <small class="text-red-600 flex justify-content-end" *ngIf="form.controls.servicePrice.errors?.['required']">*Campo requerido</small>
+                        <small class="text-red-600 flex justify-content-end" *ngIf="form.controls.servicePrice.errors?.['max']" >*Cantidad máxima es $9,999,999,999.99</small>
+                        <small class="text-red-600 flex justify-content-end" *ngIf="form.controls.servicePrice.errors?.['min']" >*Cantidad mínima es $1.00</small>
+                    </div>	 
+                </div>
+                <p class="font-semibold">Renovación del servicio</p>
+                <div class="grid field"> 
+                    <div class="col-2" style="text-align: right;">
+                        <p class="font-semibold">cada:</p>  
+                    </div>
+                    <div class="col-5"> 
+                        <p-inputNumber 
+                            inputId="locale-us"  
+                            mode="decimal" 
+                            locale="en-US" 
+                            formControlName="" 
+                            [useGrouping]="false" 
+                            [showButtons]="true" 
+                            formControlName="serviceQuantityTemporality" 
+                            buttonLayout="horizontal"
+                            inputId="horizontal"
+                            spinnerMode="horizontal"
+                            incrementButtonIcon="pi pi-plus"
+                            decrementButtonIcon="pi pi-minus"
+                            [min]="0" 
+                            [max]="365">
+                        </p-inputNumber> 
+                    </div>
+                    <div class="col-5">
+                        <p-dropdown [options]="listItem" formControlName="serviceTemporality"  optionValue="value"  [filter]="true" filterBy="label" [showClear]="true" placeholder="Selecciona uno" optionLabel="label" ></p-dropdown>
+                        <div *ngIf="form.controls.serviceTemporality.invalid">
+                            <small class="text-red-600 flex justify-content-end" *ngIf="form.controls.serviceTemporality.errors?.['required']" >*Campo requerido</small>
+                        </div>
+                    </div>
+                </div>
+            
+                <div class="col-12 flex justify-content-end mt-4">
+                    <button pButton pRipple class="p-button-outlined w-8rem mr-3"  label="Cancelar" (click)="cancel($event)" ></button>
+                    <button pButton pRipple class="p-button-primary w-8rem"  label="Guardar" ></button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>

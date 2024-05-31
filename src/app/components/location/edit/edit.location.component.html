@@ -1,0 +1,57 @@
+<style>
+	.error-box {
+		border: 1px solid red;
+	}
+</style>
+<p-toast key="msg"></p-toast>
+<div class="grid justify-content-center">
+    <div class="col-12 md:col-6 justify-content-between">
+        <div class="card p-fluid">
+            <form [formGroup]="form" (ngSubmit)="onSubmit()">
+
+                <div class="field">
+                    <label for="locationName" class="font-semibold">Nombre de la Ubicación</label>
+                    <input 
+                        pInputText 
+                        id="locationName" 
+                        type="text" 
+                        formControlName="locationName" 
+                        autofocus />
+                    <div *ngIf="form.controls.locationName.invalid">
+                        <small class="text-red-600 flex justify-content-end" *ngIf="form.controls.locationName.errors?.['required']" >*Campo requerido</small>
+                        <small class="text-red-600 flex justify-content-end" *ngIf="form.controls.locationName.errors?.['maxlength']" >*Longitud máxima 100</small>
+                    </div>
+                </div>
+                <div class="field">
+                    <label for="locationAddress" class="font-semibold">Dirección</label>
+                    <input 
+                        pInputText
+                        #search 
+                        id="locationAddress" 
+                        type="text"
+                        (keydown.enter)="$event.preventDefault()"
+                        placeholder="Búsqueda" 
+                        formControlName="locationAddress"
+                        class="font-semibold" 
+                        autofocus />
+                    <div *ngIf="form.controls.locationAddress.invalid">
+                        <small class="text-red-600 flex justify-content-end" *ngIf="form.controls.locationAddress.errors?.['required']" >*Campo requerido </small>
+                        <small class="text-red-600 flex justify-content-end" *ngIf="form.controls.locationAddress.errors?.['maxlength']" >*Longitud máxima 250</small>
+                    </div>
+                    
+                </div>
+                <div class="field">
+                    <label for="locationPhone" class="font-semibold">Teléfono</label>
+                    <p-inputMask mask="999-999-99-99" placeholder="999-999-99-99" formControlName="locationPhone"></p-inputMask>
+                    <div *ngIf="form.controls.locationPhone.invalid">
+                        <small class="text-red-600 flex justify-content-end" *ngIf="form.controls.locationPhone.errors?.['required']" >*Campo requerido</small>
+                    </div>
+                </div>  
+                <div class="col-12 flex justify-content-end mt-4">
+                    <button pButton pRipple class="p-button-outlined w-8rem mr-3"  label="Cancelar" (click)="cancel($event)" ></button>
+                    <button pButton pRipple class="p-button-primary w-8rem"  label="Guardar" ></button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
